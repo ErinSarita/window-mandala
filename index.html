@@ -12,18 +12,18 @@
 <style>
 :root{
   --bg:#F2F6F4; --surface:#FFFFFF; --ink:#1E3532; --muted:#5B726D; --line:#D3E0DB;
-  --self:#B07A1F; --seed:#F7ECC7; --gold:#C9993A; --sun1:#FFF4C2; --sun2:#FFCB4C; --sun3:#F39A2B; --sun4:#D9731B; --sunline:#8A4A10; --win:#F3E8C8; --wtext:#2E2A1E;
+  --self:#B07A1F; --seed:#F7ECC7; --gold:#C9993A; --sun1:#FFFDE6; --sun2:#FFF2A6; --sun3:#FFE066; --sun4:#F5C82B; --sunline:#6B5000; --win:#F3E8C8; --wtext:#2E2A1E;
   --ff:#C0443A; --fr:#7B58A8; --co:#4C74A8; --fa:#C86C98; --otext:#FFFFFF; --etext:#1E3532;
   --display:"Marcellus", "Cormorant Garamond", Georgia, serif;
   --body:"Mulish", "Avenir Next", "Segoe UI", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#111C1A; --surface:#1A2826; --ink:#E2EEEA; --muted:#9BB3AD; --line:#2C3F3B;
-  --self:#D9A440; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFE9A3; --sun2:#F7B93E; --sun3:#E58A24; --sun4:#C2621A; --sunline:#6A3608; --win:#3A3220; --wtext:#F1E9D6;
+  --self:#D9A440; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFF8D2; --sun2:#FFEB8C; --sun3:#FFD94D; --sun4:#EFC21F; --sunline:#4A3800; --win:#3A3220; --wtext:#F1E9D6;
   --ff:#AE3F36; --fr:#6A4C96; --co:#41679A; --fa:#A85A80; --otext:#FFFFFF; --etext:#E2EEEA; color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#111C1A; --surface:#1A2826; --ink:#E2EEEA; --muted:#9BB3AD; --line:#2C3F3B;
-  --self:#D9A440; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFE9A3; --sun2:#F7B93E; --sun3:#E58A24; --sun4:#C2621A; --sunline:#6A3608; --win:#3A3220; --wtext:#F1E9D6;
+  --self:#D9A440; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFF8D2; --sun2:#FFEB8C; --sun3:#FFD94D; --sun4:#EFC21F; --sunline:#4A3800; --win:#3A3220; --wtext:#F1E9D6;
   --ff:#AE3F36; --fr:#6A4C96; --co:#41679A; --fa:#A85A80; --otext:#FFFFFF; --etext:#E2EEEA; color-scheme:dark }
 :root[data-theme="light"]{color-scheme:light}
 /* each direction tints the window a little, and its edge more */
@@ -59,14 +59,22 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,54px);lin
 svg#m{width:100%;height:100%;display:block;overflow:visible}
 .cell{cursor:pointer;transition:opacity .25s ease;stroke:var(--bg);stroke-width:2.5}
 .cell:focus{outline:none} .cell:focus-visible{stroke:var(--ink);stroke-width:3}
+.cell.hit{stroke:none;fill:transparent} .cell.hit:focus-visible{stroke:var(--ink);stroke-width:3}
+.cell.qp{stroke:var(--sun4);stroke-width:1.3;stroke-opacity:.6} .cell.qp:focus-visible{stroke:var(--ink);stroke-width:3;stroke-opacity:1}
+.veil{fill:var(--bg);opacity:0;transition:opacity .25s ease}
+svg.dimming .veil.off{opacity:.62}
 svg.dimming .cell.off,svg.dimming .shade.off{opacity:.3}
 .shade{transition:opacity .25s ease}
 #selOutline path{fill:none;stroke:var(--gold);stroke-width:2.5;stroke-linejoin:round;pointer-events:none}
 .lbl{pointer-events:none;font-family:var(--display)}
 .t-cq{fill:var(--sunline)} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--body);font-weight:600}
-.tr{fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;pointer-events:none;opacity:.75}
-.tr.on{stroke:var(--gold);opacity:1;stroke-width:3}
+.mv-sh{fill:none;stroke:rgba(20,10,30,.34);stroke-width:6.2;stroke-linecap:round;pointer-events:none}
+.mv-shh{fill:rgba(20,10,30,.34);stroke:rgba(20,10,30,.34);stroke-width:3.4;stroke-linejoin:round;pointer-events:none}
+.mv-ln{fill:none;stroke:#fff;stroke-width:2.8;stroke-linecap:round;pointer-events:none}
+.mv-hd{fill:#fff;pointer-events:none}
+.mv.on .mv-ln{stroke:var(--sun3)} .mv.on .mv-hd{fill:var(--sun3)}
+.mv:hover .mv-ln{stroke:var(--sun3)} .mv:hover .mv-hd{fill:var(--sun3)}
 .trhit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
 .trhit:focus{outline:none}
 .door{cursor:pointer} .door circle{fill:var(--gold);stroke:var(--bg);stroke-width:2.5}
@@ -214,7 +222,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <h3>A model, made from models</h3>
     <p id="modelnote"></p>
     <h3>How it is built</h3>
-    <p>At the center is the Self, in two layers: the Flower of Life at its heart, and around it a ring of its eight qualities. Around them is the window of capacity, the range in which you can feel strong things and stay connected, divided into four directions. Inside the window, each direction is a healthy state: energized, still, settled, and connected. Just outside the window's dashed edge are the early signals of each: revving, bracing, sinking, and over-tuning. Outside those are the four defenses: fight or flight, freeze, collapse, and fawn. Around them run the movements between neighbors, in both directions, and four gold doorways on the window's edge mark orienting, the way back in.</p>
+    <p>At the center is the Self, in two layers: the Flower of Life at its heart, and around it eight petals, one for each of its qualities. Around them is the window of capacity, the range in which you can feel strong things and stay connected, divided into four directions. Inside the window, each direction is a healthy state: energized, still, settled, and connected. Just outside the window's dashed edge are the early signals of each: revving, bracing, sinking, and over-tuning. Outside those are the four defenses: fight or flight, freeze, collapse, and fawn, which flow into one another as one continuous ring. At each junction between two defenses sit two small arrows, one in each direction, for the movement between them, and four gold doorways on the window's edge mark orienting, the way back in.</p>
     <p>The window is not fixed. Drag "Your window" and the center grows while the threat rings thin, the way practice, support, and safety can widen it over time. The braid at the edge weaves the whole nervous system together: gold for the safe and connected state, red for fight or flight, purple for freeze, blue for collapse, and pink for fawn.</p>
     <h3>An evolutionary view</h3>
     <p>Each state on this wheel is an inheritance. Collapse is the oldest, shared with reptiles and fish: playing dead. Fight and flight belong to every mammal. The social, connected state, and the ability to calm one another with a face and a voice, is the newest. Polyvagal theory orders them this way; some physiologists dispute its anatomy, but the picture of defenses as survival strategies, each wise in its time, is widely shared. Nothing on the outer ring is a flaw. Each is the body trying to keep you alive.</p>
@@ -422,8 +430,8 @@ const GAP = 1.2;
 // the rings grow and thin with capacity, t from 0 (narrow) to 1 (wide): the Self and the window widen,
 // the edge and the defenses thin, and the outer edge of the defenses stays where it is
 function radii(t){
-  const self=80+52*t, core=self*0.56, w0=self+6, w1=w0+96+56*t, e0=w1+6, e1=e0+60-40*t, o0=e1+6;
-  return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,404], tr:[417,433], braid:[452,476]};
+  const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+60-40*t, o0=e1+6;
+  return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
 let CAP=0.5, R=radii(CAP);
 const NS = "http://www.w3.org/2000/svg";
@@ -526,13 +534,12 @@ function colorAt(theta, layer){
   const c=mixRGB(PAL.base[i],PAL.base[j],s);
   return rgb(layer==="edge" ? mixRGB(c,PAL.surface,0.6) : c);
 }
-let clipN=0;
-function shade(layer,k,d,r0,r1,a0,a1){
-  const id=`clip-${layer}${k}-${clipN++}`, defs=document.getElementById("wdefs");
-  const cp=el("clipPath",{id},defs); el("path",{d},cp);
-  const g=el("g",{class:"shade","clip-path":`url(#${id})`,"pointer-events":"none"}); g.dataset.slice="d"+k;
-  for(let a=a0-2; a<a1+2; a+=1.5) el("path",{d:sector(r0-4,r1+22,a,a+2.1,1,0),fill:colorAt(a+1,layer)},g);
-  if(layer==="out") el("path",{d,fill:"url(#sheen)"},g);
+// One continuous ring: thin wedges, each colored by where it sits round the circle, so the defenses melt into
+// one another with no border between them. The outer ring also gets a soft sheen, light inside and deeper at the rim.
+function ringShade(layer,r0,r1){
+  const g=el("g",{class:"shade","pointer-events":"none"});
+  for(let a=0;a<360;a+=1.5) el("path",{d:sector(r0,r1,a-0.25,a+1.85,1,0),fill:colorAt(a+0.8,layer)},g);
+  if(layer==="out") el("circle",{cx:0,cy:0,r:f((r0+r1)/2),fill:"none",stroke:"url(#sheen)","stroke-width":f(r1-r0)},g);
   return g;
 }
 
@@ -560,10 +567,11 @@ function addCell(d, layer, k, fill){
   hookTip(c,()=>{ const [x,y]=P(mid,DIRS[k].angle); return {x,y,html:cellTip(layer,k),color:DIRS[k].color}; },()=>showDir(k,layer,true));
   cells.push(c); return c;
 }
-/* The braid: three strands, the body, the breath, and the bond, plaited around the whole wheel.
-   Each strand weaves in and out across the band and passes over one strand, then under the other,
-   in turn. Every strand is cut into pieces where it changes from lying underneath to lying on top;
-   the lower pieces are drawn first and the upper pieces over them, so each crossing shows who is on top. */
+/* The braid: five strands, one for each state of the nervous system, twisted into a cable round the whole wheel.
+   Each strand winds like a thread on a rope: its sideways position is sin(phase) and its depth is cos(phase), so
+   wherever two strands cross, one is always in front and the other behind, and each strand alternates over and
+   under by itself. Strands are cut into front runs and back runs; the back runs go down first, then the front
+   runs' parting lines (only where they cross something), then the front runs themselves. */
 function drawBraid(){
   const hit=el("path",{d:`M0 ${-R.braid[1]-4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${R.braid[1]+4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${-R.braid[1]-4} M0 ${-R.braid[0]+4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${R.braid[0]-4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${-R.braid[0]+4}Z`,
     class:"braidhit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The braid. Read what it means"});
@@ -575,46 +583,54 @@ function drawBraid(){
   hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); moonTip(hit,{x:0,y:-(R.braid[0]+R.braid[1])/2,html}); } });
   hit.addEventListener("blur",()=>{ if(openMoon===hit) moonTip(null); });
   const g=el("g",{class:"braid","pointer-events":"none","aria-hidden":"true"});
-  const rc=(R.braid[0]+R.braid[1])/2, A=9.5, N=42, SUB=8;   // N plaits round the circle
-  const strands=[["--sun2",0],["--ff",2*Math.PI/5],["--fr",4*Math.PI/5],["--co",6*Math.PI/5],["--fa",8*Math.PI/5]];
-  const pieces=[[],[]];   // [under, over]
-  // strand k sits at A·sin(t+φ) across the band, with depth sin(2(t+φ)); depth keeps one sign over each quarter turn
+  const rc=(R.braid[0]+R.braid[1])/2, A=8.5, N=36, SUB=16, TOT=N*SUB, W0=9.5, W1=5.8;
+  const strands=[["--sun4",0],["--ff",2*Math.PI/5],["--fr",4*Math.PI/5],["--co",6*Math.PI/5],["--fa",8*Math.PI/5]];
+  const back=[], front=[];
   strands.forEach(([color,ph])=>{
-    for(let m=0;m<N*4;m++){
-      const t0=m*Math.PI/2-ph, pts=[];
-      for(let j=0;j<=SUB;j++){ const t=t0+j*Math.PI/(2*SUB), [x,y]=P(rc+A*Math.sin(t+ph), t*180/(Math.PI*N)); pts.push((j?"L":"M")+f(x)+" "+f(y)); }
-      pieces[m%2===0?1:0].push([pts.join(" "),color]);
+    let run=null;
+    for(let i=0;i<=TOT;i++){
+      const phi=2*Math.PI*N*i/TOT+ph, [x,y]=P(rc+A*Math.sin(phi), 360*i/TOT), c=Math.cos(phi), isFront=c>=0, pt={x,y,c};
+      if(!run){ run={front:isFront,pts:[pt],color}; continue; }
+      run.pts.push(pt);
+      if(isFront!==run.front){ (run.front?front:back).push(run); run={front:isFront,pts:[pt],color}; }
     }
+    if(run) (run.front?front:back).push(run);
   });
-  pieces.forEach(list=>list.forEach(([d,color])=>{
-    el("path",{d,fill:"none",stroke:"var(--bg)","stroke-width":8.5,"stroke-linecap":"butt"},g);
-    el("path",{d,fill:"none",stroke:`var(${color})`,"stroke-width":5.4,"stroke-linecap":"round"},g);
-  }));
+  const path=pts=>"M"+pts.map(q=>f(q.x)+" "+f(q.y)).join(" L");
+  const stroke=(d,color,w,cap)=>el("path",{d,fill:"none",stroke:color,"stroke-width":w,"stroke-linecap":cap,"stroke-linejoin":"round"},g);
+  back.forEach(r=>stroke(path(r.pts),`var(${r.color})`,W1,"round"));
+  front.forEach(r=>{ const mid=r.pts.filter(q=>q.c>0.35); if(mid.length>1) stroke(path(mid),"var(--bg)",W0,"butt"); });
+  front.forEach(r=>stroke(path(r.pts),`var(${r.color})`,W1,"round"));
 }
 
 function draw(){
-  svg.innerHTML=""; cells.length=0; tpId=0; clipN=0; R=radii(CAP); readPalette();
+  svg.innerHTML=""; cells.length=0; tpId=0; R=radii(CAP); readPalette();
   const wdefs=el("defs",{id:"wdefs"});
   const rr=R.out[1]+16, sh=el("radialGradient",{id:"sheen",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:rr},wdefs);
   [[R.out[0]/rr,"#fff",0.26],[(R.out[0]+R.out[1])/2/rr,"#fff",0.04],[R.out[1]/rr,"#000",0.04],[1,"#000",0.2]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},sh));
-  const sun=el("radialGradient",{id:"sun",cx:"50%",cy:"45%",r:"60%"},wdefs);
-  [[0,"--sun1"],[0.45,"--sun2"],[0.82,"--sun3"],[1,"--sun4"]].forEach(([o,v])=>el("stop",{offset:o,"stop-color":`var(${v})`},sun));
-  const glow=el("radialGradient",{id:"glow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(R.self+46)},wdefs);
-  [[R.self/(R.self+46),0.55],[1,0]].forEach(([o,a])=>el("stop",{offset:f(o),"stop-color":"var(--sun2)","stop-opacity":a},glow));
+  // the Self is bright yellow: a pale heart, a lemon-gold body, and a glow that spills warmly into the window
+  const sun=el("radialGradient",{id:"sun",cx:"50%",cy:"45%",r:"62%"},wdefs);
+  [[0,"--sun1"],[0.55,"--sun2"],[1,"--sun3"]].forEach(([o,v])=>el("stop",{offset:o,"stop-color":`var(${v})`},sun));
+  const petalG=el("radialGradient",{id:"petal",cx:"50%",cy:"58%",r:"62%"},wdefs);
+  [[0,"--sun1"],[0.5,"--sun2"],[1,"--sun3"]].forEach(([o,v])=>el("stop",{offset:o,"stop-color":`var(${v})`},petalG));
+  const GL=R.self+56, glow=el("radialGradient",{id:"glow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(GL)},wdefs);
+  [[0,"--sun3",0.9],[R.self/GL,"--sun3",0.8],[(R.self+22)/GL,"--sun2",0.35],[1,"--sun2",0]].forEach(([o,v,a])=>el("stop",{offset:f(o),"stop-color":`var(${v})`,"stop-opacity":a},glow));
   drawBraid();
   const labels=el("g",{"pointer-events":"none"});
+  const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
+  // the two outer rings are each one continuous band, with four invisible touch areas laid over them
+  ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]);
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
-    const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
-    const dOut=swell(R.out[0],R.out[1],b0,b1,{out:16,rIn:10}), dEdge=swell(R.edge[0],R.edge[1],b0,b1,{out:8,rIn:6});
-    shade("out",k,dOut,R.out[0],R.out[1],b0,b1); shade("edge",k,dEdge,R.edge[0],R.edge[1],b0,b1);
-    addCell(dOut,"out",k,null); addCell(dEdge,"edge",k,null);
+    ["out","edge"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice="d"+k; });
+    addCell(sector(R.out[0],R.out[1],a0,a1,1,0),"out",k,null).classList.add("hit");
+    addCell(sector(R.edge[0],R.edge[1],a0,a1,1,0),"edge",k,null).classList.add("hit");
     addCell(rsector(R.win[0],R.win[1],b0,b1,{rOut:14}),"win",k,"--w-"+key);
     const om=(R.out[0]+R.out[1])/2, em=(R.edge[0]+R.edge[1])/2, wm=(R.win[0]+R.win[1])/2;
     twoLine(om,b0+3,b1-3,d.name,ot>70?d.out.words:"","lbl t-out","lbl t-out t-sub",ot>100?24:20,12.5,ot>100?30:24,labels);
     if(et>=26) twoLine(em,b0+3,b1-3,d.edge.name,et>46?d.edge.words:"","lbl t-edge","lbl t-edge t-sub",14,11.5,20,labels);
     else arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge",Math.max(10,et*0.55),0.2,labels);
-    twoLine(wm,b0+3,b1-3,d.win.name,wt>120?d.win.words:"","lbl t-win","lbl t-win t-sub",18,12.5,24,labels);
+    twoLine(wm,b0+3,b1-3,d.win.name,wt>88?d.win.words:"","lbl t-win","lbl t-win t-sub",18,12.5,24,labels);
   });
   // the window's edge: dashed, with four gold doorways where orienting brings you back in
   el("circle",{cx:0,cy:0,r:R.win[1]+3,fill:"none",stroke:"var(--self)","stroke-width":2,"stroke-dasharray":"7 6","pointer-events":"none"});
@@ -623,45 +639,47 @@ function draw(){
     el("circle",{cx:f(x),cy:f(y),r:8},g);
     hookTip(g,()=>({x,y,html:`<b>Orienting</b>The doorway home, from anywhere on the wheel.<span>Tap to read more.</span>`}),()=>showHome(true));
   });
-  // the movements between neighbors: clockwise on the inner track, the other way on the outer
-  const trs=el("g",{});
+  // the movements between neighbors: at each junction, in the middle of the ring, two small arrows, one each way
+  const mv=el("g",{});
+  const om=(R.out[0]+R.out[1])/2, off=Math.min(20,ot*0.17), HALF=6, HEAD=1.7;
   DIRS.forEach((d,k)=>{
-    const n=(k+1)%4, s=d.angle+13, e=(n===0?360:DIRS[n].angle)-13;
-    [[k,n,R.tr[0],s,e,1],[n,k,R.tr[1],e,s,0]].forEach(([from,to,r,x0,x1,sw])=>{
-      const i=moveIndex(from,to), [sx,sy]=P(r,x0), dd=`M${f(sx)} ${f(sy)} `+arc(r,x0,x1,sw);
-      const vis=el("path",{d:dd,class:"tr","marker-end":"url(#tip)",id:"tr"+i},trs);
-      const hit=el("path",{d:dd,class:"trhit",tabindex:"0",role:"button","aria-label":MOVES[i].title},trs);
+    const n=(k+1)%4, j=d.angle+45;
+    [[k,n,om+off,j-HALF,j+HALF],[n,k,om-off,j+HALF,j-HALF]].forEach(([from,to,r,x0,x1])=>{
+      const i=moveIndex(from,to), dir=x1>x0?1:-1, g=el("g",{class:"mv",id:"tr"+i},mv);
+      const [sx,sy]=P(r,x0), lineD=`M${f(sx)} ${f(sy)} `+arc(r,x0,x1-dir*HEAD*0.6,dir>0?1:0);
+      const tip=P(r,x1), bl=P(r-5.5,x1-dir*HEAD), br=P(r+5.5,x1-dir*HEAD);
+      const headD=`M${f(tip[0])} ${f(tip[1])} L${f(bl[0])} ${f(bl[1])} L${f(br[0])} ${f(br[1])}Z`;
+      el("path",{d:lineD,class:"mv-sh"},g); el("path",{d:headD,class:"mv-shh"},g);
+      el("path",{d:lineD,class:"mv-ln"},g); el("path",{d:headD,class:"mv-hd"},g);
+      const hit=el("path",{d:`M${f(sx)} ${f(sy)} `+arc(r,x0,x1,dir>0?1:0),class:"trhit",tabindex:"0",role:"button","aria-label":MOVES[i].title},g);
       hit.dataset.slice="t"+i;
       hookTip(hit,()=>{ const [x,y]=P(r,(x0+x1)/2); return {x,y,html:`<b>${MOVES[i].title}</b>${MOVES[i].signs}<span>Tap to read more.</span>`,color:DIRS[to].color}; },()=>showMoves(i,true));
     });
   });
-  const defs=document.getElementById("wdefs"); const mk=el("marker",{id:"tip",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse"},defs);
-  el("path",{d:"M1 1L8 5L1 9",fill:"none",stroke:"context-stroke","stroke-width":"1.6","stroke-linecap":"round","stroke-linejoin":"round"},mk);
+  el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#glow)","pointer-events":"none"});
   svg.appendChild(labels);
-  // the Self at the center, in two layers: the Flower of Life at the heart, and around it a ring of the eight
-  // qualities of Self, with rays and warmth spilling out into the window
-  const rays=el("g",{"pointer-events":"none"});
-  el("circle",{cx:0,cy:0,r:f(R.self+46),fill:"url(#glow)"},rays);
-  for(let i=0;i<24;i++){ const a=i*15+7.5, long=i%2===0, r0=R.self+1, r1=R.self+(long?17:10), w=long?3.2:2.4;
-    const [x0,y0]=P(r0,a-w), [x1,y1]=P(r1,a), [x2,y2]=P(r0,a+w);
-    el("path",{d:`M${f(x0)} ${f(y0)} L${f(x1)} ${f(y1)} L${f(x2)} ${f(y2)}Z`,fill:long?"var(--sun3)":"var(--sun2)",opacity:.9},rays); }
+  // the Self at the center, in two layers: the Flower of Life at the heart, and around it eight yellow petals,
+  // one for each quality of Self
   const sunG=el("g",{id:"core"});
-  const qm=(R.core+R.self)/2, qArc=(45-2*GAP)*Math.PI/180*qm, qSize=Math.min(13,qArc*0.92/(10*0.56));
+  const p0=R.core+4, p1=R.self, h=p1-p0, HW=20.5, rt=p0+h*0.64;
+  const petalD=m=>{ const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
+    return `M${q(p0,m-8)} C${q(p0+h*0.30,m-HW*1.04)} ${q(p0+h*0.74,m-HW*1.02)} ${q(p1-4,m-HW*0.46)} Q${q(p1+5,m)} ${q(p1-4,m+HW*0.46)} C${q(p0+h*0.74,m+HW*1.02)} ${q(p0+h*0.30,m+HW*1.04)} ${q(p0,m+8)} Q${q(p0-3,m)} ${q(p0,m-8)}Z`; };
   SELF.cs.forEach(([n,t],i)=>{
-    const a0=i*45-22.5, a1=a0+45;
-    const c=el("path",{d:rsector(R.core+3,R.self,a0+GAP,a1-GAP,{rOut:9}),class:"cell",fill:i%2?"var(--sun2)":"var(--sun3)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
+    const m=i*45;
+    const c=el("path",{d:petalD(m),class:"cell qp",fill:"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
     c.dataset.slice="c"+i;
-    hookTip(c,()=>{ const [x,y]=P(qm,a0+22.5); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
-    arcText(qm,a0+GAP,a1-GAP,CS_SHORT[i],"lbl t-cq",f(qSize),0.2,sunG).setAttribute("pointer-events","none");
+    hookTip(c,()=>{ const [x,y]=P(rt,m); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
+    const avail=2*HW*0.86*Math.PI/180*rt, size=Math.min(12.5,avail/(CS_SHORT[i].length*0.6));
+    arcText(rt,m-HW*0.9,m+HW*0.9,CS_SHORT[i],"lbl t-cq",f(size),0.1,sunG).setAttribute("pointer-events","none");
   });
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)"},core);
-  const sr=R.core*0.46, sg=el("g",{fill:"none",stroke:"var(--sunline)","stroke-width":2.2,opacity:.8,"pointer-events":"none"},core);
+  const sr=R.core*0.46, sg=el("g",{fill:"none",stroke:"var(--sunline)","stroke-width":1.8,opacity:.55,"pointer-events":"none"},core);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
-    el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"var(--sun1)",stroke:"none",opacity:.85},sg); }
+    el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"var(--sun1)",stroke:"none",opacity:.9},sg); }
   el("circle",{cx:0,cy:0,r:f(sr)},sg);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2; el("circle",{cx:f(sr*Math.cos(t)),cy:f(sr*Math.sin(t)),r:f(sr)},sg); }
-  el("circle",{cx:0,cy:0,r:f(sr*2),"stroke-width":2,opacity:.85},sg);
+  el("circle",{cx:0,cy:0,r:f(sr*2),"stroke-width":1.6,opacity:.8},sg);
   core.addEventListener("click",()=>showSelf(true));
   core.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showSelf(true); } });
   const tip=document.getElementById("coretip");
@@ -672,10 +690,10 @@ function draw(){
   applySel(); setKind(kindOn);
 }
 function hover(node){
-  if(!node){ svg.classList.remove("dimming"); cells.forEach(c=>c.classList.remove("off")); svg.querySelectorAll(".shade.off").forEach(g=>g.classList.remove("off")); return; }
+  if(!node){ svg.classList.remove("dimming"); cells.forEach(c=>c.classList.remove("off")); svg.querySelectorAll(".veil.off").forEach(g=>g.classList.remove("off")); return; }
   const s=node.dataset.slice; if(!s||s[0]==="t"||s[0]==="c") return;
   svg.classList.add("dimming"); cells.forEach(c=>c.classList.toggle("off",c.dataset.slice!==s));
-  svg.querySelectorAll(".shade").forEach(g=>g.classList.toggle("off",g.dataset.slice!==s));
+  svg.querySelectorAll(".veil").forEach(g=>g.classList.toggle("off",g.dataset.slice!==s));
 }
 
 /* ---------- Hover cards ---------- */
@@ -769,11 +787,11 @@ function wire(){
 }
 function applySel(){
   cells.forEach(c=>c.classList.toggle("sel", sel.kind==="dir" && +c.dataset.k===sel.k && (!sel.layer||c.dataset.layer===sel.layer)));
-  document.querySelectorAll(".tr").forEach(p=>p.classList.toggle("on", sel.kind==="move" && p.id==="tr"+sel.k));
+  document.querySelectorAll(".mv").forEach(p=>p.classList.toggle("on", sel.kind==="move" && p.id==="tr"+sel.k));
   const so=document.getElementById("selOutline"); if(!so) return; so.innerHTML="";
   if(sel.kind==="dir"){ const [a0,a1]=dA(sel.k);
-    if(sel.layer){ const r=R[sel.layer]; el("path",{d:sel.layer==="win"?rsector(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{rOut:15}):swell(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{out:sel.layer==="out"?16:8})},so); }
-    else el("path",{d:swell(R.win[0]-2,R.out[1]+2,a0+GAP/2,a1-GAP/2,{out:16})},so); }
+    if(sel.layer){ const r=R[sel.layer]; el("path",{d:sel.layer==="win"?rsector(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{rOut:15}):sector(r[0]-2,r[1]+2,a0+0.3,a1-0.3,1,0)},so); }
+    else el("path",{d:sector(R.win[0]-2,R.out[1]+2,a0+0.3,a1-0.3,1,0)},so); }
 }
 
 const CENTER_HTML=`<div class="center-msg">
@@ -788,11 +806,11 @@ function showIntro(){
   panel.innerHTML=CENTER_HTML+`<div class="intro">
     <h2>Reading the wheel</h2>
     <ul class="legend">
-      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by the eight qualities of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest.</div></li>
+      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction: energized, still, settled, and connected. The dashed line is the window's edge.</div></li>
       <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals that you are leaving the window: revving, bracing, sinking, over-tuning. Catching them here makes the way back short.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses: fight or flight at the top, freeze to the right, collapse below, fawn to the left.</div></li>
-      <li>${sw("--gold")}<div><b>Doorways and movements</b>The gold doorways on the window's edge are orienting, the way back in. The arrows around the outside are the movements between defenses, both ways.</div></li>
+      <li>${sw("--gold")}<div><b>Doorways and movements</b>The gold doorways on the window's edge are orienting, the way back in. The two small arrows at each junction in the outer ring are the movements between neighboring defenses, one in each direction.</div></li>
     </ul>
     <p>Read out from the center along any direction: the healthy state, its early signals, and the defense it can become. Read around the outside for how one defense can turn into another. Read inward for the way home.</p>
     <p class="note">This is a model: a map drawn from earlier maps, theory-based and offered from an evolutionary perspective. See About this mandala, below the wheel.</p>
