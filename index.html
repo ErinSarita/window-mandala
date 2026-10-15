@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Window Mandala</title>
+<meta name="description" content="A map of the window of capacity, with the Self at its center: the four directions a nervous system moves under threat, the movements between them, and the way home, with practices for widening the window.">
+<link rel="icon" href="favicon.svg?v=1" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Mulish:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --bg:#F2F6F4; --surface:#FFFFFF; --ink:#1E3532; --muted:#5B726D; --line:#D3E0DB;
+  --self:#2E7D71; --seed:#F7ECC7; --gold:#C9993A; --sun1:#FFF4C2; --sun2:#FFCB4C; --sun3:#F39A2B; --sun4:#D9731B; --sunline:#9A5212; --win:#CFE8E0; --wtext:#1E3532;
+  --ff:#C8654B; --fr:#5E7FAE; --co:#6E6790; --fa:#B9708C; --otext:#FFFFFF; --etext:#1E3532;
+  --display:"Marcellus", "Cormorant Garamond", Georgia, serif;
+  --body:"Mulish", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111C1A; --surface:#1A2826; --ink:#E2EEEA; --muted:#9BB3AD; --line:#2C3F3B;
+  --self:#3B9A8C; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFE9A3; --sun2:#F7B93E; --sun3:#E58A24; --sun4:#C2621A; --sunline:#7A3E0C; --win:#24433D; --wtext:#E2EEEA;
+  --ff:#B9573F; --fr:#4E6E9C; --co:#5F5883; --fa:#A35F7A; --otext:#FFFFFF; --etext:#E2EEEA; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111C1A; --surface:#1A2826; --ink:#E2EEEA; --muted:#9BB3AD; --line:#2C3F3B;
+  --self:#3B9A8C; --seed:#F3E4B3; --gold:#E0B65E; --sun1:#FFE9A3; --sun2:#F7B93E; --sun3:#E58A24; --sun4:#C2621A; --sunline:#7A3E0C; --win:#24433D; --wtext:#E2EEEA;
+  --ff:#B9573F; --fr:#4E6E9C; --co:#5F5883; --fa:#A35F7A; --otext:#FFFFFF; --etext:#E2EEEA; color-scheme:dark }
+:root[data-theme="light"]{color-scheme:light}
+/* each direction tints the window a little, and its edge more */
+:root{
+  --w-ff:color-mix(in srgb, var(--win) 84%, var(--ff)); --w-fr:color-mix(in srgb, var(--win) 84%, var(--fr));
+  --w-co:color-mix(in srgb, var(--win) 84%, var(--co)); --w-fa:color-mix(in srgb, var(--win) 84%, var(--fa));
+  --e-ff:color-mix(in srgb, var(--ff) 38%, var(--surface)); --e-fr:color-mix(in srgb, var(--fr) 38%, var(--surface));
+  --e-co:color-mix(in srgb, var(--co) 38%, var(--surface)); --e-fa:color-mix(in srgb, var(--fa) 38%, var(--surface));
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+header.top{display:grid;gap:6px;margin-bottom:22px;position:relative;padding-right:200px}
+@media (max-width:560px){header.top{padding-right:0;padding-top:48px}}
+.hbtns{position:absolute;top:-4px;right:0;display:flex;gap:8px}
+@media (max-width:560px){.hbtns{top:0}}
+.homebtn{height:40px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:600;padding:0 14px;cursor:pointer}
+.themebtn{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--ink);cursor:pointer;padding:0}
+.homebtn:hover,.themebtn:hover{background:var(--bg)}
+.homebtn:focus-visible,.themebtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.themebtn svg{width:20px;height:20px;overflow:visible}
+.themebtn .sun{display:none} .is-dark .themebtn .moon{display:none} .is-dark .themebtn .sun{display:block}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,54px);line-height:1.05;margin:0;text-wrap:balance}
+.lede{max-width:66ch;color:var(--muted);margin:4px 0 0}
+.lede a{color:var(--ink)}
+.main{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:1fr}}
+.stage{position:sticky;top:12px;display:grid;gap:14px}
+@media (max-width:900px){.stage{position:static}}
+.svgbox{width:100%;max-width:740px;margin:0 auto;aspect-ratio:1/1;position:relative}
+svg#m{width:100%;height:100%;display:block;overflow:visible}
+.cell{cursor:pointer;transition:opacity .25s ease;stroke:var(--bg);stroke-width:2.5}
+.cell:focus{outline:none} .cell:focus-visible{stroke:var(--ink);stroke-width:3}
+svg.dimming .cell.off,svg.dimming .shade.off{opacity:.3}
+.shade{transition:opacity .25s ease}
+#selOutline path{fill:none;stroke:var(--gold);stroke-width:2.5;stroke-linejoin:round;pointer-events:none}
+.lbl{pointer-events:none;font-family:var(--display)}
+.t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
+.t-sub{font-family:var(--body);font-weight:600}
+.tr{fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;pointer-events:none;opacity:.75}
+.tr.on{stroke:var(--gold);opacity:1;stroke-width:3}
+.trhit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+.trhit:focus{outline:none}
+.door{cursor:pointer} .door circle{fill:var(--gold);stroke:var(--bg);stroke-width:2.5}
+.door:hover circle,.door:focus-visible circle{stroke:var(--ink)} .door:focus{outline:none}
+.braidhit{fill:transparent;cursor:pointer} .braidhit:focus{outline:none}
+.moontip{position:absolute;left:0;top:0;z-index:2;width:max-content;max-width:min(270px,74%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.4;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .15s ease}
+.moontip.on{opacity:1}
+.moontip.ringed{border-top:5px solid var(--tipc);background:color-mix(in srgb, var(--tipc) 12%, var(--surface))}
+.moontip b{font-family:var(--display);font-weight:400;font-size:16px;display:block}
+.moontip span{color:var(--muted);font-size:12.5px;display:block}
+.moontip .ringtag{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.coretip{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-100% - 12%));width:min(250px,70%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--sun3);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.45;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .2s ease}
+.coretip.on{opacity:1}
+.coretip b{font-family:var(--display);font-weight:400;font-size:16px;display:block}
+.coretip span{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
+/* the practices on the wheel: the Self breathing, and rings of kindness widening */
+#core{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion: no-preference){
+  svg.breathing #core{animation:breathe 10s ease-in-out infinite}
+  .kring{transform-box:fill-box;transform-origin:center;animation:widen 9s ease-out infinite}
+}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes widen{0%{transform:scale(1);opacity:.85}100%{transform:scale(var(--to));opacity:0}}
+.kring{fill:none;stroke:var(--gold);stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:none}
+.capbar{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:740px;margin:0 auto;width:100%}
+.caprow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.caprow label{font-size:14px;font-weight:700}
+.caprow input{flex:1;min-width:160px;accent-color:var(--self)}
+.capname{font-family:var(--display);font-size:17px;min-width:12ch}
+.capbar p{margin:0;font-size:13.5px;color:var(--muted)}
+.practicebar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.btn:hover{background:var(--bg)} .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.legendkey{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:740px;margin:0 auto}
+.legendkey button{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 8px;cursor:pointer}
+.sw{width:14px;height:14px;border-radius:50%;flex:none;display:inline-block}
+.panel{display:grid;gap:18px;min-width:0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:inherit;font-size:14px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab:focus-visible,.legendkey button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dirnav{display:flex;flex-wrap:wrap;gap:6px;margin-top:-8px}
+.dirnav button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:999px;padding:3px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.dirnav button[aria-current="true"]{color:var(--ink);border-color:var(--ink)}
+#panel{display:grid;gap:16px}
+.phasehead h2{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:0}
+.phasehead .meta{color:var(--muted);font-size:14px;margin-top:4px}
+.phasehead p{margin:10px 0 0;max-width:62ch}
+.ring{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:10px;scroll-margin-top:16px}
+.ring.hl{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.ring h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ring h3 small{font-family:var(--body);font-size:13px;color:var(--muted)}
+.ring h4{margin:4px 0 0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ring p{margin:0}
+.ring ul,.ring ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.about{margin:0;color:var(--muted);font-size:14px}
+.voice{font-family:var(--display);font-size:19px;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0}
+.note{background:color-mix(in srgb, var(--self) 10%, transparent);border-radius:10px;padding:10px 12px;font-size:14.5px}
+.src{font-size:12.5px;color:var(--muted)}
+.hint{font-size:14px;color:var(--muted)}
+.linkbtn{font:inherit;font-size:14px;color:var(--muted);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;justify-self:start}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 11px;cursor:pointer}
+.chips button:hover,.chips button:focus-visible{border-color:var(--ink);outline:none}
+.move{border-left:4px solid var(--mc);border-radius:0 12px 12px 0;padding:10px 14px;background:var(--surface);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;gap:6px;scroll-margin-top:16px}
+.move.hl{box-shadow:0 0 0 2px var(--gold)}
+.move h4{margin:0;font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:0;text-transform:none;color:var(--ink)}
+.move p{margin:0}
+.cs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;list-style:none;padding:0!important}
+.cs li{background:color-mix(in srgb, var(--sun2) 16%, var(--surface));border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}
+.cs li b{display:block;font-family:var(--display);font-weight:400;font-size:18px}
+@media (max-width:420px){.cs{grid-template-columns:1fr}}
+.finder{display:grid;gap:12px}
+.fq{display:grid;gap:6px}
+.fq p{font-weight:700;margin:0}
+.fopts{display:flex;flex-wrap:wrap;gap:6px}
+.fopts button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.fopts button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.wq{display:grid;gap:4px;padding:8px 0;border-top:1px solid var(--line)}
+.wq p{margin:0;font-size:15px}
+.result{border:1px solid var(--ink);border-radius:14px;padding:14px 16px;display:grid;gap:8px;background:var(--surface)}
+.result h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.menu{grid-template-columns:1fr}}
+.menu div{border-top:4px solid var(--mc);background:var(--surface);border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0 0 12px 12px;padding:10px 12px}
+.menu b{font-family:var(--display);font-weight:400;font-size:18px;display:block;margin-bottom:4px}
+.menu ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
+.why{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.center-msg{display:grid;gap:12px}
+.center-msg h2,.intro h2{font-family:var(--display);font-weight:400;font-size:30px;margin:0;line-height:1.15}
+.center-msg p,.intro p{margin:0;max-width:62ch}
+.intro{display:grid;gap:14px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.legend{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.legend li{display:grid;grid-template-columns:18px 1fr;gap:12px;align-items:start}
+.legend .sw{margin-top:5px;width:18px;height:18px}
+.legend b{font-family:var(--display);font-weight:400;font-size:19px;display:block}
+section.about{margin-top:56px;display:grid;gap:18px;max-width:880px}
+section.about h2{font-family:var(--display);font-weight:400;font-size:30px;margin:0}
+section.about h3{font-family:var(--display);font-weight:400;font-size:21px;margin:8px 0 0}
+section.about p{margin:0;max-width:68ch;color:var(--ink);font-size:16px}
+.refs{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px}
+.foot{font-size:13px;color:var(--muted)!important;border-top:1px solid var(--line);padding-top:14px;margin-top:10px}
+@media (prefers-reduced-motion: reduce){.cell{transition:none}}
+</style>
+<script>
+try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") document.documentElement.setAttribute("data-theme",t); }catch(e){}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="hbtns">
+      <button class="homebtn" type="button" id="homebtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 3"/></svg>Come home</button>
+      <button class="themebtn" type="button" id="themebtn" aria-label="Switch to dark mode">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+    <div class="eyebrow">The nervous system and the Self</div>
+    <h1>The Window Mandala</h1>
+    <p class="lede">A map of the window of capacity, with the Self at its center. Inside the window you can feel a great deal and stay yourself. Outside it, the body moves in one of four directions to protect you: fight or flight, freeze, collapse, or fawn, and it can move between them, around the circle and back. The way home always runs inward. Find where you are, see how wide your window is, and practice widening it. A companion to <a href="https://erinsarita.github.io/return-mandala/">The Return Mandala</a> and <a href="https://erinsarita.github.io/prenatal-mandala/">The Pregnancy and Birth Mandala</a>.</p>
+  </header>
+
+  <div class="main">
+    <div class="stage">
+      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Calm, curious, compassionate, connected: the center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="capbar">
+        <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
+        <p>Drag to see the window widen: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
+        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness</button></div>
+      </div>
+      <div class="legendkey" id="legendkey"></div>
+    </div>
+    <div class="panel">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="dirnav" id="dirnav" hidden></div>
+      <div id="panel" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <section class="about" id="about">
+    <h2>About this mandala</h2>
+    <h3>A model, made from models</h3>
+    <p id="modelnote"></p>
+    <h3>How it is built</h3>
+    <p>At the center is the Self. Around it is the window of capacity, the range in which you can feel strong things and stay connected, divided into four directions. Inside the window, each direction is a healthy state: energized, still, settled, and connected. Just outside the window's dashed edge are the early signals of each: revving, bracing, sinking, and over-tuning. Outside those are the four defenses: fight or flight, freeze, collapse, and fawn. Around them run the movements between neighbors, in both directions, and four gold doorways on the window's edge mark orienting, the way back in.</p>
+    <p>The window is not fixed. Drag "Your window" and the center grows while the threat rings thin, the way practice, support, and safety can widen it over time. The braid at the edge has three strands: the body, the breath, and the bond with others.</p>
+    <h3>An evolutionary view</h3>
+    <p>Each state on this wheel is an inheritance. Collapse is the oldest, shared with reptiles and fish: playing dead. Fight and flight belong to every mammal. The social, connected state, and the ability to calm one another with a face and a voice, is the newest. Polyvagal theory orders them this way; some physiologists dispute its anatomy, but the picture of defenses as survival strategies, each wise in its time, is widely shared. Nothing on the outer ring is a flaw. Each is the body trying to keep you alive.</p>
+    <h3>Going gently</h3>
+    <p>Reading this map can itself move you toward an edge. Notice, and come home whenever you need to: the button at the top is always there. If you find yourself outside your window often, or for long, or if what surfaces is trauma, a trauma-informed therapist can help widen your window in a way a map cannot. If you are in crisis, contact your local emergency number, or in the United States call or text 988.</p>
+    <h3>References</h3>
+    <ol class="refs">
+      <li>Dana, D. (2018). <i>The Polyvagal Theory in Therapy</i>. Norton.</li>
+      <li>Fredrickson, B. L., Cohn, M. A., Coffey, K. A., Pek, J., &amp; Finkel, S. M. (2008). Open hearts build lives: Positive emotions, induced through loving-kindness meditation, build consequential personal resources. <i>Journal of Personality and Social Psychology, 95</i>(5), 1045–1062.</li>
+      <li>Grossman, P. (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. <i>Biological Psychology, 180</i>, 108589.</li>
+      <li>Hodgdon, H. B., Anderson, F. G., Southwell, E., Hrubec, W., &amp; Schwartz, R. (2022). Internal Family Systems (IFS) therapy for posttraumatic stress disorder (PTSD) among survivors of multiple childhood trauma: A pilot effectiveness study. <i>Journal of Aggression, Maltreatment &amp; Trauma, 31</i>(1), 22–43.</li>
+      <li>Hofmann, S. G., Grossman, P., &amp; Hinton, D. E. (2011). Loving-kindness and compassion meditation: Potential for psychological interventions. <i>Clinical Psychology Review, 31</i>(7), 1126–1132.</li>
+      <li>Jung, C. G. (1959). <i>Aion: Researches into the Phenomenology of the Self</i>. Princeton University Press.</li>
+      <li>Lehrer, P. M., &amp; Gevirtz, R. (2014). Heart rate variability biofeedback: How and why does it work? <i>Frontiers in Psychology, 5</i>, 756.</li>
+      <li>Levine, P. A. (2010). <i>In an Unspoken Voice</i>. North Atlantic Books.</li>
+      <li>National Scientific Council on the Developing Child. (2015). <i>Supportive Relationships and Active Skill-Building Strengthen the Foundations of Resilience</i> (Working Paper 13). Center on the Developing Child, Harvard University.</li>
+      <li>Ogden, P., Minton, K., &amp; Pain, C. (2006). <i>Trauma and the Body</i>. Norton.</li>
+      <li>Porges, S. W. (2011). <i>The Polyvagal Theory</i>. Norton.</li>
+      <li>Schauer, M., &amp; Elbert, T. (2010). Dissociation following traumatic stress: Etiology and treatment. <i>Zeitschrift für Psychologie / Journal of Psychology, 218</i>(2), 109–127.</li>
+      <li>Schwartz, R. C. (2021). <i>No Bad Parts</i>. Sounds True.</li>
+      <li>Schwartz, R. C., &amp; Sweezy, M. (2020). <i>Internal Family Systems Therapy</i> (2nd ed.). Guilford.</li>
+      <li>Shadick, N. A., et al. (2013). A randomized controlled trial of an internal family systems-based psychotherapeutic intervention on outcomes in rheumatoid arthritis: A proof-of-concept study. <i>Journal of Rheumatology, 40</i>(11), 1831–1841.</li>
+      <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
+      <li>Taylor, S. E., Klein, L. C., Lewis, B. P., Gruenewald, T. L., Gurung, R. A. R., &amp; Updegraff, J. A. (2000). Biobehavioral responses to stress in females: Tend-and-befriend, not fight-or-flight. <i>Psychological Review, 107</i>(3), 411–429.</li>
+      <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
+    </ol>
+    <p class="foot">Created by Erin Singleton, a student in APPPAH's Prenatal &amp; Perinatal Educator certification, as a companion to The Return Mandala. A model for reflection and education, not diagnosis, therapy, or medical advice.</p>
+  </section>
+</div>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Content ----------
+   A model, built from earlier ones: the window of tolerance (Siegel), the ladder of states (Porges, Dana), the
+   defense cascade (Schauer and Elbert), fawn (Walker), tend and befriend (Taylor and colleagues), the thaw (Levine),
+   the Self and its parts (Schwartz, Internal Family Systems), and the science of resilience (Harvard). Written in our
+   own words, and offered as a map, not a measure. */
+
+// The four directions out from the Self. Each runs from a state inside the window, through its early signals at the
+// edge, to the defense it becomes outside the window. The angle is where it sits on the wheel, top first, clockwise.
+const DIRS = [
+  {key:"ff", angle:0, color:"--ff", name:"Fight or flight", move:"Moving against, or away",
+   win:{name:"Energized", words:"play, passion, focus", text:"Activation held by connection: the energy of play, of a good argument, of dancing, of a deadline you can meet. Your heart is up and your eyes are bright, and you are still yourself. Deb Dana calls this a blend of the safe, social state with the mobilizing one."},
+   edge:{name:"Revving", words:"restless, irritable, urgent", signs:["Restlessness, a jiggling leg, pacing","Irritability, a short fuse","Racing thoughts, a sense of urgency","A tight jaw, raised shoulders, shallow breath"]},
+   out:{words:"move against, or away", text:"When the body senses danger, it readies to fight it or to flee it. The heart pounds, breath quickens, muscles fill with blood, digestion stops, and the world narrows to the threat. Fight moves against it; flight moves away from it. Both are ancient and both are good at what they do.",
+     feels:["Pounding heart, fast breath, heat or sweat","Anger, rage, panic, or fear","Thoughts that race, blame, or plan escape","A strong urge to push, strike, shout, run, or leave"],
+     protects:"Your life, your boundaries, and the people you love. Fight carries the energy of a healthy no; flight carries the wisdom of getting out.",
+     voice:"\"I have to stop this.\" \"I have to get out.\"",
+     parts:"In Internal Family Systems terms, this is often the work of firefighter parts, which act fast to put out pain, and of angry protectors that stand guard.",
+     back:["Breathe out longer than you breathe in.","Push your palms into a wall, or your feet into the floor, and feel your strength.","Move it through: walk fast, shake out your arms, run up the stairs.","Orient: name five things you can see, slowly.","Find a steady face or voice, and let it slow you."],
+     questions:["What did my body do first: heat, tightness, a pounding heart?","What am I trying to stop, or get away from?","Is the danger here now, or is this old?","What would a healthy no sound like here?"]}},
+  {key:"fr", angle:90, color:"--fr", name:"Freeze", move:"Stopped, and charged",
+   win:{name:"Still", words:"presence, listening, awe", text:"Stillness held by safety: deep listening, quiet attention, being moved by music or a sky full of stars. Your body is quiet and alert at once, and you are fully here. This is the healthy root of freeze: the pause that lets you take in what is happening."},
+   edge:{name:"Bracing", words:"holding the breath, on guard", signs:["Holding your breath without noticing","Scanning, hypervigilance, startling easily","Trouble deciding, going still to avoid being seen","A braced body, locked knees, a fixed gaze"]},
+   out:{words:"stopped, and charged", text:"When fighting or fleeing cannot work, when you are trapped or outmatched, the body keeps the charge and puts on the brakes. Accelerator and brake at once: the heart may still race while the body cannot move. In the defense cascade this is the freeze, and in its strongest form, fright.",
+     feels:["Unable to move or speak, as if stuck","A pounding heart in a still body","Time slowing, the mind going blank","Feeling small, watched, or trapped"],
+     protects:"Your life, by keeping you unseen and ready. Many animals freeze so a predator passes them by.",
+     voice:"\"Don't move. Don't make a sound.\"",
+     parts:"Often the work of protector parts that keep you hidden, still, and out of trouble, sometimes holding a younger part's terror.",
+     back:["Start with tiny movements: wiggle your fingers and toes, then let them grow.","Let your eyes move slowly around the room, and turn your head with them.","Breathe out with a sound: a sigh, a hum, a low voom.","Say to yourself, \"I can move. I can leave if I need to.\"","If shaking or trembling comes, let it: it is often the charge releasing."],
+     questions:["Where in my body am I holding still?","What would happen if I moved?","Do I feel trapped? Is that true now?","What is the smallest movement I can make?"]}},
+  {key:"co", angle:180, color:"--co", name:"Collapse", move:"Stopped, and emptied",
+   win:{name:"Settled", words:"rest, surrender, intimacy", text:"Rest held by safety: sleep, digestion, lying in the grass, the soft surrender of being held by someone you trust. The body lets go because it can. This is the healthy root of collapse, the deep rest we all need."},
+   edge:{name:"Sinking", words:"heavy, foggy, withdrawing", signs:["Heaviness, low energy, wanting to lie down","Fogginess, losing words, drifting off","Pulling away from people","Flatness: things that usually matter seem not to"]},
+   out:{words:"stopped, and emptied", text:"When nothing seems to work, when the threat is too big or too long, the body drops the charge. Heart rate and blood pressure fall, muscles go slack, feeling goes numb or far away. It is the oldest defense: the body playing dead, or protecting itself from pain it cannot escape. Dissociation lives here.",
+     feels:["Numbness, heaviness, emptiness","Far away, foggy, unreal, outside yourself","Hopelessness, shame, nothing mattering","No energy to move or speak"],
+     protects:"You, from pain that could not be escaped or fought. Going numb and far away was the body's mercy.",
+     voice:"\"What's the point.\" \"I'm not here.\"",
+     parts:"Often protector parts that numb and disconnect, sometimes guarding exiles who carry the oldest pain.",
+     back:["Go gently. Warmth first: a blanket, a hot drink, a warm hand on your chest.","Orient: let your eyes find color and light; notice what is around you.","Small rhythmic movement: rocking, swaying, tapping.","A voice: someone's, or your own humming.","Expect the return to stir things up. Feeling more is a sign of coming back."],
+     questions:["How long have I been here?","When did I first notice going away?","What was too much just before?","What is one small sign of life I can feel right now?"]}},
+  {key:"fa", angle:270, color:"--fa", name:"Fawn", move:"Moving toward",
+   win:{name:"Connected", words:"warmth, care, kindness", text:"Care held by safety: warmth, kindness, attunement to another, with your own needs still in the room. You can tend to someone and stay yourself, and say no when you need to. This is the healthy root of fawn: our deep capacity to reach toward others for safety, which researchers call tend and befriend."},
+   edge:{name:"Over-tuning", words:"scanning moods, can't say no", signs:["Scanning other people's moods, managing them","A yes that isn't yours, or trouble saying no","Apologizing, smoothing things over, smiling when you're not okay","Losing track of what you feel or want"]},
+   out:{words:"move toward the threat", text:"When fighting, fleeing, or freezing are not safe, the body may move toward the threat: pleasing, placating, agreeing, becoming what is wanted. Pete Walker named this fawn. It often grows where a child could not fight or flee the very people they depended on, and appeasing them was the way to stay safe.",
+     feels:["Anxious attention fixed on someone else","Agreeing, flattering, giving in","A self that disappears","Anger and the urge to leave, held under the smile"],
+     protects:"Your belonging and your safety, by keeping the people you depend on calm.",
+     voice:"\"Whatever you need.\" \"It's fine, really.\"",
+     parts:"Often manager parts that keep everyone happy and keep you out of trouble, protecting younger parts that learned love had to be earned.",
+     back:["Pause before you answer: \"Let me think about that.\"","Ask, \"What do I feel? What do I want?\" and wait for the answer.","Find your feet and your own breath; feel your back against the chair.","Practice a small no, somewhere safe.","Let the anger that comes up be information about your limits."],
+     questions:["Whose feelings am I tracking right now?","What do I actually want here?","What am I afraid will happen if I say no?","Is this person safe to disagree with?"]}}
+];
+
+// Moving around the circle: each neighbor pair, both ways, and the two crossings
+const MOVES = [
+  {from:0, to:1, title:"From fight or flight into freeze",
+   text:"When fighting or fleeing cannot succeed, when you are trapped, cornered, or outmatched, the body keeps all its charge and puts on the brakes. The heart can stay high while the body stops. This is the moment of being stopped in your tracks.",
+   signs:"Sudden stillness, breath held, a blank mind, time slowing.",
+   helps:"Tiny movements and a slow exhale. Remind yourself you can move."},
+  {from:1, to:0, title:"From freeze into fight or flight",
+   text:"As the brakes release, the held charge surges back: a sudden urge to run or strike, shaking, heat, anger. This is often part of coming out of freeze, and it can feel alarming. The energy needs a safe way to move, not a target.",
+   signs:"Trembling, heat, a rush of fear or anger, the urge to move.",
+   helps:"Let it move safely: push, shake, walk fast. Don't act on it toward anyone."},
+  {from:1, to:2, title:"From freeze into collapse",
+   text:"When the freeze goes on too long or the threat cannot be escaped, the system drops the charge. Blood pressure falls, muscles go slack, feeling drains or goes far away. In the defense cascade this is the flag, and at its extreme, the faint.",
+   signs:"Going limp, numb, foggy, far away; a sinking or fainting feeling.",
+   helps:"Lie down safely, warmth, a steady voice, gentle orienting."},
+  {from:2, to:1, title:"From collapse into freeze",
+   text:"Coming back up from collapse usually passes through the charge that was dropped. As numbness lifts, fear, agitation, or trembling can return. It often feels worse before it feels better, and it is often the thaw beginning: the body coming back to life.",
+   signs:"Feeling returning as fear or restlessness, shaking, waves of emotion.",
+   helps:"Go slowly, back and forth between the feeling and something steady. Let the shaking happen. This is a good sign."},
+  {from:2, to:3, title:"From collapse into fawn",
+   text:"In more extreme cases, when shutting down is not safe enough, the social part of the nervous system comes back online in the service of survival: complying, submitting, placating. Defense research describes submission; Walker describes it as fawn. It can look like cooperation and feel like disappearing.",
+   signs:"Going along with things you don't want, a hollow politeness, an empty yes.",
+   helps:"Safety first. Then notice the yes that isn't yours, and find one tiny no."},
+  {from:3, to:2, title:"From fawn into collapse",
+   text:"When appeasing fails or exhausts you, giving up can follow: depletion, emptiness, the sense that nothing you do matters. Fawning takes enormous energy, and collapse is often where it runs out.",
+   signs:"Sudden exhaustion after caretaking, emptiness, wanting to disappear.",
+   helps:"Rest without earning it. Warmth. Someone who asks nothing of you."},
+  {from:3, to:0, title:"From fawn into fight or flight",
+   text:"The anger and the urge to leave that were held under the smile can surface: resentment flaring, an explosion that seems out of nowhere, a sudden exit. When it is met with understanding, this is boundary energy coming back, the healthy no returning.",
+   signs:"Resentment, sudden anger, wanting to leave, then guilt.",
+   helps:"Name the limit underneath the anger, and say it while it is still small."},
+  {from:0, to:3, title:"From fight or flight into fawn",
+   text:"When fighting or fleeing seems more dangerous than the threat, the body switches to appeasing it: smiling, apologizing, agreeing. This is common where a child could not fight or flee a caregiver, and had to make peace with them instead.",
+   signs:"Anger swallowed into a smile, apologizing when you are the one hurt.",
+   helps:"Notice the switch, and give the swallowed feeling a safe place to go later."}
+];
+const CROSSINGS = [
+  {title:"Straight across: fight or flight into collapse", text:"A shock can drop the body from high alarm straight into collapse, as in fainting at the sight of blood or bad news. The body goes from accelerator to off."},
+  {title:"Straight across: freeze and fawn", text:"Freeze and fawn can blend into frozen compliance: going still and going along at once, unable to object or to leave."}
+];
+
+// Coming home: orienting, and the way back toward the Self from anywhere on the wheel
+const HOME = {
+  intro:"From anywhere on the wheel, the way home runs inward. Orienting is the doorway: the first thing a body does before it leaves the window, and the first step back in.",
+  orient:"Orienting is turning toward your surroundings with your senses: letting your eyes move slowly and land on things, turning your head, noticing sounds, temperature, the ground under you. It tells the nervous system where you are and that, right now, you are here. Peter Levine and others use it as a first step out of freeze and collapse, and a way to settle fight or flight.",
+  steps:["Pause. Feel your feet, or your weight in the chair.","Let your eyes move slowly around the room. Let them rest on something pleasant: a color, a plant, the light.","Turn your head slowly, as an animal does when it checks that it is safe.","Notice three sounds, near and far.","Name where you are, the date, and your age: \"I am here, now.\"","Notice any small shift: a deeper breath, a swallow, a softening. That is the window opening."],
+  coreg:"Co-regulation comes before self-regulation. Babies borrow calm from a steady adult long before they can make it themselves, and adults keep that capacity all their lives. A calm voice, a steady presence, a hand on the back: the Harvard resilience research finds that a supportive relationship is what most turns overwhelming stress into stress we can bear."
+};
+
+// The Self at the center
+const SELF = {
+  intro:"At the center of this mandala is the Self, with a capital S: the calm, clear, compassionate presence at the core of every person. In Internal Family Systems, the therapy Richard Schwartz developed, the Self is never damaged, only crowded out, and healing is less about building it than about uncovering it.",
+  cs:[["Calm","a settled body and mind"],["Curiosity","wanting to know, without judging"],["Compassion","warmth toward suffering, including your own"],["Confidence","a quiet trust that you can meet this"],["Courage","willing to turn toward what is hard"],["Clarity","seeing what is, without distortion"],["Creativity","new possibilities, playfulness"],["Connectedness","belonging to yourself, to others, to life"]],
+  parts:"IFS describes the mind as made of parts, each with its own feelings and job. Managers try to keep life under control and pain away: the planner, the critic, the pleaser. Firefighters rush in when pain breaks through: the binge, the rage, the numbing. Exiles carry the old hurts, often from childhood, that the others protect. Every part has a good intention, even when its strategy causes harm. No bad parts.",
+  blend:"When a part takes over, we say it is blended: you feel its fear as if it were all of you. Unblending is asking it, kindly, to step back a little, so there is room for the Self. Then you can be with the part, rather than being it. On this wheel, the defensive states are often parts blending; the window is where there is room for Self.",
+  small:"So is there a lowercase self? In everyday life, what we call \"myself\" is usually a mix of parts: our habits, roles, and protections. That everyday self matters, and it is not the enemy. The capital Self is what remains when the parts relax: not a better personality, but the awareness that can hold all of them. This wheel does not give the small self its own ring, because it lives in every ring: it is whichever part is speaking.",
+  links:"Many traditions point to the same center. Carl Jung called the center of the psyche the Self, and saw it in mandalas. Contemplative traditions speak of awareness, presence, or Buddha nature. Therapists who work with both IFS and polyvagal theory often link Self-energy with the safe and connected state: when the body feels safe, Self comes forward more easily, and when Self is present, the body tends to settle.",
+  evidence:"What is measured, and what is a model. IFS has a growing research base: a randomized trial in rheumatoid arthritis found improvements in pain, depression, and self-compassion (Shadick and colleagues, 2013), and a pilot study of adults with childhood trauma found reductions in PTSD symptoms (Hodgdon and colleagues, 2022). It was listed as an evidence-based practice by a United States government registry in 2015. The research is still young. The Self itself is a clinical and spiritual concept, not something that can be measured, and it is offered here that way."
+};
+
+// Patterns: the routes a nervous system tends to take
+const PATTERNS = {
+  intro:"Most of us have favorite routes around the wheel: a state we go to first, a path we tend to travel, and places we rarely or never visit. These grow from what kept us safe, often early on. Knowing your route is not a diagnosis; it is a map of what your body learned.",
+  list:[
+    {name:"Fight and fawn", text:"Anger and appeasing take turns: keeping the peace, then resentment, then guilt, then keeping the peace again. Often learned where anger was dangerous but swallowing it was costly too.", q:"What happens to my anger after I smooth things over?"},
+    {name:"Flight and freeze", text:"Staying busy and then stopping dead: overworking, planning, moving, until the body suddenly won't. Often learned where slowing down felt unsafe.", q:"What would I feel if I stopped moving?"},
+    {name:"Freeze and collapse", text:"Going quiet, then far away. A tendency to disappear under pressure, to go blank, to sleep it off. Often learned where there was no way out and no one to turn to.", q:"When I go far away, what am I leaving?"},
+    {name:"Fawn and collapse", text:"Caretaking until empty: giving and giving, then crashing. Often learned where a child had to tend a parent's feelings.", q:"Who takes care of me when I'm depleted?"},
+    {name:"Straight to fight", text:"A short fuse: going from calm to anger fast, with few early signals. The window may be narrow at the top.", q:"What is the first, small sign before the anger?"},
+    {name:"A room never visited", text:"Some states are rarely felt at all, often because they were not allowed: people who never get angry, or never rest, or never let themselves need anyone. The missing state is often the one that carries what was not permitted.", q:"Which state do I never let myself feel? Who taught me it wasn't safe?"}
+  ],
+  prompts:["Under stress, where do I go first?","Which route do I travel most often around the wheel?","Which state do I rarely visit, and what might it carry?","How do I usually come back, and how long does it take?","Which part of me is running the show when I'm there? What is it protecting?","What is it afraid would happen if it stopped? (a question from IFS)"],
+  rights:"If you have walked The Return Mandala, notice the links. Fawn often grows where the Right to Freedom or the Right to Have Support was not safe. Collapse can have roots in the earliest Right to Exist. Fight and flight often guard the Right to Need."
+};
+
+// Triggers, regulation, and building resilience
+const REG = {
+  neuro:"Beneath awareness, the nervous system is always scanning for safety and danger. Stephen Porges calls this neuroception. A trigger is a cue, a tone of voice, a smell, a look, a time of year, that the body links with past danger, so it reacts before the mind knows why. Many triggers are implicit memories: the body remembering what the mind cannot.",
+  notice:["What happened just before? Where was I, who was there, what was said?","What did my body do first: tighten, heat, sink, freeze?","Which direction did I go: fight or flight, freeze, collapse, or fawn?","How far: just to the edge, or all the way out?","What helped me come back, and how long did it take?","Is this reaction the right size for now, or is it older?"],
+  menu:[
+    {name:"Bringing it down", dir:0, items:["A long exhale, out longer than in","Push against a wall, or squeeze and release your fists","Move: walk, shake, dance it through","Cool water on your face or wrists"]},
+    {name:"Unfreezing", dir:1, items:["Tiny movements that grow","Slow orienting with eyes and head","A sigh or a hum on the out-breath","\"I can move. I can leave.\""]},
+    {name:"Coming back up", dir:2, items:["Warmth and gentle rhythm: rocking, swaying","Something strong to taste or smell","Orienting to color and light","A voice, someone's or your own"]},
+    {name:"Coming back to yourself", dir:3, items:["Pause before you answer","\"What do I feel? What do I want?\"","Feel your own back and feet","A small, safe no"]}
+  ],
+  glimmers:"Deb Dana calls the tiny moments of safety and connection glimmers: sunlight on a wall, a friendly face, a cat stretching, the smell of rain. Noticing them, often and on purpose, trains the nervous system to find its way back to the center.",
+  resilience:["One supportive relationship. The most common finding in resilience research is at least one steady, caring person.","Skills, practiced inside the window. Regulation is easier to learn when you are calm than when you need it.","Manageable challenges. Small, supported stresses are how the window widens.","Good experiences. Play, beauty, rest, and meaning tip the scale.","Meaning and belonging. Faith, culture, and tradition are among the foundations of resilience."]
+};
+
+// Practices: cultivating the Self and widening the window
+const PRACTICES = [
+  {key:"breath", name:"Breathe with the Self", how:"Breathe in as the center widens and out as it softens: about five seconds in and five seconds out, six breaths a minute. Ten breaths is enough to begin.", why:"Slow breathing near six breaths a minute brings heart rhythm and breath into a smooth, synchronized pattern researchers call coherence (Lehrer and Gevirtz). It is one of the most reliable ways to steady the nervous system."},
+  {key:"kind", name:"Widening rings of kindness", how:"Begin with yourself: \"May I be safe. May I be at ease.\" Then widen the ring to someone you love, someone neutral, someone difficult, and all beings, as the rings move outward from the center.", why:"Loving-kindness practice begins at the center and widens, like this mandala. Studies find it increases positive emotion and a sense of connection over time (Fredrickson and colleagues, 2008; Hofmann and colleagues, 2011)."},
+  {key:"unblend", name:"Unblending", how:"Notice a feeling or a voice that has taken over. Find where it lives in your body. Ask it, kindly, \"Would you be willing to step back a little, so I can be with you?\" Notice any space that opens, and any calm, curiosity, or warmth that comes into it. Then ask the part what it wants you to know.", why:"Adapted from Internal Family Systems. When a part steps back, there is room for Self, and the defensive state often eases with it."},
+  {key:"glimmer", name:"Glimmers", how:"Three times today, notice something small that feels safe or good, and stay with it for three breaths.", why:"Practicing safety, not only managing danger, gives the nervous system a well-worn way home (Dana)."},
+  {key:"edge", name:"Touch the edge, and come back", how:"Inside your window, bring to mind something a little stressful. Notice your body begin to move toward the edge, then return to something steady. Back and forth, a few times, never going far.", why:"Titration and pendulation (Levine). Each safe return widens the window a little."}
+];
+
+// How wide is your window? A reflection, not a measure.
+const WIDTH = {
+  intro:"Your window changes with sleep, support, health, season, and day, so this is a reflection of how it tends to be lately, not a score. Answer for the last few weeks.",
+  items:["When something upsets me, I can still think clearly.","After stress, I come back to feeling okay within an hour or so.","I can feel strong emotions without being swept away by them.","I notice early signs in my body before I'm overwhelmed.","I can say no without a lot of guilt or fear.","I can rest without feeling I have to earn it.","I can be close to people and still feel like myself.","I have at least one person I can turn to."],
+  bands:[
+    {upto:0.34, name:"A narrow window, for now", text:"Small things may tip you out, and coming back takes a while. That is not a failing: it often means you have been carrying a lot, for a long time. Start with co-regulation and glimmers, and go gently. A guide can help widen it."},
+    {upto:0.67, name:"A window that is widening", text:"You can hold quite a lot, and you know your way back from some places better than others. Notice which direction narrows your window most, and practice there, inside the window."},
+    {upto:1.01, name:"A wide window", text:"You can feel a great deal and stay yourself. Hard days still come, and they will. The practices here keep the window wide and help you lend your steadiness to others."}
+  ]
+};
+
+// Where am I? A short finder
+const FINDER = [
+  {q:"How is your energy right now?", a:[["Revved up, high","high"],["Steady","steady"],["Low, drained, heavy","low"]]},
+  {q:"How connected do you feel, to yourself and others?", a:[["Connected","yes"],["Somewhat","some"],["Cut off","no"]]},
+  {q:"What does your body want to do?", a:[["Move: push, run, act","move"],["Stay still, it can't move","still"],["Rest, lie down","rest"],["Please someone, make it okay","please"]]}
+];
+
+const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the Self and its parts (Richard Schwartz), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
+
+/* ---------- Geometry ---------- */
+const VB = 490;
+const GAP = 1.2;
+// the rings grow and thin with capacity, t from 0 (narrow) to 1 (wide): the Self and the window widen,
+// the edge and the defenses thin, and the outer edge of the defenses stays where it is
+function radii(t){
+  const self=56+50*t, w0=self+6, w1=w0+104+64*t, e0=w1+6, e1=e0+60-40*t, o0=e1+6;
+  return {self, win:[w0,w1], edge:[e0,e1], out:[o0,404], tr:[417,433], braid:[452,476]};
+}
+let CAP=0.5, R=radii(CAP);
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("m");
+const rad = d => (d-90)*Math.PI/180;
+const P = (r,a) => [r*Math.cos(rad(a)), r*Math.sin(rad(a))];
+const f = n => n.toFixed(2);
+function el(tag, attrs, parent){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); (parent||svg).appendChild(e); return e; }
+function arc(r,a0,a1,sweep){ const [x,y]=P(r,a1); const large=Math.abs(a1-a0)>180?1:0; return `A${f(r)} ${f(r)} 0 ${large} ${sweep} ${f(x)} ${f(y)}`; }
+// annular sector; outer edge scalloped into n bumps
+const CURVE=23;   // how far each petal edge swells outward
+function sector(r0,r1,a0,a1,n,bulge,bulgeIn){
+  const s0=P(r0,a0); let d=`M${f(s0[0])} ${f(s0[1])}`;
+  const e0=P(r1,a0); d+=` L${f(e0[0])} ${f(e0[1])}`;
+  const step=(a1-a0)/n;
+  for(let i=0;i<n;i++){ const b0=a0+i*step, b1=b0+step, m=(b0+b1)/2;
+    if(bulge){ const c=P(r1+bulge,m), e=P(r1,b1); d+=` Q${f(c[0])} ${f(c[1])} ${f(e[0])} ${f(e[1])}`; }
+    else d+=" "+arc(r1,b0,b1,1);
+  }
+  d+=` L${f(P(r0,a1)[0])} ${f(P(r0,a1)[1])} `;
+  if(bulgeIn){ const c=P(r0+bulgeIn,(a0+a1)/2), e=P(r0,a0); d+=`Q${f(c[0])} ${f(c[1])} ${f(e[0])} ${f(e[1])}Z`; }
+  else d+=arc(r0,a1,a0,0)+"Z";
+  return d;
+}
+// an annular sector whose corners can be rounded: o.rOut rounds the two outer corners and o.rIn the two inner ones
+// (each only where that edge is a plain arc); o.out and o.in swell the outer and inner edges as sector() does
+function rsector(r0,r1,a0,a1,o){
+  const p=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`, dA=(rc,r)=>rc/r*180/Math.PI, m=(a0+a1)/2;
+  const ro=o.out?0:(o.rOut||0), ri=o.in?0:(o.rIn||0);
+  let d=`M${p(r0+ri,a0)} L${p(r1-ro,a0)}`;
+  if(ro) d+=` Q${p(r1,a0)} ${p(r1,a0+dA(ro,r1))} `+arc(r1,a0+dA(ro,r1),a1-dA(ro,r1),1)+` Q${p(r1,a1)} ${p(r1-ro,a1)}`;
+  else if(o.out) d+=` L${p(r1,a0)} Q${p(r1+o.out,m)} ${p(r1,a1)}`;
+  else d+=` L${p(r1,a0)} `+arc(r1,a0,a1,1);
+  d+=` L${p(r0+ri,a1)}`;
+  if(ri) d+=` Q${p(r0,a1)} ${p(r0,a1-dA(ri,r0))} `+arc(r0,a1-dA(ri,r0),a0+dA(ri,r0),0)+` Q${p(r0,a0)} ${p(r0+ri,a0)}Z`;
+  else if(o.in) d+=` L${p(r0,a1)} Q${p(r0+o.in,m)} ${p(r0,a0)}Z`;
+  else d+=` L${p(r0,a1)} `+arc(r0,a1,a0,0)+"Z";
+  return d;
+}
+// soft corners: the outer edge of your beginning, and where the need ring first rises from it
+const CORNER = {q:15, need:9};
+// a rounder, taller petal: the sides rise from the base and meet in a dome, rather than a point
+function bloom(r0,r1,a0,a1,bulgeIn){
+  const h=r1-r0, w=a1-a0, m=(a0+a1)/2, p=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
+  return `M${p(r0,a0)} C${p(r0+h*0.62,a0-w*0.03)} ${p(r1+2,m-w*0.2)} ${p(r1,m)} C${p(r1+2,m+w*0.2)} ${p(r0+h*0.62,a1+w*0.03)} ${p(r0,a1)} `+
+    (bulgeIn ? `Q${p(r0+bulgeIn,m)} ${p(r0,a0)}Z` : arc(r0,a1,a0,0)+"Z");
+}
+function petal(r0,r1,a0,a1,bulgeIn){
+  const m=(a0+a1)/2, w=(a1-a0);
+  const b0=P(r0,a0), b1=P(r0,a1), tip=P(r1,m);
+  const c0=P(r0+(r1-r0)*.62,a0-w*.08), c1=P(r0+(r1-r0)*.62,a1+w*.08);
+  return `M${f(b0[0])} ${f(b0[1])} Q${f(c0[0])} ${f(c0[1])} ${f(tip[0])} ${f(tip[1])} Q${f(c1[0])} ${f(c1[1])} ${f(b1[0])} ${f(b1[1])} `+(bulgeIn ? `Q${f(P(r0+bulgeIn,m)[0])} ${f(P(r0+bulgeIn,m)[1])} ${f(b0[0])} ${f(b0[1])}` : arc(r0,a1,a0,0))+"Z";
+}
+// text path along an arc that reads upright
+let tpId=0;
+function arcText(r,a0,a1,text,cls,size,ls,parent){
+  const m=((a0+a1)/2+360)%360, flip = m>95 && m<265;
+  const id="tp"+(tpId++);
+  const rr = flip ? r+size*0.35 : r-size*0.35;
+  const [sx,sy]=P(rr, flip?a1:a0);
+  el("path",{id, d:`M${f(sx)} ${f(sy)} `+arc(rr, flip?a1:a0, flip?a0:a1, flip?0:1), fill:"none"}, parent);
+  const t=el("text",{class:cls, "font-size":size, "text-anchor":"middle", "letter-spacing":ls||0}, parent);
+  const tp=el("textPath",{href:"#"+id, startOffset:"50%"}, t); tp.textContent=text; return t;
+}
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const KEYS=["ff","fr","co","fa"];
+const dA=k=>[DIRS[k].angle-45, DIRS[k].angle+45];
+const moveIndex=(a,b)=>MOVES.findIndex(m=>m.from===a&&m.to===b);
+const moveColor=i=>`var(${DIRS[MOVES[i].to].color})`;
+// a two-line label along an arc that keeps its first line on top, whichever side of the wheel it is on
+function twoLine(r,a0,a1,l1,l2,c1,c2,s1,s2,gap,parent){
+  const m=((a0+a1)/2+360)%360, flip=m>95&&m<265, up=flip?-gap/2:gap/2;
+  arcText(r+up,a0,a1,l1,c1,s1,0.3,parent);
+  if(l2) arcText(r-up,a0,a1,l2,c2,s2,0.2,parent);
+}
+
+// A ring segment whose outer edge follows the circle and swells gently toward its middle, so a wide quarter of the
+// wheel stays round instead of flattening into a chord. o.out is the swell; o.rIn rounds the two inner corners.
+function swell(r0,r1,a0,a1,o){
+  const p=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`, dA=(rc,r)=>rc/r*180/Math.PI, ri=o.rIn||0, N=60;
+  let d=`M${p(r0+ri,a0)} L${p(r1,a0)}`;
+  for(let i=1;i<=N;i++){ const u=i/N; d+=` L${p(r1+(o.out||0)*Math.sin(Math.PI*u), a0+(a1-a0)*u)}`; }
+  d+=` L${p(r0+ri,a1)}`;
+  if(ri) d+=` Q${p(r0,a1)} ${p(r0,a1-dA(ri,r0))} `+arc(r0,a1-dA(ri,r0),a0+dA(ri,r0),0)+` Q${p(r0,a0)} ${p(r0+ri,a0)}Z`;
+  else d+=` L${p(r0,a1)} `+arc(r0,a1,a0,0)+"Z";
+  return d;
+}
+// The outer rings flow in a gradient round the circle: each defense's color holds at its center and melts into its
+// neighbor's toward the border, so the colors themselves show the movement between states.
+const hexRGB=h=>{ h=h.trim().replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join(""); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)); };
+const mixRGB=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+const rgb=c=>`rgb(${c.map(v=>Math.round(v)).join(",")})`;
+let PAL=null;
+function readPalette(){ PAL={base:DIRS.map(d=>hexRGB(cssv(d.color))), surface:hexRGB(cssv("--surface"))}; }
+function colorAt(theta, layer){
+  const pos=(((theta%360)+360)%360)/90, i=Math.floor(pos)%4, j=(i+1)%4, u=pos-Math.floor(pos), s=u*u*(3-2*u);
+  const c=mixRGB(PAL.base[i],PAL.base[j],s);
+  return rgb(layer==="edge" ? mixRGB(c,PAL.surface,0.6) : c);
+}
+let clipN=0;
+function shade(layer,k,d,r0,r1,a0,a1){
+  const id=`clip-${layer}${k}-${clipN++}`, defs=document.getElementById("wdefs");
+  const cp=el("clipPath",{id},defs); el("path",{d},cp);
+  const g=el("g",{class:"shade","clip-path":`url(#${id})`,"pointer-events":"none"}); g.dataset.slice="d"+k;
+  for(let a=a0-2; a<a1+2; a+=1.5) el("path",{d:sector(r0-4,r1+22,a,a+2.1,1,0),fill:colorAt(a+1,layer)},g);
+  if(layer==="out") el("path",{d,fill:"url(#sheen)"},g);
+  return g;
+}
+
+/* ---------- Draw ---------- */
+const cells=[];
+const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the window"};
+function cellTip(layer,k){
+  const d=DIRS[k], tag=`<span class="ringtag">${LAYER_TAG[layer]}</span>`, more="<span>Tap to read more.</span>";
+  if(layer==="win") return `${tag}<b>${d.win.name}</b>${d.win.words}${more}`;
+  if(layer==="edge") return `${tag}<b>${d.edge.name}</b>${d.edge.words}<span>The early signals of ${d.name.toLowerCase()}</span>${more}`;
+  return `${tag}<b>${d.name}</b>${d.out.words}${more}`;
+}
+function hookTip(node, info, go){
+  node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(null); go(); });
+  node.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+  node.addEventListener("mouseenter",()=>{ hover(node); if(!openMoon) moonTip(node,info(),true); });
+  node.addEventListener("mouseleave",()=>{ hover(null); if(!openMoon) moonTip(null); });
+  node.addEventListener("focus",()=>{ hover(node); if(!openMoon && node.matches(":focus-visible")) moonTip(node,info(),true); });
+  node.addEventListener("blur",()=>{ hover(null); if(!openMoon) moonTip(null); });
+}
+function addCell(d, layer, k, fill){
+  const c=el("path",{d, class:"cell", fill:fill?`var(${fill})`:"transparent", tabindex:"0", role:"button", "aria-label":`${layer==="out"?DIRS[k].name:DIRS[k][layer].name}, ${LAYER_TAG[layer].toLowerCase()}`});
+  c.dataset.layer=layer; c.dataset.k=k; c.dataset.slice="d"+k;
+  const r=R[layer], mid=(r[0]+r[1])/2;
+  hookTip(c,()=>{ const [x,y]=P(mid,DIRS[k].angle); return {x,y,html:cellTip(layer,k),color:DIRS[k].color}; },()=>showDir(k,layer,true));
+  cells.push(c); return c;
+}
+/* The braid: three strands, the body, the breath, and the bond, plaited around the whole wheel.
+   Each strand weaves in and out across the band and passes over one strand, then under the other,
+   in turn. Every strand is cut into pieces where it changes from lying underneath to lying on top;
+   the lower pieces are drawn first and the upper pieces over them, so each crossing shows who is on top. */
+function drawBraid(){
+  const hit=el("path",{d:`M0 ${-R.braid[1]-4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${R.braid[1]+4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${-R.braid[1]-4} M0 ${-R.braid[0]+4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${R.braid[0]-4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${-R.braid[0]+4}Z`,
+    class:"braidhit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The braid. Read what it means"});
+  const html=`<b>The braid</b>Three strands woven together: the body, the breath, and the bond with others. Together they hold the window open.`;
+  hit.addEventListener("click",e=>{ e.stopPropagation();
+    if(hit.classList.contains("open")){ moonTip(null); return; }
+    const pt=new DOMPoint(e.clientX,e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    moonTip(hit,{x:pt.x,y:pt.y,html}); });
+  hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); moonTip(hit,{x:0,y:-(R.braid[0]+R.braid[1])/2,html}); } });
+  hit.addEventListener("blur",()=>{ if(openMoon===hit) moonTip(null); });
+  const g=el("g",{class:"braid","pointer-events":"none","aria-hidden":"true"});
+  const rc=(R.braid[0]+R.braid[1])/2, A=8.5, N=57, SUB=8;   // N plaits round the circle
+  const strands=[["--self",0],["--gold",2*Math.PI/3],["--fa",4*Math.PI/3]];
+  const pieces=[[],[]];   // [under, over]
+  // strand k sits at A·sin(t+φ) across the band, with depth sin(2(t+φ)); depth keeps one sign over each quarter turn
+  strands.forEach(([color,ph])=>{
+    for(let m=0;m<N*4;m++){
+      const t0=m*Math.PI/2-ph, pts=[];
+      for(let j=0;j<=SUB;j++){ const t=t0+j*Math.PI/(2*SUB), [x,y]=P(rc+A*Math.sin(t+ph), t*180/(Math.PI*N)); pts.push((j?"L":"M")+f(x)+" "+f(y)); }
+      pieces[m%2===0?1:0].push([pts.join(" "),color]);
+    }
+  });
+  pieces.forEach(list=>list.forEach(([d,color])=>{
+    el("path",{d,fill:"none",stroke:"var(--bg)","stroke-width":10,"stroke-linecap":"butt"},g);
+    el("path",{d,fill:"none",stroke:`var(${color})`,"stroke-width":6.5,"stroke-linecap":"round"},g);
+  }));
+}
+
+function draw(){
+  svg.innerHTML=""; cells.length=0; tpId=0; clipN=0; R=radii(CAP); readPalette();
+  const wdefs=el("defs",{id:"wdefs"});
+  const rr=R.out[1]+16, sh=el("radialGradient",{id:"sheen",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:rr},wdefs);
+  [[R.out[0]/rr,"#fff",0.26],[(R.out[0]+R.out[1])/2/rr,"#fff",0.04],[R.out[1]/rr,"#000",0.04],[1,"#000",0.2]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},sh));
+  const sun=el("radialGradient",{id:"sun",cx:"50%",cy:"45%",r:"60%"},wdefs);
+  [[0,"--sun1"],[0.45,"--sun2"],[0.82,"--sun3"],[1,"--sun4"]].forEach(([o,v])=>el("stop",{offset:o,"stop-color":`var(${v})`},sun));
+  const glow=el("radialGradient",{id:"glow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(R.self+46)},wdefs);
+  [[R.self/(R.self+46),0.55],[1,0]].forEach(([o,a])=>el("stop",{offset:f(o),"stop-color":"var(--sun2)","stop-opacity":a},glow));
+  drawBraid();
+  const labels=el("g",{"pointer-events":"none"});
+  DIRS.forEach((d,k)=>{
+    const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
+    const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
+    const dOut=swell(R.out[0],R.out[1],b0,b1,{out:16,rIn:10}), dEdge=swell(R.edge[0],R.edge[1],b0,b1,{out:8,rIn:6});
+    shade("out",k,dOut,R.out[0],R.out[1],b0,b1); shade("edge",k,dEdge,R.edge[0],R.edge[1],b0,b1);
+    addCell(dOut,"out",k,null); addCell(dEdge,"edge",k,null);
+    addCell(rsector(R.win[0],R.win[1],b0,b1,{rOut:14}),"win",k,"--w-"+key);
+    const om=(R.out[0]+R.out[1])/2, em=(R.edge[0]+R.edge[1])/2, wm=(R.win[0]+R.win[1])/2;
+    twoLine(om,b0+3,b1-3,d.name,ot>70?d.out.words:"","lbl t-out","lbl t-out t-sub",ot>100?24:20,12.5,ot>100?30:24,labels);
+    if(et>=26) twoLine(em,b0+3,b1-3,d.edge.name,et>46?d.edge.words:"","lbl t-edge","lbl t-edge t-sub",14,11.5,20,labels);
+    else arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge",Math.max(10,et*0.55),0.2,labels);
+    twoLine(wm,b0+3,b1-3,d.win.name,wt>120?d.win.words:"","lbl t-win","lbl t-win t-sub",18,12.5,24,labels);
+  });
+  // the window's edge: dashed, with four gold doorways where orienting brings you back in
+  el("circle",{cx:0,cy:0,r:R.win[1]+3,fill:"none",stroke:"var(--self)","stroke-width":2,"stroke-dasharray":"7 6","pointer-events":"none"});
+  [45,135,225,315].forEach(a=>{
+    const [x,y]=P(R.win[1]+3,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
+    el("circle",{cx:f(x),cy:f(y),r:8},g);
+    hookTip(g,()=>({x,y,html:`<b>Orienting</b>The doorway home, from anywhere on the wheel.<span>Tap to read more.</span>`}),()=>showHome(true));
+  });
+  // the movements between neighbors: clockwise on the inner track, the other way on the outer
+  const trs=el("g",{});
+  DIRS.forEach((d,k)=>{
+    const n=(k+1)%4, s=d.angle+13, e=(n===0?360:DIRS[n].angle)-13;
+    [[k,n,R.tr[0],s,e,1],[n,k,R.tr[1],e,s,0]].forEach(([from,to,r,x0,x1,sw])=>{
+      const i=moveIndex(from,to), [sx,sy]=P(r,x0), dd=`M${f(sx)} ${f(sy)} `+arc(r,x0,x1,sw);
+      const vis=el("path",{d:dd,class:"tr","marker-end":"url(#tip)",id:"tr"+i},trs);
+      const hit=el("path",{d:dd,class:"trhit",tabindex:"0",role:"button","aria-label":MOVES[i].title},trs);
+      hit.dataset.slice="t"+i;
+      hookTip(hit,()=>{ const [x,y]=P(r,(x0+x1)/2); return {x,y,html:`<b>${MOVES[i].title}</b>${MOVES[i].signs}<span>Tap to read more.</span>`,color:DIRS[to].color}; },()=>showMoves(i,true));
+    });
+  });
+  const defs=document.getElementById("wdefs"); const mk=el("marker",{id:"tip",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse"},defs);
+  el("path",{d:"M1 1L8 5L1 9",fill:"none",stroke:"context-stroke","stroke-width":"1.6","stroke-linecap":"round","stroke-linejoin":"round"},mk);
+  svg.appendChild(labels);
+  // the Self at the center
+  // warmth radiating out into the window, and the sun's rays
+  const rays=el("g",{"pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:f(R.self+46),fill:"url(#glow)"},rays);
+  for(let i=0;i<24;i++){ const a=i*15, long=i%2===0, r0=R.self+1, r1=R.self+(long?17:10), w=long?3.2:2.4;
+    const [x0,y0]=P(r0,a-w), [x1,y1]=P(r1,a), [x2,y2]=P(r0,a+w);
+    el("path",{d:`M${f(x0)} ${f(y0)} L${f(x1)} ${f(y1)} L${f(x2)} ${f(y2)}Z`,fill:long?"var(--sun3)":"var(--sun2)",opacity:.9},rays); }
+  const core=el("g",{id:"core",class:"cell",tabindex:"0",role:"button","aria-label":"The Self, at the center. Read about it"});
+  el("circle",{cx:0,cy:0,r:R.self,fill:"url(#sun)"},core);
+  const sr=R.self*0.29, sg=el("g",{fill:"none",stroke:"var(--sunline)","stroke-width":2.4,opacity:.8,"pointer-events":"none",transform:`translate(0 ${f(-R.self*0.1)})`},core);
+  for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
+    el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"var(--sun1)",stroke:"none",opacity:.85},sg); }
+  el("circle",{cx:0,cy:0,r:f(sr)},sg);
+  for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2; el("circle",{cx:f(sr*Math.cos(t)),cy:f(sr*Math.sin(t)),r:f(sr)},sg); }
+  el("circle",{cx:0,cy:0,r:f(sr*2),"stroke-width":2.2,opacity:.85},sg);
+  const st=el("text",{x:0,y:f(R.self*0.84),"text-anchor":"middle","dominant-baseline":"central",class:"lbl t-self","font-size":f(Math.max(15,R.self*0.24)),"letter-spacing":"1.5",stroke:"none","pointer-events":"none"},core); st.textContent="SELF";
+  core.addEventListener("click",()=>showSelf(true));
+  core.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showSelf(true); } });
+  const tip=document.getElementById("coretip");
+  ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
+  ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
+  el("g",{id:"kind"});
+  el("g",{id:"selOutline"});
+  applySel(); setKind(kindOn);
+}
+function hover(node){
+  if(!node){ svg.classList.remove("dimming"); cells.forEach(c=>c.classList.remove("off")); svg.querySelectorAll(".shade.off").forEach(g=>g.classList.remove("off")); return; }
+  const s=node.dataset.slice; if(!s||s[0]==="t") return;
+  svg.classList.add("dimming"); cells.forEach(c=>c.classList.toggle("off",c.dataset.slice!==s));
+  svg.querySelectorAll(".shade").forEach(g=>g.classList.toggle("off",g.dataset.slice!==s));
+}
+
+/* ---------- Hover cards ---------- */
+const mtip=document.getElementById("moontip");
+// tap or click pins a card open; a mouse hover shows it while over; keyboard focus opens it too
+function tipOn(node, info){
+  node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(node.classList.contains("open")?null:node,info()); });
+  node.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); moonTip(node,info()); } });
+  node.addEventListener("mouseenter",()=>{ if(!openMoon) moonTip(node,info(),true); });
+  node.addEventListener("mouseleave",()=>{ if(!openMoon) moonTip(null); });
+  node.addEventListener("focus",()=>{ if(node.matches(":focus-visible")) moonTip(node,info()); });
+  node.addEventListener("blur",()=>{ if(openMoon===node) moonTip(null); });
+}
+let openMoon=null;
+function moonTip(mk, info, hoverOnly){
+  if(openMoon) openMoon.classList.remove("open");
+  openMoon=null;
+  if(!mk){ mtip.classList.remove("on"); return; }
+  if(!hoverOnly){ openMoon=mk; mk.classList.add("open"); }
+  mtip.innerHTML=info.html;
+  mtip.classList.toggle("ringed",!!info.color);
+  if(info.color) mtip.style.setProperty("--tipc",`var(${info.color})`);
+  const box=mtip.parentElement, W=box.clientWidth, scale=W/(2*VB);
+  const px=(info.x+VB)*scale, py=(info.y+VB)*scale, w=mtip.offsetWidth, h=mtip.offsetHeight;
+  const left=Math.min(Math.max(px-w/2, 0), W-w);
+  const above=py-h-22*scale-6;
+  mtip.style.left=left+"px"; mtip.style.top=(above>=0 ? above : py+22*scale+6)+"px";
+  mtip.classList.add("on");
+}
+document.addEventListener("click",()=>{ if(openMoon) moonTip(null); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && openMoon) moonTip(null); });
+window.addEventListener("resize",()=>moonTip(null));
+
+
+/* ---------- Capacity ---------- */
+const cap=document.getElementById("cap"), capname=document.getElementById("capname");
+function bandOf(t){ return WIDTH.bands.find(b=>t<b.upto); }
+function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(CAP*100); capname.textContent=bandOf(CAP).name; if(redraw!==false) draw(); }
+cap.addEventListener("input",()=>setCap(cap.value/100));
+document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
+
+/* ---------- Practices on the wheel ---------- */
+let kindOn=false;
+const pbreath=document.getElementById("pbreath"), pkind=document.getElementById("pkind");
+function setBreath(on){ svg.classList.toggle("breathing",on); pbreath.setAttribute("aria-pressed",on?"true":"false"); }
+function setKind(on){
+  kindOn=on; pkind.setAttribute("aria-pressed",on?"true":"false");
+  const g=document.getElementById("kind"); if(!g) return; g.innerHTML="";
+  if(!on) return;
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  [0,3,6].forEach((delay,i)=>{
+    if(reduce){ el("circle",{cx:0,cy:0,r:f(R.self+(R.out[1]-R.self)*(i+1)/4),class:"kring",style:"opacity:.5"},g); return; }
+    el("circle",{cx:0,cy:0,r:f(R.self),class:"kring",style:`--to:${f(R.out[1]/R.self)};animation-delay:${delay}s`},g);
+  });
+}
+pbreath.addEventListener("click",()=>setBreath(pbreath.getAttribute("aria-pressed")!=="true"));
+pkind.addEventListener("click",()=>setKind(!kindOn));
+
+/* ---------- Panel ---------- */
+const panel=document.getElementById("panel"), tabs=document.getElementById("tabs"), dnav=document.getElementById("dirnav");
+let sel={kind:null,k:null,layer:null}, view="intro";
+function addTab(label,key,go){ const b=document.createElement("button"); b.className="tab"; b.type="button"; b.setAttribute("role","tab"); b.textContent=label; b.dataset.tab=key; b.addEventListener("click",go); tabs.appendChild(b); }
+addTab("How to read","intro",()=>showIntro());
+addTab("Where am I?","where",()=>showWhere(true));
+addTab("The Self","self",()=>showSelf(true));
+addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
+addTab("Moving between","moves",()=>showMoves(null,true));
+addTab("Patterns","patterns",()=>showPatterns(true));
+addTab("Triggers and regulation","reg",()=>showReg(true));
+addTab("Practices","practice",()=>showPractice(true));
+DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${d.name}`; b.dataset.k=k; b.addEventListener("click",()=>showDir(k,null,true)); dnav.appendChild(b); });
+function sw(v){ return `<span class="sw" style="background:var(${v})"></span>`; }
+function ul(items,cls){ return `<ul${cls?` class="${cls}"`:""}>`+items.map(i=>`<li>${i}</li>`).join("")+"</ul>"; }
+const isNarrow=()=>window.matchMedia("(max-width:900px)").matches;
+function markTabs(){
+  [...tabs.children].forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===view?"true":"false"));
+  dnav.hidden=view!=="dir";
+  [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
+}
+function setView(v,s){ view=v; sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+function wire(){
+  panel.querySelectorAll("[data-dir]").forEach(b=>b.addEventListener("click",()=>showDir(+b.dataset.dir,b.dataset.layer||null,true)));
+  panel.querySelectorAll("[data-move]").forEach(b=>b.addEventListener("click",()=>showMoves(+b.dataset.move,true)));
+  panel.querySelectorAll("[data-home]").forEach(b=>b.addEventListener("click",()=>showHome(true)));
+  panel.querySelectorAll("[data-self]").forEach(b=>b.addEventListener("click",()=>showSelf(true)));
+  panel.querySelectorAll("[data-where]").forEach(b=>b.addEventListener("click",()=>showWhere(true,b.dataset.where||null)));
+  panel.querySelectorAll("[data-practice]").forEach(b=>b.addEventListener("click",()=>showPractice(true)));
+  panel.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>showReg(true)));
+  panel.querySelectorAll("[data-patterns]").forEach(b=>b.addEventListener("click",()=>showPatterns(true)));
+}
+function applySel(){
+  cells.forEach(c=>c.classList.toggle("sel", sel.kind==="dir" && +c.dataset.k===sel.k && (!sel.layer||c.dataset.layer===sel.layer)));
+  document.querySelectorAll(".tr").forEach(p=>p.classList.toggle("on", sel.kind==="move" && p.id==="tr"+sel.k));
+  const so=document.getElementById("selOutline"); if(!so) return; so.innerHTML="";
+  if(sel.kind==="dir"){ const [a0,a1]=dA(sel.k);
+    if(sel.layer){ const r=R[sel.layer]; el("path",{d:sel.layer==="win"?rsector(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{rOut:15}):swell(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{out:sel.layer==="out"?16:8})},so); }
+    else el("path",{d:swell(R.win[0]-2,R.out[1]+2,a0+GAP/2,a1-GAP/2,{out:16})},so); }
+}
+
+const CENTER_HTML=`<div class="center-msg">
+    <div class="eyebrow">Begin here</div>
+    <h2>The Self at the center</h2>
+    <p>At the center of this mandala is the Self: the calm, curious, compassionate presence at the core of every person. Around it is your window of capacity, the range in which you can feel a great deal, energy, stillness, rest, and closeness, and still be yourself.</p>
+    <p>When something is too much, the body moves out of the window in one of four directions to protect you: against or away from the threat, still and charged, still and emptied, or toward the threat to appease it. Each is an ancient survival strategy, and each has a healthy root inside the window. The body can move between them, around the circle in either direction, and back.</p>
+    <p>The way home always runs inward, through orienting, connection, and the Self. And the window is not fixed: with safety, support, and practice, the center grows and the rings of threat thin.</p>
+  </div>`;
+function showIntro(){
+  setView("intro");
+  panel.innerHTML=CENTER_HTML+`<div class="intro">
+    <h2>Reading the wheel</h2>
+    <ul class="legend">
+      <li>${sw("--sun3")}<div><b>The Self</b>The center: calm, curiosity, compassion, connectedness. What remains when every part can rest.</div></li>
+      <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction: energized, still, settled, and connected. The dashed line is the window's edge.</div></li>
+      <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals that you are leaving the window: revving, bracing, sinking, over-tuning. Catching them here makes the way back short.</div></li>
+      <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses: fight or flight at the top, freeze to the right, collapse below, fawn to the left.</div></li>
+      <li>${sw("--gold")}<div><b>Doorways and movements</b>The gold doorways on the window's edge are orienting, the way back in. The arrows around the outside are the movements between defenses, both ways.</div></li>
+    </ul>
+    <p>Read out from the center along any direction: the healthy state, its early signals, and the defense it can become. Read around the outside for how one defense can turn into another. Read inward for the way home.</p>
+    <p class="note">This is a model: a map drawn from earlier maps, theory-based and offered from an evolutionary perspective. See About this mandala, below the wheel.</p>
+    <p><button type="button" class="btn" data-where>Where am I right now?</button></p>
+  </div>`;
+  wire();
+}
+
+// Where am I? The finder, and how wide is my window
+function showWhere(user, focus){
+  setView("where");
+  panel.innerHTML=`<div class="phasehead"><h2>Where am I?</h2><div class="meta">Right now, and lately</div>
+      <p>Two short reflections: where you are in this moment, and how wide your window tends to be. Neither is a test. They are ways of noticing.</p></div>
+    <div class="ring" id="finder"><h3>Right now</h3><div class="finder">${FINDER.map((f,i)=>`<div class="fq"><p>${f.q}</p><div class="fopts">${f.a.map(([t,v])=>`<button type="button" data-q="${i}" data-v="${v}" aria-pressed="false">${t}</button>`).join("")}</div></div>`).join("")}</div>
+      <div id="findout"></div></div>
+    <div class="ring" id="width"><h3>How wide is my window?</h3><p class="about">${WIDTH.intro}</p>
+      ${WIDTH.items.map((t,i)=>`<div class="wq"><p>${t}</p><div class="fopts">${["Rarely","Sometimes","Often"].map((l,v)=>`<button type="button" data-w="${i}" data-v="${v}" aria-pressed="false">${l}</button>`).join("")}</div></div>`).join("")}
+      <div id="widthout"><p class="hint">Answer all eight to see your window drawn on the wheel.</p></div></div>`;
+  const ans={}, wans={};
+  panel.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{
+    const q=+b.dataset.q; ans[q]=b.dataset.v;
+    panel.querySelectorAll(`[data-q="${q}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+    if(Object.keys(ans).length===3) findResult(ans);
+  }));
+  panel.querySelectorAll("[data-w]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.w; wans[i]=+b.dataset.v;
+    panel.querySelectorAll(`[data-w="${i}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+    if(Object.keys(wans).length===WIDTH.items.length){
+      const t=Object.values(wans).reduce((a,b)=>a+b,0)/(2*WIDTH.items.length), band=bandOf(t);
+      setCap(t);
+      document.getElementById("widthout").innerHTML=`<div class="result"><h3>${band.name}</h3><p>${band.text}</p><p class="about">The wheel now shows a window about this wide. It will change, and widening it is the work of the practices.</p><button type="button" class="linkbtn" data-practice>Practices for widening the window</button></div>`;
+      wire();
+    }
+  }));
+  if(user) bringPanel(focus?document.getElementById(focus):null);
+}
+function findResult(a){
+  // energy, connection, and urge together point to a place on the wheel
+  let layer, k;
+  if(a[0]==="steady" && a[1]==="yes"){ layer="win"; k = a[2]==="rest"?2 : a[2]==="please"?3 : a[2]==="still"?1 : 0; }
+  else {
+    k = a[2]==="please" ? 3 : a[2]==="still" ? (a[0]==="low"?2:1) : a[2]==="rest" ? 2 : (a[0]==="low"?2:0);
+    if(a[0]==="low" && a[2]==="move") k=2;
+    layer = a[1]==="yes" ? "win" : a[1]==="some" ? "edge" : "out";
+  }
+  const d=DIRS[k], name = layer==="win"?d.win.name : layer==="edge"?d.edge.name : d.name;
+  const text = layer==="win" ? `You may be inside your window, in its ${d.win.name.toLowerCase()} side: ${d.win.words}.`
+    : layer==="edge" ? `You may be near the edge, toward ${d.name.toLowerCase()}: ${d.edge.words}. This is the easiest place to come back from.`
+    : `You may be outside your window, in ${d.name.toLowerCase()}. Nothing is wrong with you: your body is protecting you.`;
+  sel={kind:"dir",k,layer}; applySel();
+  document.getElementById("findout").innerHTML=`<div class="result"><h3>${name}</h3><p>${text}</p>
+    ${layer!=="win"?`<h4>A first step back</h4>${ul(d.out.back.slice(0,3))}`:""}
+    <p><button type="button" class="linkbtn" data-dir="${k}" data-layer="${layer}">Read about ${name.toLowerCase()}</button> · <button type="button" class="linkbtn" data-home>Coming home</button></p></div>`;
+  wire();
+}
+
+function showSelf(user){
+  setView("self");
+  const S=SELF;
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The center</div><h2>The Self</h2><div class="meta">With a capital S</div><p>${S.intro}</p></div>
+    <div class="ring"><h3>The qualities of Self</h3><p class="about">Schwartz describes eight Cs. When you notice them, Self is near.</p>
+      <ul class="cs">${S.cs.map(([n,t])=>`<li><b>${n}</b>${t}</li>`).join("")}</ul></div>
+    <div class="ring"><h3>Parts</h3><p>${S.parts}</p></div>
+    <div class="ring"><h3>Blending, and unblending</h3><p>${S.blend}</p><button type="button" class="linkbtn" data-practice>Try the unblending practice</button></div>
+    <div class="ring"><h3>Self, and self</h3><p>${S.small}</p></div>
+    <div class="ring"><h3>One center, many names</h3><p>${S.links}</p></div>
+    <div class="ring"><h3>Growing toward the Self</h3><p>Meditation and the practices here are ways of spending more time near the center: noticing the Cs, unblending from parts, and letting the body feel safe enough for Self to come forward. Over time the center grows, and the rings of threat thin, as the slider shows.</p>
+      <p class="note">${S.evidence}</p></div>
+    <p class="src">Schwartz (2021); Schwartz &amp; Sweezy (2020); Shadick et al. (2013); Hodgdon et al. (2022); Jung (1959); Dana (2018)</p>`;
+  wire(); if(user) bringPanel();
+}
+
+function showDir(k, layer, user){
+  setView("dir",{kind:"dir",k,layer});
+  const d=DIRS[k], o=d.out, hl=x=>layer===x?" hl":"";
+  const nb=[(k+1)%4,(k+3)%4];
+  const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">${d.move}</div><h2>${d.name}</h2>
+      <p>${o.text}</p></div>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p>${d.win.text}</p></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals. Catching them here makes the way back short.</p>${ul(d.edge.signs)}</div>
+    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3>
+      <h4>How it can feel</h4>${ul(o.feels)}
+      <p class="voice">${o.voice}</p>
+      <h4>What it protects</h4><p>${o.protects}</p>
+      <h4>Parts</h4><p>${o.parts}</p></div>
+    <div class="ring"><h3>The way back toward the Self</h3>${ul(o.back)}<button type="button" class="linkbtn" data-home>Orienting, and coming home</button></div>
+    <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
+    <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
+    <p class="src">Siegel (1999); Dana (2018); Schauer &amp; Elbert (2010); ${k===3?"Walker (2013); Taylor et al. (2000); ":""}Levine (2010); Schwartz (2021)</p>`;
+  wire();
+  if(user) bringPanel(layer?document.getElementById("L-"+layer):null);
+}
+
+function showMoves(i, user){
+  setView("moves", i!=null?{kind:"move",k:i,layer:null}:null);
+  panel.innerHTML=`<div class="phasehead"><h2>Moving between</h2><div class="meta">Around the circle, in both directions</div>
+      <p>The defenses are not separate rooms. The body moves between them, often in the same order, and the way back can pass through them too. Each arrow on the wheel is one of these movements.</p></div>
+    ${DIRS.map((d,k)=>{ const n=(k+1)%4; return [moveIndex(k,n),moveIndex(n,k)]; }).flat().map(j=>{ const m=MOVES[j]; return `<div class="move${i===j?" hl":""}" id="mv-${j}" style="--mc:var(${DIRS[m.to].color})">
+      <h4>${m.title}</h4><p>${m.text}</p><p><b>Signs.</b> ${m.signs}</p><p><b>What helps.</b> ${m.helps}</p></div>`; }).join("")}
+    <div class="ring"><h3>Straight across</h3>${CROSSINGS.map(c=>`<p><b>${c.title}.</b> ${c.text}</p>`).join("")}</div>
+    <div class="ring"><h3>And inward</h3><p>From anywhere on the outer ring, the most important movement is inward, toward the window and the Self. ${HOME.intro}</p><button type="button" class="linkbtn" data-home>Coming home</button></div>
+    <p class="src">Schauer &amp; Elbert (2010); Walker (2013); Levine (2010); Dana (2018)</p>`;
+  wire();
+  if(user) bringPanel(i!=null?document.getElementById("mv-"+i):null);
+}
+
+function showHome(user){
+  setView("home");
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The doorway</div><h2>Coming home</h2><p>${HOME.intro}</p></div>
+    <div class="ring"><h3>Orienting</h3><p>${HOME.orient}</p><ol>${HOME.steps.map(s=>`<li>${s}</li>`).join("")}</ol></div>
+    <div class="ring"><h3>From wherever you are</h3><div class="chips">${DIRS.map((d,k)=>`<button type="button" data-dir="${k}" data-layer="out">From ${d.name.toLowerCase()}</button>`).join("")}</div></div>
+    <div class="ring"><h3>With others</h3><p>${HOME.coreg}</p></div>
+    <p class="note">If you are in crisis, contact your local emergency number, or in the United States call or text 988.</p>`;
+  wire(); if(user) bringPanel();
+}
+
+function showPatterns(user){
+  setView("patterns");
+  const Pt=PATTERNS;
+  panel.innerHTML=`<div class="phasehead"><h2>Patterns</h2><div class="meta">The routes your nervous system tends to take</div><p>${Pt.intro}</p></div>
+    ${Pt.list.map(p=>`<div class="ring"><h3>${p.name}</h3><p>${p.text}</p><p class="voice">${p.q}</p></div>`).join("")}
+    <div class="ring"><h3>Finding your route</h3>${ul(Pt.prompts)}<p class="about">Answer in writing, over a week or two. Patterns show themselves slowly.</p></div>
+    <div class="ring"><h3>Where patterns come from</h3><p>${Pt.rights} <a href="https://erinsarita.github.io/return-mandala/">Open The Return Mandala</a>.</p></div>
+    <p class="src">Walker (2013); Schwartz (2021)</p>`;
+  wire(); if(user) bringPanel();
+}
+
+function showReg(user){
+  setView("reg");
+  panel.innerHTML=`<div class="phasehead"><h2>Triggers and regulation</h2><div class="meta">Noticing, coming back, and building resilience</div></div>
+    <div class="ring"><h3>What a trigger is</h3><p>${REG.neuro}</p></div>
+    <div class="ring"><h3>After a trigger: notice</h3>${ul(REG.notice)}<p class="about">Keeping a few notes like this for a week or two shows your patterns.</p><button type="button" class="linkbtn" data-patterns>Patterns</button></div>
+    <div class="ring"><h3>Regulation, by direction</h3><div class="menu">${REG.menu.map(m=>`<div style="--mc:var(${DIRS[m.dir].color})"><b>${m.name}</b><span class="about">from ${DIRS[m.dir].name.toLowerCase()}</span>${ul(m.items)}</div>`).join("")}</div>
+      <p class="about">Self-regulation and co-regulation work together: the steadiest way back is often another steady person.</p></div>
+    <div class="ring"><h3>Glimmers</h3><p>${REG.glimmers}</p></div>
+    <div class="ring"><h3>Building resilience</h3>${ul(REG.resilience)}<p class="about">From the Harvard Center on the Developing Child: resilience is built from relationships, skills, and good experiences, and can be strengthened at any age.</p></div>
+    <p class="src">Porges (2011); Dana (2018); Levine (2010); National Scientific Council on the Developing Child (2015)</p>`;
+  wire(); if(user) bringPanel();
+}
+
+function showPractice(user){
+  setView("practice");
+  panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">Cultivating the Self, and widening the window</div>
+      <p>Practice inside your window, when you are steady enough to learn. Over time, these are how the center grows.</p></div>
+    ${PRACTICES.map(p=>`<div class="ring" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
+      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Breathe with the Self on the wheel</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Show the rings of kindness</button>`:""}</div>`).join("")}
+    <p class="src">Lehrer &amp; Gevirtz (2014); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
+  panel.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
+    if(b.dataset.run==="breath") setBreath(true); else setKind(true);
+    document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
+  }));
+  wire(); if(user) bringPanel();
+}
+document.getElementById("homebtn").addEventListener("click",()=>showHome(true));
+
+/* light and dark */
+const root=document.documentElement, tbtn=document.getElementById("themebtn"), sysDark=window.matchMedia("(prefers-color-scheme: dark)");
+function isDark(){ const t=root.getAttribute("data-theme"); return t?t==="dark":sysDark.matches; }
+function syncTheme(){ const d=isDark(); root.classList.toggle("is-dark",d); tbtn.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode"); tbtn.title=d?"Light mode":"Dark mode"; }
+tbtn.addEventListener("click",()=>{ const n=isDark()?"light":"dark"; root.setAttribute("data-theme",n); try{ localStorage.setItem("wm-theme",n); }catch(e){} syncTheme(); draw(); });
+sysDark.addEventListener("change",()=>{ syncTheme(); draw(); }); syncTheme();
+
+/* legend key */
+const lk=document.getElementById("legendkey");
+[["The Self","--sun3",()=>showSelf(true)],...DIRS.map((d,k)=>[d.name,d.color,()=>showDir(k,null,true)]),["Coming home","--gold",()=>showHome(true)]].forEach(([n,c,go])=>{
+  const b=document.createElement("button"); b.type="button"; b.innerHTML=sw(c)+n; b.addEventListener("click",go); lk.appendChild(b); });
+
+document.getElementById("modelnote").textContent=MODEL_NOTE;
+setCap(0.5,false);
+draw();
+showIntro();
+
+})();
+</script>
+</body></html>
