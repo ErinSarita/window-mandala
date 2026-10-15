@@ -105,7 +105,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 }
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
 @keyframes widen{0%{transform:scale(1);opacity:.85}100%{transform:scale(var(--to));opacity:0}}
-.kring{fill:none;stroke:var(--gold);stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:none}
+.kring{fill:none;stroke:var(--goldline);stroke-width:2.4;vector-effect:non-scaling-stroke;pointer-events:none;filter:drop-shadow(0 0 3px var(--sun3))}
 .capbar{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:740px;margin:0 auto;width:100%}
 .caprow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .caprow label{font-size:14px;font-weight:700}
@@ -113,6 +113,14 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .capname{font-family:var(--display);font-size:17px;min-width:12ch}
 .capbar p{margin:0;font-size:13.5px;color:var(--muted)}
 .practicebar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.guide{max-width:740px;margin:0 auto;width:100%;background:color-mix(in srgb, var(--sun2) 30%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 55%, var(--line));border-radius:16px;padding:14px 18px;display:grid;gap:6px;text-align:center;box-shadow:0 8px 28px color-mix(in srgb, var(--sun3) 22%, transparent)}
+.g-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.g-count{font-size:13px;color:var(--muted)}
+.g-cue{font-family:var(--display);font-size:clamp(28px,4vw,36px);font-weight:500;margin:2px 0 0;line-height:1.15;transition:opacity .45s ease}
+.g-sub{margin:0;color:var(--muted);font-family:var(--display);font-style:italic;font-size:19px;min-height:1.4em;transition:opacity .45s ease}
+.g-bar{height:3px;background:color-mix(in srgb, var(--line) 80%, transparent);border-radius:3px;overflow:hidden;margin-top:4px}
+.g-bar i{display:block;height:100%;width:0;background:var(--goldline)}
+.g-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
 .btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
 .btn:hover{background:var(--bg)} .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -210,10 +218,18 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <div class="main">
     <div class="stage">
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="guide" id="guide" hidden>
+        <div class="g-top"><span class="eyebrow" id="g-title"></span><span class="g-count" id="g-count"></span></div>
+        <p class="g-cue" id="g-cue" aria-live="polite"></p>
+        <p class="g-sub" id="g-sub"></p>
+        <div class="g-bar"><i id="g-bar"></i></div>
+        <div class="g-btns"><button type="button" class="btn" id="g-sound" aria-pressed="true">Sound on</button><button type="button" class="btn" id="g-voice" aria-pressed="false">Voice guidance</button><button type="button" class="btn" id="g-stop">End practice</button></div>
+      </div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
         <p>Drag to see the window widen: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
-        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness</button></div>
+        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self · 2 min</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness · 2 min</button></div>
+        <p class="hint" style="text-align:center">Both are guided on screen, with gentle sound and an optional voice.</p>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -535,11 +551,11 @@ const hexRGB=h=>{ h=h.trim().replace("#",""); if(h.length===3) h=h.split("").map
 const mixRGB=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
 const rgb=c=>`rgb(${c.map(v=>Math.round(v)).join(",")})`;
 let PAL=null;
-function readPalette(){ PAL={base:DIRS.map(d=>hexRGB(cssv(d.color))), surface:hexRGB(cssv("--surface"))}; }
+function readPalette(){ PAL={base:DIRS.map(d=>hexRGB(cssv(d.color))), surface:hexRGB(cssv("--surface")), win:hexRGB(cssv("--win"))}; }
 function colorAt(theta, layer){
   const pos=(((theta%360)+360)%360)/90, i=Math.floor(pos)%4, j=(i+1)%4, u=pos-Math.floor(pos), s=u*u*(3-2*u);
   const c=mixRGB(PAL.base[i],PAL.base[j],s);
-  return rgb(layer==="edge" ? mixRGB(c,PAL.surface,0.55) : c);
+  return rgb(layer==="edge" ? mixRGB(c,PAL.surface,0.55) : layer==="win" ? mixRGB(PAL.win,c,0.2) : c);
 }
 // One continuous ring: thin wedges, each colored by where it sits round the circle, so the defenses melt into
 // one another with no border between them. The outer ring also gets a soft sheen, light inside and deeper at the rim.
@@ -632,13 +648,13 @@ function draw(){
   const labels=el("g",{"pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
-  ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]);
+  ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.win[0],R.win[1]);
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
-    ["out","edge"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
+    ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
     addCell(sector(R.out[0],R.out[1],a0,a1,1,0),"out",k,null).classList.add("hit");
     addCell(sector(R.edge[0],R.edge[1],a0,a1,1,0),"edge",k,null).classList.add("hit");
-    addCell(rsector(R.win[0],R.win[1],b0,b1,{rOut:14}),"win",k,"--w-"+key);
+    addCell(sector(R.win[0],R.win[1],a0,a1,1,0),"win",k,null).classList.add("hit");
     const om=(R.out[0]+R.out[1])/2, em=(R.edge[0]+R.edge[1])/2, wm=(R.win[0]+R.win[1])/2;
     twoLine(om,b0+3,b1-3,d.name.toUpperCase(),ot>70?d.out.words:"","lbl t-out t-caps","lbl t-out t-sub",ot>100?21:18,16,ot>100?32:26,labels);
     if(et>=30) twoLine(em,b0+3,b1-3,d.edge.name,et>48?d.edge.words:"","lbl t-edge t-ital","lbl t-edge t-sub",17,14.5,22,labels);
@@ -646,7 +662,10 @@ function draw(){
     twoLine(wm,b0+3,b1-3,d.win.name,wt>88?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
   });
   // the window's edge: a line of golden beads, with four doorways where orienting brings you back in
-  el("circle",{cx:0,cy:0,r:R.win[1]+3,fill:"none",stroke:"var(--sun4)","stroke-width":2.8,"stroke-linecap":"round","stroke-dasharray":"0.01 8.5","pointer-events":"none"});
+  // the edge of the window, drawn as a clear frame: a soft band of light, a gold line, and a fine inner line
+  el("circle",{cx:0,cy:0,r:f(R.win[1]+3),fill:"none",stroke:"var(--sun2)","stroke-width":8,"stroke-opacity":.75,"pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:f(R.win[1]+3),fill:"none",stroke:"var(--goldline)","stroke-width":2.4,"pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:f(R.win[1]-4),fill:"none",stroke:"var(--goldline)","stroke-width":0.8,"stroke-opacity":.55,"pointer-events":"none"});
   [45,135,225,315].forEach(a=>{
     const [x,y]=P(R.win[1]+3,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
     el("circle",{cx:f(x),cy:f(y),r:11,class:"dh"},g); el("circle",{cx:f(x),cy:f(y),r:5.6,class:"dc"},g);
@@ -705,7 +724,10 @@ function draw(){
     el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"var(--sun3)","fill-opacity":.55,stroke:"var(--goldline)","stroke-width":0.9,"stroke-opacity":.8},sg); }
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2; el("circle",{cx:f(sr*Math.cos(t)),cy:f(sr*Math.sin(t)),r:f(sr),"stroke-width":1.1,"stroke-opacity":.7},sg); }
   el("circle",{cx:0,cy:0,r:f(sr*2),"stroke-width":1.4,"stroke-opacity":.8},sg);
-  el("circle",{cx:0,cy:0,r:f(sr),"stroke-width":2.8},sg);
+  // the central circle, the one holding the six-petaled flower, drawn in light: a white band edged in fine gold
+  el("circle",{cx:0,cy:0,r:f(sr),stroke:"var(--sun2)","stroke-width":6,"stroke-opacity":.9},sg);
+  el("circle",{cx:0,cy:0,r:f(sr),stroke:"#fff","stroke-width":2.6},sg);
+  [sr-3.2,sr+3.2].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),"stroke-width":0.6,"stroke-opacity":.7},sg));
   core.addEventListener("click",()=>showSelf(true));
   core.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showSelf(true); } });
   const tip=document.getElementById("coretip");
@@ -762,22 +784,126 @@ function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(
 cap.addEventListener("input",()=>setCap(cap.value/100));
 document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
 
-/* ---------- Practices on the wheel ---------- */
-let kindOn=false;
+/* ---------- Guided practices ----------
+   Two practices, guided on screen with gentle sound and an optional voice. Breathing with the Self paces ten slow
+   breaths, five seconds in and five out, with the center swelling and softening in time. Rings of kindness walks the
+   loving-kindness phrases outward in five circles, and the rings of light reach further at each one, so the circle of
+   care visibly widens: from the window, to its edge, to the defenses, to the braid. */
+let kindOn=false, kindStage=null;
 const pbreath=document.getElementById("pbreath"), pkind=document.getElementById("pkind");
-function setBreath(on){ svg.classList.toggle("breathing",on); pbreath.setAttribute("aria-pressed",on?"true":"false"); }
+const guide=document.getElementById("guide"), gTitle=document.getElementById("g-title"), gCue=document.getElementById("g-cue"),
+      gSub=document.getElementById("g-sub"), gCount=document.getElementById("g-count"), gBar=document.getElementById("g-bar"),
+      gSound=document.getElementById("g-sound"), gVoice=document.getElementById("g-voice");
+let PR=null, soundOn=true, voiceOn=false, AC=null;
+const canSpeak="speechSynthesis" in window;
+if(!canSpeak){ gVoice.disabled=true; gVoice.textContent="Voice not available"; }
+
+// sound: soft sine tones that rise with the in-breath and fall with the out-breath, and a small bell
+function audio(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ AC=null; } } if(AC&&AC.state==="suspended") AC.resume(); return AC; }
+function tone(f0,f1,dur,vol){
+  if(!soundOn) return; const ac=audio(); if(!ac) return; const t=ac.currentTime, g=ac.createGain();
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+dur*0.4); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  g.connect(ac.destination);
+  [[1,1],[1.5,0.22],[2,0.08]].forEach(([m,v])=>{ const o=ac.createOscillator(), og=ac.createGain(); o.type="sine";
+    o.frequency.setValueAtTime(f0*m,t); o.frequency.linearRampToValueAtTime(f1*m,t+dur); og.gain.value=v; o.connect(og); og.connect(g); o.start(t); o.stop(t+dur+0.05); });
+}
+function bell(freq){
+  if(!soundOn) return; const ac=audio(); if(!ac) return; const t=ac.currentTime;
+  [[1,0.08,5],[2.76,0.025,3],[5.4,0.01,1.6]].forEach(([m,v,d])=>{ const o=ac.createOscillator(), g=ac.createGain(); o.type="sine"; o.frequency.value=freq*m;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+d+0.05); });
+}
+function say(text){ if(!voiceOn||!canSpeak) return; try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=0.8; u.pitch=0.95; u.volume=0.9; speechSynthesis.speak(u); }catch(e){} }
+
+function setCue(cue, sub, count){
+  gCue.style.opacity=0; gSub.style.opacity=0;
+  setTimeout(()=>{ gCue.textContent=cue; gSub.textContent=sub||""; gCount.textContent=count||""; gCue.style.opacity=1; gSub.style.opacity=1; },220);
+}
+function openGuide(title){
+  guide.hidden=false; gTitle.textContent=title; gBar.style.width="0%";
+  // keep the guide in view, with as much of the wheel above it as fits
+  requestAnimationFrame(()=>{ const r=guide.getBoundingClientRect(); if(r.bottom>window.innerHeight||r.top<0) guide.scrollIntoView({behavior:"smooth",block:"end"}); });
+}
+function stopPractice(){
+  if(PR&&PR.timer) clearInterval(PR.timer);
+  PR=null; svg.classList.remove("breathing"); kindStage=null; setKind(false);
+  guide.hidden=true; if(canSpeak) speechSynthesis.cancel();
+  pbreath.setAttribute("aria-pressed","false"); pkind.setAttribute("aria-pressed","false");
+}
+function finish(cue, sub){
+  if(PR.done) return; PR.done=true; gBar.style.width="100%";
+  setCue(cue, sub, ""); bell(392); say(cue+". "+sub);
+  const mine=PR; setTimeout(()=>{ if(PR===mine) stopPractice(); }, 14000);
+}
+
+const LEAD=4500, HALF=5000, BREATHS=10;
+function startBreath(){
+  stopPractice(); audio();
+  PR={kind:"breath",t0:performance.now(),step:-2}; pbreath.setAttribute("aria-pressed","true");
+  openGuide("Breathe with the Self"); setCue("Settle in","Let your eyes rest on the center. Breathe with it as it widens and softens.","");
+  say("Settle in. Let your eyes rest on the center, and breathe with it.");
+  PR.timer=setInterval(tickBreath,80);
+}
+function tickBreath(){
+  const e=performance.now()-PR.t0;
+  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
+  const b=e-LEAD, step=Math.floor(b/HALF);
+  if(step>=BREATHS*2){ svg.classList.remove("breathing"); finish("Rest here","Let your breath find its own pace, and notice how you feel."); return; }
+  gBar.style.width=((b%HALF)/HALF*100)+"%";
+  if(step!==PR.step){
+    if(step===0){ svg.classList.remove("breathing"); void svg.getBoundingClientRect(); svg.classList.add("breathing"); }
+    PR.step=step; const inhale=step%2===0, n=Math.floor(step/2)+1;
+    setCue(inhale?"Breathe in":"Breathe out", inhale?"as the Self widens":"as it softens", `Breath ${n} of ${BREATHS}`);
+    if(inhale) tone(196,262,4.7,0.07); else tone(262,196,4.7,0.06);
+    say(inhale?"Breathe in":"Breathe out");
+  }
+}
+
+const STAGE=21000, LINE0=1500, LINEGAP=6000;
+const KIND_STAGES=[
+  {who:"Begin with yourself", sub:"Rest a hand on your heart if you like.", lines:["May I be safe.","May I be at ease.","May I be kind to myself."]},
+  {who:"Someone you love", sub:"Bring them to mind, and picture them smiling.", lines:["May you be safe.","May you be at ease.","May you be held in kindness."]},
+  {who:"Someone you barely know", sub:"A neighbor, a face you passed today.", lines:["May you be safe.","May you be at ease.","May you be held in kindness."]},
+  {who:"Someone who is difficult for you", sub:"Only as far as feels right. You can return to yourself at any time.", lines:["May you be safe.","May you be at ease.","May you be free from suffering."]},
+  {who:"All beings, everywhere", sub:"Let the circle open as wide as it will go.", lines:["May all beings be safe.","May all beings be at ease.","May all beings be held in kindness."]}
+];
+// how far the rings of light reach at each circle of kindness
+const kindReach=i=>[R.win[1]+3, R.edge[1], (R.out[0]+R.out[1])/2, R.out[1], R.braid[1]+6][i];
+function startKind(){
+  stopPractice(); audio();
+  PR={kind:"kind",t0:performance.now(),stage:-1,line:-1}; pkind.setAttribute("aria-pressed","true");
+  openGuide("Rings of kindness"); setCue("Settle in","Feel the warmth at the center of the wheel, and in your own chest.","");
+  say("Settle in. Feel the warmth at the center.");
+  PR.timer=setInterval(tickKind,100);
+}
+function tickKind(){
+  const e=performance.now()-PR.t0;
+  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
+  const k=e-LEAD, st=Math.floor(k/STAGE);
+  if(st>=KIND_STAGES.length){ finish("Rest in the warmth","Let it settle back into the center, into you."); return; }
+  const within=k-st*STAGE, S=KIND_STAGES[st];
+  gBar.style.width=(within/STAGE*100)+"%";
+  if(st!==PR.stage){ PR.stage=st; PR.line=-1; kindStage=st; setKind(true); bell(st===0?330:392); gTitle.textContent=S.who; }
+  const ln=Math.max(0,Math.min(S.lines.length-1,Math.floor((within-LINE0)/LINEGAP)));
+  if(within>=LINE0 && ln!==PR.line){ PR.line=ln; setCue(S.lines[ln], ln===0?S.sub:"", `Circle ${st+1} of ${KIND_STAGES.length}`); say(S.lines[ln]); }
+}
+
 function setKind(on){
-  kindOn=on; pkind.setAttribute("aria-pressed",on?"true":"false");
+  kindOn=on;
   const g=document.getElementById("kind"); if(!g) return; g.innerHTML="";
   if(!on) return;
+  const reach=kindStage!=null?kindReach(kindStage):R.out[1];
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   [0,3,6].forEach((delay,i)=>{
-    if(reduce){ el("circle",{cx:0,cy:0,r:f(R.self+(R.out[1]-R.self)*(i+1)/4),class:"kring",style:"opacity:.5"},g); return; }
-    el("circle",{cx:0,cy:0,r:f(R.self),class:"kring",style:`--to:${f(R.out[1]/R.self)};animation-delay:${delay}s`},g);
+    if(reduce){ el("circle",{cx:0,cy:0,r:f(R.self+(reach-R.self)*(i+1)/3),class:"kring",style:"opacity:.55"},g); return; }
+    el("circle",{cx:0,cy:0,r:f(R.self),class:"kring",style:`--to:${f(reach/R.self)};animation-delay:${delay}s`},g);
   });
 }
-pbreath.addEventListener("click",()=>setBreath(pbreath.getAttribute("aria-pressed")!=="true"));
-pkind.addEventListener("click",()=>setKind(!kindOn));
+pbreath.addEventListener("click",()=>{ if(PR&&PR.kind==="breath") stopPractice(); else startBreath(); });
+pkind.addEventListener("click",()=>{ if(PR&&PR.kind==="kind") stopPractice(); else startKind(); });
+document.getElementById("g-stop").addEventListener("click",stopPractice);
+gSound.addEventListener("click",()=>{ soundOn=!soundOn; gSound.setAttribute("aria-pressed",soundOn?"true":"false"); gSound.textContent=soundOn?"Sound on":"Sound off"; });
+gVoice.addEventListener("click",()=>{ voiceOn=!voiceOn; gVoice.setAttribute("aria-pressed",voiceOn?"true":"false"); if(!voiceOn&&canSpeak) speechSynthesis.cancel(); });
 
 /* ---------- Panel ---------- */
 const panel=document.getElementById("panel"), tabs=document.getElementById("tabs"), dnav=document.getElementById("dirnav");
@@ -817,7 +943,7 @@ function applySel(){
   document.querySelectorAll(".mv").forEach(p=>p.classList.toggle("on", sel.kind==="move" && p.id==="tr"+sel.k));
   const so=document.getElementById("selOutline"); if(!so) return; so.innerHTML="";
   if(sel.kind==="dir"){ const [a0,a1]=dA(sel.k);
-    if(sel.layer){ const r=R[sel.layer]; el("path",{d:sel.layer==="win"?rsector(r[0]-2,r[1]+2,a0+GAP/2,a1-GAP/2,{rOut:15}):sector(r[0]-2,r[1]+2,a0+0.3,a1-0.3,1,0)},so); }
+    if(sel.layer){ const r=R[sel.layer]; el("path",{d:sector(r[0]-2,r[1]+2,a0+0.3,a1-0.3,1,0)},so); }
     else el("path",{d:sector(R.win[0]-2,R.out[1]+2,a0+0.3,a1-0.3,1,0)},so); }
 }
 
@@ -984,11 +1110,10 @@ function showPractice(user){
   panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">Cultivating the Self, and widening the window</div>
       <p>Practice inside your window, when you are steady enough to learn. Over time, these are how the center grows.</p></div>
     ${PRACTICES.map(p=>`<div class="ring" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
-      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Breathe with the Self on the wheel</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Show the rings of kindness</button>`:""}</div>`).join("")}
+      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Begin the guided breathing</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Begin the rings of kindness</button>`:""}</div>`).join("")}
     <p class="src">Lehrer &amp; Gevirtz (2014); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
   panel.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
-    if(b.dataset.run==="breath") setBreath(true); else setKind(true);
-    document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
+    if(b.dataset.run==="breath") startBreath(); else startKind();
   }));
   wire(); if(user) bringPanel();
 }
