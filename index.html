@@ -915,31 +915,29 @@ function drawLoop(){
       const off=()=>svg.classList.remove("qfocus");
       ["mouseenter","focus"].forEach(ev=>h.addEventListener(ev,on)); ["mouseleave","blur"].forEach(ev=>h.addEventListener(ev,off));
       hookTip(h,()=>{ const [x,y]=P((span[0]+span[1])/2,d.angle); return {x,y,html:`<span class="ringtag">${tag} · ${d.name}</span><b>${cap(ring.name)}</b><i>${ring.role}</i><span class="tl">${LOOPQ[k][ring.key]}</span><span class="tl">${ring.tip}</span><span>Tap to read more.</span>`,color:d.color}; },openFor(ring,k)); });
-    const quarterLines=(r0,r1,c)=>DIRS.forEach((d,k)=>{ const a=d.angle+45, [x0,y0]=P(r0,a), [x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),stroke:c,"stroke-width":1.2,"stroke-opacity":.55,"pointer-events":"none"},g); });
     const H=R.heart, S=R.stem, E=R.edge, K=R.brake, B=R.rim;
     // heart and brainstem: gold, brightest nearest the center
     el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#F6DE9F",class:"loop-ring"},g);
     el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F1D388",class:"loop-ring"},g);
     [[H[0],"#C9962E"],[H[1],"#C9962E"],[S[1],"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
-    quarterLines(H[0],S[1],"#B98428");
     const fs=w=>Math.min(14,w*0.62);
-    [45,225].forEach(a=>arcText((H[0]+H[1])/2,a-30,a+30,"heart · heart rate variability","lbl t-ring",fs(H[1]-H[0]),0.3,g));
-    [135,315].forEach(a=>arcText((S[0]+S[1])/2,a-30,a+30,"brainstem · the vagal centers","lbl t-ring",fs(S[1]-S[0]),0.3,g));
-    arcText((H[0]+H[1])/2,-28,28,"from the body up: breath","lbl t-door",fs(H[1]-H[0])*0.95,0.3,g);
-    arcText((S[0]+S[1])/2,140,220,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
+    // the ring names sit on the four diagonals, between the directions, so each line out from the center reads
+    // heart, brainstem, alarm, brake in order
+    const X=[45,135,225,315];
+    X.forEach(a=>arcText((H[0]+H[1])/2,a-16,a+16,"the heart","lbl t-ring",fs(H[1]-H[0]),0.4,g));
+    X.forEach(a=>arcText((S[0]+S[1])/2,a-16,a+16,"the brainstem","lbl t-ring",fs(S[1]-S[0]),0.4,g));
     // the alarm: the edge keeps its own gradient, with the brainstem's gold carried across it
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(E[1])},g);
       (isDark()?[[E[0]/E[1],"#F8E4AE",.62],[(E[0]+(E[1]-E[0])*0.5)/E[1],"#F2DCA8",.42],[1,"#EAD3B8",.28]]:[[E[0]/E[1],"#F1D388",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#EFCF80",.15],[1,"#EDCB78",0]]).forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       const base=el("g",{id:"loopbase","pointer-events":"none"}), lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(base,lab);
       el("path",{d:band(E[0],E[1]),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
-    [45,225].forEach(a=>arcText((E[0]+E[1])/2,a-24,a+24,"the alarm · amygdala","lbl t-ring t-alarm",14,0.3,g));
+    X.forEach(a=>arcText((E[0]+E[1])/2,a-16,a+16,"the alarm","lbl t-ring t-alarm",14.5,0.4,g));
     // the brake, and the border of the window of capacity around it
     el("path",{d:band(K[0],K[1]),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring"},g);
     el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},g);
     [[K[0],"#B98428",1],[B[0],"#A9781F",1],[B[1],"#A9781F",1]].forEach(([r,c,w])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":w,"pointer-events":"none"},g));
-    quarterLines(K[0],K[1],"#8A6417");
-    [135,315].forEach(a=>arcText((K[0]+K[1])/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(12.5,(K[1]-K[0])*0.72),0.4,g));
-    [0,45,135,225,315].forEach(a=>arcText((B[0]+B[1])/2,a-20,a+20,"window of capacity","lbl t-ring t-rim",Math.min(13,(B[1]-B[0])*0.78),0.8,g));
+    X.forEach(a=>arcText((K[0]+K[1])/2,a-16,a+16,"the brake","lbl t-ring t-brake",Math.min(13,(K[1]-K[0])*0.78),0.5,g));
+    [0,180].forEach(a=>arcText((B[0]+B[1])/2,a-24,a+24,"window of capacity","lbl t-ring t-rim",Math.min(13.5,(B[1]-B[0])*0.8),0.8,g));
     // beyond the border: the loop broken, in the defenses; each defense keeps its own card
     const ro=R.out[0]+10, rot=R.out[0]+26;
     const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
