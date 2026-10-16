@@ -34,7 +34,7 @@ The mandala is the single file `index.html`. The content lives in constants near
 
 ## The center, in layers
 
-The Self tab describes the center in four layers, each with a practice: the white heart (resting as awareness; "Resting as awareness"), the Flower of Life (the Self itself; "A meditation into the Self"), the petals (the qualities, Self-present; "Meeting a part: the six Fs"), and the window (Self-led; "A parts check-in"). Hovering a layer lights it on the wheel, and the heart has its own hover card. The stages of returning run in and back out: notice, unblend, Self-present, rest, Self-led. The Awareness tab adds how a wider awareness widens the window and deepens the Self, toward samadhi.
+The Self tab describes the center in four layers, each with a practice: awareness at the very center (the gateway, to connection beyond oneself; "Resting as awareness"), the Flower of Life (the Self, the witness; "A meditation into the Self"), the petals (the qualities, Self-present; "Meeting a part: the six Fs"), and the window (Self-led; "A parts check-in"). Hovering a layer lights it on the wheel, and the center has its own hover card. The stages of returning run in and back out: notice, unblend, Self-present, rest, Self-led. The Awareness tab adds how a wider awareness widens the window and deepens the Self, toward samadhi.
 
 ## Guided practices
 

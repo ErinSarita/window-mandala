@@ -112,7 +112,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 @keyframes lpulse{0%,100%{fill-opacity:.1}50%{fill-opacity:.42}}
 .lhl{fill:#fff;fill-opacity:.28;pointer-events:none}
 .lhl-line{fill:none;stroke:var(--goldline);stroke-width:2.4;pointer-events:none;filter:drop-shadow(0 0 4px var(--sun3))}
-.heart-hit{fill:transparent;cursor:pointer;outline:none}
+.gate-hit{fill:transparent;cursor:pointer;outline:none}
 .layers{display:grid;gap:12px}
 .layers>div{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px;border-radius:0}
 .layers>div:first-child{border-top:0;padding-top:0}
@@ -449,10 +449,10 @@ const SELF = {
   cs:[["Calm","a settled body and mind"],["Curiosity","wanting to know, without judging"],["Compassion","warmth toward suffering, including your own"],["Confidence","a quiet trust that you can meet this"],["Courage","willing to turn toward what is hard"],["Clarity","seeing what is, without distortion"],["Creativity","new possibilities, playfulness"],["Connectedness","belonging to yourself, to others, to life"]],
   // the center in layers, from the deepest out; each has a practice
   layers:[
-    {key:"heart", name:"The heart: resting as awareness", where:"The white circle at the very center", practice:"rest",
-     text:"At the deepest layer, even the sense of someone doing something softens. What remains is open, quiet awareness: knowing, without effort. Contemplative traditions give it many names: presence, stillness, the ground of being. Schwartz, too, writes of a spiritual side to the Self, a felt connection to something larger than any one person. It is the deepest point of the wheel, and in a sense the highest: the white heart at the center and the field of awareness around the whole wheel are the same presence, seen from two sides."},
-    {key:"flower", name:"The Self: the one who is here", where:"The Flower of Life", practice:"selfmed",
-     text:"Not a quality you feel, but the one who feels them: the presence that can be with any part without becoming it. In IFS the Self is not built but uncovered. It is already whole, waiting behind the parts, and it comes forward on its own when they step back."},
+    {key:"gate", name:"Awareness: the gateway", where:"The white circle at the very center", practice:"rest",
+     text:"At the deepest layer, even the sense of a witness watching softens. What remains is awareness itself: open, quiet knowing, without effort. It is also a gateway: the place where the sense of Self deepens past the personal and opens into connection, with others, with the living world, with life itself. Contemplative traditions give it many names: presence, stillness, the ground of being. Schwartz, too, writes of a spiritual side to the Self, a felt connection to something larger than any one person. It is the deepest point of the wheel, and in a sense the highest: the awareness at the center and the field of awareness around the whole wheel are the same presence, seen from two sides."},
+    {key:"flower", name:"The Self: the witness", where:"The Flower of Life", practice:"selfmed",
+     text:"Not a quality you feel, but the one who feels them: the one who notices, steady and present, and can be with any part without becoming it. Contemplative traditions call this the witness. In IFS the Self is not built but uncovered. It is already whole, waiting behind the parts, and it comes forward on its own when they step back."},
     {key:"petals", name:"The qualities: Self-present", where:"The eight petals", practice:"sixf",
      text:"How the Self feels from inside: the eight Cs. When you notice calm, curiosity, or compassion toward a part, Self is present. IFS also names five Ps for how the Self acts in the world: presence, patience, perspective, persistence, and playfulness."},
     {key:"win", name:"The window: Self-led", where:"The window of capacity", practice:"checkin",
@@ -463,7 +463,7 @@ const SELF = {
     ["Notice","\"Where am I?\" Awareness catches the state, often at the edge or beyond it.","out"],
     ["Unblend","\"A part of me is afraid.\" The part is asked, kindly, to step back a little, and some space opens.","edge"],
     ["Self-present","Calm, curiosity, or warmth comes into that space. You can be with the part, rather than being it.","petals"],
-    ["Rest","Nothing to fix, for a while: resting as the Self, and deeper, as awareness itself.","heart"],
+    ["Rest","Nothing to fix, for a while: resting as the witness, and deeper, as awareness itself.","gate"],
     ["Self-led","Back out into life. The part trusts the Self a little more, and you act from the center.","win"]
   ],
   stagesNote:"The way in is also the way out: returning is not leaving life for the center, but bringing the center back into life. Each stage can take a breath or a year, and they loop. Most days we move through the first two; the deeper ones come with practice, and with time.",
@@ -512,7 +512,7 @@ const PRACTICES = [
   {key:"unblend", name:"Unblending", how:"Notice a feeling or a voice that has taken over. Find where it lives in your body. Ask it, kindly, \"Would you be willing to step back a little, so I can be with you?\" Notice any space that opens, and any calm, curiosity, or warmth that comes into it. Then ask the part what it wants you to know.", why:"Adapted from Internal Family Systems. When a part steps back, there is room for Self, and the defensive state often eases with it."},
   {key:"sixf", name:"Meeting a part: the six Fs", how:"<b>Find</b> a part: a feeling, a voice, a sensation. <b>Focus</b> on it, and notice where it is in or around your body. <b>Flesh it out</b>: how does it look or feel, and how old does it seem? Ask, \"How do I <b>feel toward</b> this part?\" If the answer is not curiosity, warmth, or calm, another part is blended; kindly ask it to step back too. <b>Befriend</b> the part: ask what it does for you, and let it know you see it. Then ask about its <b>fears</b>: \"What are you afraid would happen if you stopped doing this?\"", why:"For the petals, the qualities of Self. These are the steps Internal Family Systems uses to get to know a protective part. The question \"How do I feel toward it?\" is a simple test of whether Self is present: when the answer is one of the Cs, it is."},
   {key:"selfmed", name:"A meditation into the Self", how:"Sit, and close your eyes or soften your gaze. Each time a thought, a feeling, or an urge arises, notice it as a part, and ask it, kindly, to relax and step aside for a while, trusting that you will come back to it. Do this again and again, without force. Then notice what is left when the parts step back: often spaciousness, warmth, and a quiet sense of being here. That is the Self, not something you make, but something you uncover.", why:"For the Flower of Life, the Self itself. Adapted from the Self meditations taught in Internal Family Systems. Each time a part steps back and the Self comes forward, the part and the body both learn that the center is safe."},
-  {key:"rest", name:"Resting as awareness", how:"After some time in stillness, let go of any focus at all. Notice that sounds, sensations, and thoughts are already being known, without effort. Turn gently toward the knowing itself: not a thing you can see, but the open, quiet awareness in which everything appears. Rest as that, for a few breaths or a few minutes. When the mind grabs hold of something, notice it, and rest again.", why:"For the white heart at the center. Many contemplative traditions describe this as the deepest rest: awareness resting in itself. Go gently. If it feels unsettling or empty rather than restful, open your eyes, feel your feet on the floor, and come back to the breath. That is a wise choice, not a failure."},
+  {key:"rest", name:"Resting as awareness", how:"After some time in stillness, let go of any focus at all. Notice that sounds, sensations, and thoughts are already being known, without effort. Turn gently toward the knowing itself: not a thing you can see, but the open, quiet awareness in which everything appears. Rest as that, for a few breaths or a few minutes. When the mind grabs hold of something, notice it, and rest again.", why:"For awareness, the gateway at the very center. Many contemplative traditions describe this as the deepest rest: awareness resting in itself. Go gently. If it feels unsettling or empty rather than restful, open your eyes, feel your feet on the floor, and come back to the breath. That is a wise choice, not a failure."},
   {key:"glimmer", name:"Glimmers", how:"Three times today, notice something small that feels safe or good, and stay with it for three breaths.", why:"Practicing safety, not only managing danger, gives the nervous system a well-worn way home (Dana)."},
   {key:"aware", name:"Opening peripheral awareness", how:"Sit comfortably and rest your attention on the breath, at the nose or the belly. Without letting go of the breath, let your awareness open around it: sounds in the room, the feeling of your body, the space around you. Keep the breath at the center and everything else in the background, like the halo around the wheel. Every so often, notice the mind itself: where am I on the wheel right now? Five to ten minutes is plenty.", why:"Training peripheral awareness, and awareness of your own state, means the edge is noticed earlier, so there is more time and more choice. Over time it is one of the steadiest ways the window widens."},
   {key:"edge", name:"Touch the edge, and come back", how:"Inside your window, bring to mind something a little stressful. Notice your body begin to move toward the edge, then return to something steady. Back and forth, a few times, never going far.", why:"Titration and pendulation (Levine). Each safe return widens the window a little."}
@@ -601,10 +601,10 @@ function petal(r0,r1,a0,a1,bulgeIn){
 }
 // text path along an arc that reads upright
 let tpId=0, CR={sr:30,L1:200}, layerKey=null;
-// light one layer of the wheel: the heart, the Flower, the petals, the window, the edge, or the outer ring
+// light one layer of the wheel: awareness at the center, the Flower, the petals, the window, the edge, or the outer ring
 function setLayerHL(key){
   layerKey=key; const g=document.getElementById("layerHL"); if(!g) return; g.innerHTML=""; if(!key) return;
-  const span={heart:[0,CR.sr],flower:[CR.sr,R.core],petals:[R.core,CR.L1],win:R.win,edge:R.edge,out:R.out}[key]; if(!span) return;
+  const span={gate:[0,CR.sr],flower:[CR.sr,R.core],petals:[R.core,CR.L1],win:R.win,edge:R.edge,out:R.out}[key]; if(!span) return;
   const [r0,r1]=span, ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
   el("path",{d:ring(r1)+(r0>0?" "+ring(r0):"")+"Z","fill-rule":"evenodd",class:"lhl"},g);
   el("circle",{cx:0,cy:0,r:f(r1),class:"lhl-line"},g);
@@ -845,9 +845,9 @@ function draw(){
   el("circle",{cx:0,cy:0,r:f(sr),stroke:"var(--sun2)","stroke-width":6,"stroke-opacity":.9},sg);
   el("circle",{cx:0,cy:0,r:f(sr),stroke:"#fff","stroke-width":2.6},sg);
   [sr-3.2,sr+3.2].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),"stroke-width":0.6,"stroke-opacity":.7},sg));
-  // the white heart: the deepest layer, resting as awareness
-  const heart=el("circle",{cx:0,cy:0,r:f(sr+3),class:"heart-hit",tabindex:"0",role:"button","aria-label":"The heart of the Self: resting as awareness"},sunG);
-  hookTip(heart,()=>({x:0,y:-sr*0.4,html:`<span class="ringtag">The deepest layer</span><b>The heart</b><span class="tl">Resting as awareness: open, quiet knowing, with nothing to do.</span><span>Tap to read about the layers of Self.</span>`,color:"--sun3"}),()=>showSelf(true,null,"heart"));
+  // awareness, the gateway: the white circle at the very center, the deepest layer
+  const gate=el("circle",{cx:0,cy:0,r:f(sr+3),class:"gate-hit",tabindex:"0",role:"button","aria-label":"Awareness, the gateway: the deepest layer of the Self"},sunG);
+  hookTip(gate,()=>({x:0,y:-sr*0.4,html:`<span class="ringtag">The deepest layer</span><b>Awareness</b><i>the gateway</i><span class="tl">Open, quiet knowing, and a doorway to connection beyond yourself.</span><span>Tap to read about the layers of Self.</span>`,color:"--sun3"}),()=>showSelf(true,null,"gate"));
   core.addEventListener("click",()=>showSelf(true));
   core.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showSelf(true); } });
   const tip=document.getElementById("coretip");
@@ -1013,8 +1013,8 @@ const CENTER_STAGES=[
   {hl:"out", title:"Notice", bell:392, lines:["Notice where you are on the wheel right now.","Your body, your breath, your mood.","No need to change it. Just notice."]},
   {hl:"edge", title:"Unblend", bell:349, lines:["Is there a part here: a feeling, a voice, a pull?","Ask it, kindly, to step back a little.","Notice any space that opens."]},
   {hl:"petals", title:"The qualities of Self", bell:330, lines:["Into that space, notice any calm.","Any curiosity.","Any warmth, toward yourself, or toward the part."]},
-  {hl:"flower", title:"The Self", bell:294, lines:["Notice the one who is noticing.","Not a part: the one who is here.","This is the Self."]},
-  {hl:"heart", title:"Resting as awareness", bell:262, lines:["Let go of doing anything at all.","Rest as the quiet knowing in which everything appears.","Nothing to fix. Just this."]},
+  {hl:"flower", title:"The Self", bell:294, lines:["Notice the one who is noticing.","Not a part: the witness, the one who is here.","This is the Self."]},
+  {hl:"gate", title:"Resting as awareness", bell:262, lines:["Let go of doing anything at all.","Rest as the quiet knowing in which everything appears.","Nothing to fix. Just this."]},
   {hl:"win", title:"Returning", bell:392, lines:["Now let this presence widen, back into your window.","Feel your body, your feet, the room around you.","Bring the center with you."]}
 ];
 const pcenter=document.getElementById("pcenter");
@@ -1128,7 +1128,7 @@ function showIntro(){
   panel.innerHTML=PURPOSE_HTML+CENTER_HTML+`<div class="intro">
     <h2>Reading the wheel</h2>
     <ul class="legend">
-      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest. The white circle at its heart is the deepest layer: resting as awareness.</div></li>
+      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest. Within the Flower is the witness, and at the very center, the white circle is awareness: the gateway to connection beyond oneself.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction: energized, still, settled, and connected. The dashed line is the window's edge.</div></li>
       <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals that you are leaving the window: revving, bracing, sinking, over-tuning. Catching them here makes the way back short.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses: fight or flight at the top, freeze to the right, collapse below, fawn to the left.</div></li>
@@ -1224,7 +1224,7 @@ function showAware(user){
 
 function showSelf(user, ci, layer){
   setView("self");
-  const S=SELF, prName=k=>PRACTICES.find(p=>p.key===k).name, lsw={heart:"--sun1",flower:"--sun3",petals:"--sun2",win:"--win"};
+  const S=SELF, prName=k=>PRACTICES.find(p=>p.key===k).name, lsw={gate:"--sun1",flower:"--sun3",petals:"--sun2",win:"--win"};
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The center</div><h2>The Self</h2><div class="meta">With a capital S</div><p>${S.intro}</p></div>
     <div class="ring"><h3>The qualities of Self</h3><p class="about">Schwartz describes eight Cs. When you notice them, Self is near.</p>
       <ul class="cs">${S.cs.map(([n,t],i)=>`<li${ci===i?` class="hl" id="cq-${i}"`:""}><b>${n}</b>${t}</li>`).join("")}</ul></div>
