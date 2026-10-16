@@ -13,7 +13,7 @@
 :root{
   --bg:#F8F5EF; --surface:#FFFFFF; --ink:#2C2433; --muted:#6F6578; --line:#E8DFD3;
   --self:#C79A35; --seed:#F7ECC7; --gold:#CDA349; --sun1:#FFFDF3; --sun2:#FFF3BD; --sun3:#FFE48A; --sun4:#EBC25C; --goldline:#B98428; --sunink:#7A4D10; --sunline:#B98428;
-  --win:#FAEBB2; --wtext:#2C2433; --halo:rgba(255,255,255,.72); --arrow:#4E3B68; --arrowglow:#FFFFFF;
+  --petal:#F5D068; --win:#FAEBB2; --wtext:#2C2433; --halo:rgba(255,255,255,.72); --arrow:#4E3B68; --arrowglow:#FFFFFF;
   --ff:#E5998F; --fr:#B49AD6; --co:#93B2DD; --fa:#EDA9CA; --otext:#2E2240; --etext:#2C2433;
   --display:"Cormorant Garamond", "Cormorant", Georgia, serif;
   --body:"Mulish", "Avenir Next", "Segoe UI", system-ui, sans-serif;
@@ -21,12 +21,12 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#16131D; --surface:#1F1B28; --ink:#EFE9F3; --muted:#ADA3B8; --line:#352E42;
   --self:#E6C267; --seed:#F3E4B3; --gold:#E8C46C; --sun1:#FFF8DC; --sun2:#FFEAA0; --sun3:#F8D977; --sun4:#E3BA50; --goldline:#C8922C; --sunink:#5E3B08; --sunline:#C8922C;
-  --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(44,36,58,.32); --arrow:#FFFFFF; --arrowglow:#1A1024;
+  --petal:#EFC95E; --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(44,36,58,.32); --arrow:#FFFFFF; --arrowglow:#1A1024;
   --ff:#B9726B; --fr:#8D76B5; --co:#6D8DC1; --fa:#C181A6; --otext:#FFFFFF; --etext:#EFE9F3; color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#16131D; --surface:#1F1B28; --ink:#EFE9F3; --muted:#ADA3B8; --line:#352E42;
   --self:#E6C267; --seed:#F3E4B3; --gold:#E8C46C; --sun1:#FFF8DC; --sun2:#FFEAA0; --sun3:#F8D977; --sun4:#E3BA50; --goldline:#C8922C; --sunink:#5E3B08; --sunline:#C8922C;
-  --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(44,36,58,.32); --arrow:#FFFFFF; --arrowglow:#1A1024;
+  --petal:#EFC95E; --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(44,36,58,.32); --arrow:#FFFFFF; --arrowglow:#1A1024;
   --ff:#B9726B; --fr:#8D76B5; --co:#6D8DC1; --fa:#C181A6; --otext:#FFFFFF; --etext:#EFE9F3; color-scheme:dark }
 :root[data-theme="light"]{color-scheme:light}
 /* each direction tints the window a little, and its edge more */
@@ -63,10 +63,10 @@ svg#m{width:100%;height:100%;display:block;overflow:visible}
 .cell{cursor:pointer;transition:opacity .25s ease;stroke:var(--bg);stroke-width:2.5}
 .cell:focus{outline:none} .cell:focus-visible{stroke:var(--ink);stroke-width:3}
 .cell.hit{stroke:none;fill:transparent} .cell.hit:focus-visible{stroke:var(--ink);stroke-width:3}
-.cell.qp{stroke:var(--goldline);stroke-width:1.1;stroke-opacity:.7;transition:filter .25s ease} .cell.qp:hover{filter:brightness(1.05) drop-shadow(0 0 4px var(--sun3))}
+.cell.qp{stroke:#FFFFFF;stroke-width:2;stroke-linejoin:round;transition:filter .25s ease} .cell.qp:hover{filter:brightness(1.05) drop-shadow(0 0 4px var(--sun3))}
 .cell.qp:focus-visible{stroke:var(--ink);stroke-width:2.5;stroke-opacity:1}
 .qb{stroke:var(--goldline);stroke-width:.9;stroke-opacity:.45;pointer-events:none}
-.vein{fill:none;stroke:var(--goldline);stroke-width:.9;stroke-opacity:.5;stroke-linecap:round;pointer-events:none}
+.vein{fill:none;stroke:#FFFFFF;stroke-width:1.1;stroke-opacity:.75;stroke-linecap:round;pointer-events:none}
 /* hovering lights only the section under the pointer, and softens the rest */
 .veil{fill:var(--bg);opacity:0;transition:opacity .25s ease,fill .25s ease}
 svg.dimming .veil.off{opacity:.5}
@@ -1266,7 +1266,7 @@ function draw(){
   const hF=L1-L0, rt=L0+hF*0.56;
   SELF.cs.forEach(([n,t],i)=>{
     const m=i*45;
-    const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
+    const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:"var(--petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
     c.dataset.slice="c"+i;
     hookTip(c,()=>{ const [x,y]=P(rt,m); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
     el("path",{d:`M${q(L0+hF*0.74,m)} L${q(L1-hF*0.09,m)}`,class:"vein"},sunG);
