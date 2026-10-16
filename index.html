@@ -830,7 +830,7 @@ function drawTrace(animate){
     // the edge is the alarm: its own gradient stays, with a border and a name
     const e0=rw, e1=R.edge[1];
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(e1)},g);
-      [[e0/e1,"#E7B53F",.85],[(e0+(e1-e0)*0.55)/e1,"#E7B53F",.35],[1,"#E7B53F",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
+      [[e0/e1,"#FBEDC4",.95],[(e0+(e1-e0)*0.5)/e1,"#F7E2A8",.45],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       // laid under the ring's own words, so the early signals stay readable
       const ap=el("path",{d:band(e0,e1),"fill-rule":"evenodd",fill:"url(#alarmglow)","pointer-events":"none",id:"alarmglowpath"},g);
       const lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(ap,lab); }
