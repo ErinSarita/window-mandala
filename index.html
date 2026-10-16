@@ -78,16 +78,13 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .lbl{pointer-events:none;font-family:var(--display);font-weight:600}
 .t-edge{paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
 .t-cq{fill:var(--sunink);font-style:italic;font-weight:600}
-.self-ring{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;pointer-events:none;transition:stroke-width .25s ease,filter .25s ease}
-svg.selffocus .self-ring{stroke-width:3;stroke-opacity:1;filter:drop-shadow(0 0 6px var(--sun3))}
 .self-focus{opacity:0;transition:opacity .3s ease}
 svg.selffocus .self-focus{opacity:1}
 .self-shade{fill:#1E1726;fill-opacity:.45}
 .self-glow{fill:none;stroke:#FFE38A;stroke-width:4;stroke-opacity:.9;filter:drop-shadow(0 0 8px #FFD866)}
 svg.selffocus #core{filter:brightness(1.06) drop-shadow(0 0 10px rgba(255,220,120,.6))}
 .self-hit{fill:transparent;cursor:pointer;outline:none}
-.self-bg{fill:#FFF6DA;fill-opacity:.95;cursor:pointer}
-.is-dark .self-bg{fill-opacity:.6}
+.self-bg{cursor:pointer}
 .t-selfring{fill:var(--sunink);font-style:italic;font-weight:700;letter-spacing:.06em} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--display);font-style:italic;font-weight:500}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
@@ -1191,7 +1188,9 @@ function draw(){
       eTexts.push(arcText(em+up,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",17,0.3,labels));
       if(et>48) eTexts.push(arcText(em-up,b0+3,b1-3,d.edge.words,"lbl t-edge t-sub",14.5,0.2,labels)); }
     else eTexts.push(arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",Math.max(11,Math.min(17,et*0.62)),0.2,labels));
-    twoLine(wm,b0+3,b1-3,d.win.name,(wt>88||(LOOPGEO&&wt>56))?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
+    // in the loop view the names sit centred between the Self's glow and the heart ring, clear of both
+    const wflip=d.angle>95&&d.angle<265, wr=LOOPGEO?(L1+3+R.win[1])/2+(wflip?1:-1.5):wm;
+    twoLine(wr,b0+3,b1-3,d.win.name,(wt>88||(LOOPGEO&&wt>56))?d.win.words:"","lbl t-win","lbl t-win t-sub",LOOPGEO?22:24,LOOPGEO?15:16,LOOPGEO?24:27,labels);
   });
   // the window's edge, marked by a soft band of light, with four doorways where orienting brings you back in
   el("circle",{cx:0,cy:0,r:f(R.win[1]+3),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
@@ -1232,8 +1231,10 @@ function draw(){
   svg.appendChild(labels);
   // the Self: one ring of eight lotus petals, each carrying a quality, round the Flower of Life
   const sunG=el("g",{id:"core"});
-  // the Self's own ground: the lightest gold on the wheel, inside the ring that circles the petals
-  const selfBg=el("circle",{cx:0,cy:0,r:f(L1+3),class:"self-bg",role:"presentation"},sunG);
+  // the Self's own ground: the lightest gold on the wheel, glowing out past the petal tips and fading into the window, with no border
+  { const gR=L1+15, k=isDark()?0.68:1;
+    grad("selfground",{...U,r:f(gR)},[[0,"#FFFDF4",k],[(L1-8)/gR,"#FFF8E0",0.97*k],[(L1+2)/gR,"#FFF3CC",0.75*k],[1,"#FFEFBA",0]]); }
+  const selfBg=el("circle",{cx:0,cy:0,r:f(L1+15),fill:"url(#selfground)",class:"self-bg",role:"presentation"},sunG);
   const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
   const lotus=(r0,r1,m,hw,hb)=>{ const h=r1-r0;
     return `M${q(r0,m-hb)} C${q(r0+h*0.24,m-hw*1.02)} ${q(r0+h*0.5,m-hw*1.07)} ${q(r0+h*0.66,m-hw*0.84)}`+
@@ -1253,7 +1254,6 @@ function draw(){
   // a ring just beyond the petal tips marks everything inside it as the Self: the witness, the Flower, and its qualities
   { const sr0=L1+3, sr1=L1+17, sm=(sr0+sr1)/2;
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-    el("circle",{cx:0,cy:0,r:f(sr0),class:"self-ring"},sunG);
     const sh=el("path",{d:ringP(sr1)+" "+ringP(L1-2)+"Z","fill-rule":"evenodd",class:"self-hit",tabindex:"0",role:"button","aria-label":"The Self: everything inside this ring"},sunG);
     hookTip(sh,()=>{ const [x,y]=P(sm,45); return {x,y,html:`<span class="ringtag">The center</span><b>The Self</b><span class="tl">Everything inside this ring is the Self: the witness at the very center, the Flower of Life, and the eight petals of its qualities. Around it, your window of capacity.</span><span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true));
     // the cream ground between the petals is part of the Self too: it lights the center the same way
