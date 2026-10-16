@@ -81,6 +81,8 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .self-ring{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;pointer-events:none;transition:stroke-width .25s ease,filter .25s ease}
 svg.selffocus .self-ring{stroke-width:3;stroke-opacity:1;filter:drop-shadow(0 0 6px var(--sun3))}
 .self-hit{fill:transparent;cursor:pointer;outline:none}
+.self-bg{fill:#FFF6DA;fill-opacity:.95;pointer-events:none}
+.is-dark .self-bg{fill-opacity:.6}
 .t-selfring{fill:var(--sunink);font-style:italic;font-weight:700;letter-spacing:.06em} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--display);font-style:italic;font-weight:500}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
@@ -911,8 +913,8 @@ function drawLoop(){
     const quarterLines=(r0,r1,c)=>DIRS.forEach((d,k)=>{ const a=d.angle+45, [x0,y0]=P(r0,a), [x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),stroke:c,"stroke-width":1.2,"stroke-opacity":.55,"pointer-events":"none"},g); });
     const H=R.heart, S=R.stem, E=R.edge, K=R.brake, B=R.rim;
     // heart and brainstem: gold, brightest nearest the center
-    el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#FFF6DA",class:"loop-ring"},g);
-    el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F8E4AE",class:"loop-ring"},g);
+    el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#F6DE9F",class:"loop-ring"},g);
+    el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F1D388",class:"loop-ring"},g);
     [[H[0],"#C9962E"],[H[1],"#C9962E"],[S[1],"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
     quarterLines(H[0],S[1],"#B98428");
     const fs=w=>Math.min(14,w*0.62);
@@ -922,7 +924,7 @@ function drawLoop(){
     arcText((S[0]+S[1])/2,140,220,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
     // the alarm: the edge keeps its own gradient, with the brainstem's gold carried across it
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(E[1])},g);
-      (isDark()?[[E[0]/E[1],"#F8E4AE",.62],[(E[0]+(E[1]-E[0])*0.5)/E[1],"#F2DCA8",.42],[1,"#EAD3B8",.28]]:[[E[0]/E[1],"#F8E4AE",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#F5DC9C",.15],[1,"#F3D891",0]]).forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
+      (isDark()?[[E[0]/E[1],"#F8E4AE",.62],[(E[0]+(E[1]-E[0])*0.5)/E[1],"#F2DCA8",.42],[1,"#EAD3B8",.28]]:[[E[0]/E[1],"#F1D388",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#EFCF80",.15],[1,"#EDCB78",0]]).forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       const base=el("g",{id:"loopbase","pointer-events":"none"}), lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(base,lab);
       el("path",{d:band(E[0],E[1]),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
     [45,225].forEach(a=>arcText((E[0]+E[1])/2,a-24,a+24,"the alarm · amygdala","lbl t-ring t-alarm",14,0.3,g));
@@ -1227,6 +1229,8 @@ function draw(){
   svg.appendChild(labels);
   // the Self: one ring of eight lotus petals, each carrying a quality, round the Flower of Life
   const sunG=el("g",{id:"core"});
+  // the Self's own ground: the lightest gold on the wheel, inside the ring that circles the petals
+  el("circle",{cx:0,cy:0,r:f(L1+3),class:"self-bg"},sunG);
   const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
   const lotus=(r0,r1,m,hw,hb)=>{ const h=r1-r0;
     return `M${q(r0,m-hb)} C${q(r0+h*0.24,m-hw*1.02)} ${q(r0+h*0.5,m-hw*1.07)} ${q(r0+h*0.66,m-hw*0.84)}`+
@@ -1247,7 +1251,6 @@ function draw(){
   { const sr0=L1+3, sr1=L1+17, sm=(sr0+sr1)/2;
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     el("circle",{cx:0,cy:0,r:f(sr0),class:"self-ring"},sunG);
-    [45,135,225,315].forEach(a=>arcText(sm,a-18,a+18,"the Self","lbl t-selfring",14,0.6,sunG).setAttribute("pointer-events","none"));
     const sh=el("path",{d:ringP(sr1)+" "+ringP(L1-2)+"Z","fill-rule":"evenodd",class:"self-hit",tabindex:"0",role:"button","aria-label":"The Self: everything inside this ring"},sunG);
     hookTip(sh,()=>{ const [x,y]=P(sm,45); return {x,y,html:`<span class="ringtag">The center</span><b>The Self</b><span class="tl">Everything inside this ring is the Self: the witness at the very center, the Flower of Life, and the eight petals of its qualities. Around it, your window of capacity.</span><span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true));
     ["mouseenter","focus"].forEach(ev=>sh.addEventListener(ev,()=>svg.classList.add("selffocus")));
