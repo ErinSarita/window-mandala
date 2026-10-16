@@ -661,12 +661,12 @@ function draw(){
   // a halo just beyond the ring, so the wheel seems to give off light
   grad("aura",{...U,r:VB},[[0.8,"var(--sun2)",0],[0.885,"var(--sun2)",isDark()?0.1:0.42],[0.985,"var(--sun2)",0]]);
   grad("sheen",{...U,r:rr},[[R.out[0]/rr,"#fff",0.34],[(R.out[0]+R.out[1])/2/rr,"#fff",0.06],[R.out[1]/rr,"#000",0.02],[1,"#000",0.08]]);
-  // the Self: a pale-gold disc, a bright heart, two layers of lotus petals, and a glow that spills into the window
-  const L0=R.core*0.55, L1=R.self-2, B1=R.self+8, sr=R.core*0.42, GL=R.self+60;
+  // the Self: a pale-gold disc, a bright heart, one ring of lotus petals, and a glow that spills into the window
+  // one layer of eight lotus petals, large enough to reach out over the inner window, stopping short of its words
+  const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=Math.min(R.self+(R.win[1]-R.win[0])*0.32, wmid-26), sr=R.core*0.42, GL=R.self+60;
   grad("sun",{...U,r:R.core},[[0,"var(--sun1)"],[0.72,"var(--sun2)"],[1,"var(--sun3)"]]);
   grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun1)"],[0.78,"var(--sun2)"],[1,"var(--sun3)"]]);
-  grad("petalb",{...U,r:B1},[[R.core/B1,"var(--sun1)"],[1,"var(--sun2)"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
@@ -738,10 +738,7 @@ function draw(){
   });
   el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#glow)","pointer-events":"none"});
   svg.appendChild(labels);
-  // a fine ring of golden beads round the Self, as on the rim of a mandala
-  const beads=el("g",{"pointer-events":"none"}), BR=R.self+17, NB=Math.round(2*Math.PI*BR/11);
-  for(let b=0;b<NB;b++){ const [x,y]=P(BR,b*360/NB); el("circle",{cx:f(x),cy:f(y),r:1.5,fill:"var(--sun4)",opacity:.7},beads); }
-  // the Self: a lotus of two layers, the eight front petals carrying its qualities, round the Flower of Life
+  // the Self: one ring of eight lotus petals, each carrying a quality, round the Flower of Life
   const sunG=el("g",{id:"core"});
   const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
   const lotus=(r0,r1,m,hw,hb)=>{ const h=r1-r0;
@@ -749,16 +746,15 @@ function draw(){
       ` C${q(r0+h*0.8,m-hw*0.6)} ${q(r1-h*0.15,m-hw*0.1)} ${q(r1,m)}`+
       ` C${q(r1-h*0.15,m+hw*0.1)} ${q(r0+h*0.8,m+hw*0.6)} ${q(r0+h*0.66,m+hw*0.84)}`+
       ` C${q(r0+h*0.5,m+hw*1.07)} ${q(r0+h*0.24,m+hw*1.02)} ${q(r0,m+hb)}Z`; };
-  for(let i=0;i<8;i++) el("path",{d:lotus(L0,B1,i*45+22.5,16,5),class:"qb",fill:"url(#petalb)"},sunG);
   const hF=L1-L0, rt=L0+hF*0.56;
   SELF.cs.forEach(([n,t],i)=>{
     const m=i*45;
-    const c=el("path",{d:lotus(L0,L1,m,24,7),class:"cell qp",fill:"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
+    const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
     c.dataset.slice="c"+i;
     hookTip(c,()=>{ const [x,y]=P(rt,m); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
     el("path",{d:`M${q(L0+hF*0.74,m)} L${q(L1-hF*0.09,m)}`,class:"vein"},sunG);
-    const avail=2*24*0.84*Math.PI/180*rt, size=Math.min(15.5,avail/(CS_SHORT[i].length*0.5));
-    arcText(rt,m-21,m+21,CS_SHORT[i],"lbl t-cq",f(size),0.2,sunG).setAttribute("pointer-events","none");
+    const avail=2*25*0.84*Math.PI/180*rt, size=Math.min(17,avail/(CS_SHORT[i].length*0.5));
+    arcText(rt,m-22,m+22,CS_SHORT[i],"lbl t-cq",f(size),0.2,sunG).setAttribute("pointer-events","none");
   });
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
