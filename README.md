@@ -4,6 +4,16 @@ A map of the window of capacity, with the Self at its center: the four direction
 
 A companion to [The Return Mandala](https://erinsarita.github.io/return-mandala/) and [The Pregnancy and Birth Mandala](https://erinsarita.github.io/prenatal-mandala/). Created by Erin Singleton, a student in APPPAH's Prenatal & Perinatal Educator certification. A model for reflection and education, not diagnosis, therapy, or medical advice.
 
+## The purpose
+
+Three maps of the inner life, brought into one picture, each answering a question:
+
+- **Where is my body?** Polyvagal theory: the ventral window, sympathetic fight or flight, dorsal collapse, and the blends between.
+- **Who is here?** Internal Family Systems: the parts that take over when we leave the window, and the Self at the center.
+- **How do I know, and how does the window grow?** Awareness, as *The Mind Illuminated* (Yates, Immergut, and Graves) teaches it: attention and peripheral awareness, metacognitive awareness that notices the edge early, and the presence that widens the window.
+
+Used together: notice where you are, name it, and return, letting the Self lead. On the wheel, the soft halo around everything is the field of peripheral awareness; the Awareness tab explains it, and the Practices tab adds "Opening peripheral awareness."
+
 ## The model
 
 A synthesis of earlier models, described in our own words: the window of tolerance (Siegel), the ladder of states (Porges, Dana), the defense cascade (Schauer and Elbert), fawn (Walker), tend and befriend (Taylor and colleagues), the thaw and orienting (Levine), the Self and its parts (Schwartz, Internal Family Systems), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective.

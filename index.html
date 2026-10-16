@@ -87,6 +87,8 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .trhit:focus{outline:none}
 .door{cursor:pointer} .door .dh{fill:var(--sun2);opacity:.6} .door .dc{fill:var(--sun4);stroke:none}
 .door:hover .dc,.door:focus-visible .dc{fill:var(--goldline)} .door:focus{outline:none}
+.awarehit{fill:transparent;cursor:pointer} .awarehit:focus{outline:none}
+.t-aware{fill:var(--goldline);font-style:italic;font-weight:500;opacity:.9}
 .braidhit{fill:transparent;cursor:pointer} .braidhit:focus{outline:none}
 .moontip{position:absolute;left:0;top:0;z-index:2;width:max-content;max-width:min(300px,80%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.4;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .15s ease}
 .moontip.on{opacity:1}
@@ -183,6 +185,10 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .menu b{font-family:var(--display);font-weight:500;font-size:18px;display:block;margin-bottom:4px}
 .menu ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
 .why{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.purpose{display:grid;gap:10px;background:color-mix(in srgb, var(--sun2) 24%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 45%, var(--line));border-radius:16px;padding:16px 18px;margin-bottom:22px}
+.purpose h2{font-family:var(--display);font-weight:500;font-size:30px;margin:0;line-height:1.15}
+.purpose p{margin:0;max-width:62ch}
+.purpose .three{margin:0;padding-left:20px;display:grid;gap:8px}
 .center-msg{display:grid;gap:12px}
 .center-msg h2,.intro h2{font-family:var(--display);font-weight:500;font-size:30px;margin:0;line-height:1.15}
 .center-msg p,.intro p{margin:0;max-width:62ch}
@@ -215,7 +221,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     </div>
     <div class="eyebrow">The nervous system and the Self</div>
     <h1>The Window Mandala</h1>
-    <p class="lede">A map of the window of capacity, with the Self at its center. Inside the window you can feel a great deal and stay yourself. Outside it, the body moves in one of four directions to protect you: fight or flight, freeze, collapse, or fawn, and it can move between them, around the circle and back. The way home always runs inward. Find where you are, see how wide your window is, and practice widening it. A companion to <a href="https://erinsarita.github.io/return-mandala/">The Return Mandala</a> and <a href="https://erinsarita.github.io/prenatal-mandala/">The Pregnancy and Birth Mandala</a>.</p>
+    <p class="lede">Three maps of the inner life, brought into one picture: the nervous system, from polyvagal theory; the parts and the Self, from Internal Family Systems; and awareness, as <i>The Mind Illuminated</i> teaches it. At the center is the Self, around it your window of capacity, and around the window the four ways the body protects you when something is too much. Find where you are, meet what is there, and practice the awareness that widens the window. A companion to <a href="https://erinsarita.github.io/return-mandala/">The Return Mandala</a> and <a href="https://erinsarita.github.io/prenatal-mandala/">The Pregnancy and Birth Mandala</a>.</p>
   </header>
 
   <div class="main">
@@ -245,6 +251,8 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
 
   <section class="about" id="about">
     <h2>About this mandala</h2>
+    <h3>The purpose</h3>
+    <p>This mandala brings three maps of the inner life into one picture: the nervous system, from polyvagal theory (where is my body?); the parts and the Self, from Internal Family Systems (who is here?); and awareness, from <i>The Mind Illuminated</i> (how do I know, and how does the window grow?). Used together, they offer a simple way through: notice where you are, name it, and return, letting the Self lead.</p>
     <h3>A model, made from models</h3>
     <p id="modelnote"></p>
     <h3>How it is built</h3>
@@ -272,8 +280,10 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Schwartz, R. C., &amp; Sweezy, M. (2020). <i>Internal Family Systems Therapy</i> (2nd ed.). Guilford.</li>
       <li>Shadick, N. A., et al. (2013). A randomized controlled trial of an internal family systems-based psychotherapeutic intervention on outcomes in rheumatoid arthritis: A proof-of-concept study. <i>Journal of Rheumatology, 40</i>(11), 1831–1841.</li>
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
+      <li>Tang, Y.-Y., Hölzel, B. K., &amp; Posner, M. I. (2015). The neuroscience of mindfulness meditation. <i>Nature Reviews Neuroscience, 16</i>(4), 213–225.</li>
       <li>Taylor, S. E., Klein, L. C., Lewis, B. P., Gruenewald, T. L., Gurung, R. A. R., &amp; Updegraff, J. A. (2000). Biobehavioral responses to stress in females: Tend-and-befriend, not fight-or-flight. <i>Psychological Review, 107</i>(3), 411–429.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
+      <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
     </ol>
     <p class="foot">Created by Erin Singleton, a student in APPPAH's Prenatal &amp; Perinatal Educator certification, as a companion to The Return Mandala. A model for reflection and education, not diagnosis, therapy, or medical advice.</p>
   </section>
@@ -442,6 +452,7 @@ const PRACTICES = [
   {key:"kind", name:"Widening rings of kindness", how:"Begin with yourself: \"May I be safe. May I be at ease.\" Then widen the ring to someone you love, someone neutral, someone difficult, and all beings, as the rings move outward from the center.", why:"Loving-kindness practice begins at the center and widens, like this mandala. Studies find it increases positive emotion and a sense of connection over time (Fredrickson and colleagues, 2008; Hofmann and colleagues, 2011)."},
   {key:"unblend", name:"Unblending", how:"Notice a feeling or a voice that has taken over. Find where it lives in your body. Ask it, kindly, \"Would you be willing to step back a little, so I can be with you?\" Notice any space that opens, and any calm, curiosity, or warmth that comes into it. Then ask the part what it wants you to know.", why:"Adapted from Internal Family Systems. When a part steps back, there is room for Self, and the defensive state often eases with it."},
   {key:"glimmer", name:"Glimmers", how:"Three times today, notice something small that feels safe or good, and stay with it for three breaths.", why:"Practicing safety, not only managing danger, gives the nervous system a well-worn way home (Dana)."},
+  {key:"aware", name:"Opening peripheral awareness", how:"Sit comfortably and rest your attention on the breath, at the nose or the belly. Without letting go of the breath, let your awareness open around it: sounds in the room, the feeling of your body, the space around you. Keep the breath at the center and everything else in the background, like the halo around the wheel. Every so often, notice the mind itself: where am I on the wheel right now? Five to ten minutes is plenty.", why:"Adapted from The Mind Illuminated (Yates). Training peripheral and metacognitive awareness means the edge is noticed earlier, so there is more time and more choice. Over time it is one of the steadiest ways the window widens."},
   {key:"edge", name:"Touch the edge, and come back", how:"Inside your window, bring to mind something a little stressful. Notice your body begin to move toward the edge, then return to something steady. Back and forth, a few times, never going far.", why:"Titration and pendulation (Levine). Each safe return widens the window a little."}
 ];
 
@@ -463,7 +474,7 @@ const FINDER = [
   {q:"What does your body want to do?", a:[["Move: push, run, act","move"],["Stay still, it can't move","still"],["Rest, lie down","rest"],["Please someone, make it okay","please"]]}
 ];
 
-const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the Self and its parts (Richard Schwartz), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
+const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the Self and its parts (Richard Schwartz), awareness as taught in The Mind Illuminated (John Yates, with Matthew Immergut and Jeremy Graves), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
 
 /* ---------- Geometry ---------- */
 const VB = 490;
@@ -662,6 +673,11 @@ function draw(){
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
   el("circle",{cx:0,cy:0,r:VB,fill:"url(#aura)","pointer-events":"none"});
+  // the halo between the defenses and the braid is the field of peripheral awareness, which holds every state
+  { const r0=R.out[1]+2, r1=R.braid[0]-5;
+    const ring=`M0 ${-r1} A${r1} ${r1} 0 1 1 0 ${r1} A${r1} ${r1} 0 1 1 0 ${-r1} M0 ${-r0} A${r0} ${r0} 0 1 0 0 ${r0} A${r0} ${r0} 0 1 0 0 ${-r0}Z`;
+    const hit=el("path",{d:ring,class:"awarehit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The field of awareness. Read about awareness"});
+    hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>The field of awareness</b><span class="tl">Peripheral awareness: the soft, wide knowing that holds every state, the window and the defenses alike.</span><span>Tap to read more.</span>`}),()=>showAware(true)); }
   drawBraid();
   const labels=el("g",{"pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
@@ -719,6 +735,7 @@ function draw(){
     });
   });
   el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#glow)","pointer-events":"none"});
+  arcText((R.out[1]+R.braid[0])/2+1,-34,34,"the field of awareness","lbl t-aware",13,1.2,labels);
   svg.appendChild(labels);
   // the Self: one ring of eight lotus petals, each carrying a quality, round the Flower of Life
   const sunG=el("g",{id:"core"});
@@ -940,6 +957,7 @@ function addTab(label,key,go){ const b=document.createElement("button"); b.class
 addTab("How to read","intro",()=>showIntro());
 addTab("Where am I?","where",()=>showWhere(true));
 addTab("The Self","self",()=>showSelf(true));
+addTab("Awareness","aware",()=>showAware(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
 addTab("Moving between","moves",()=>showMoves(null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
@@ -964,6 +982,7 @@ function wire(){
   panel.querySelectorAll("[data-where]").forEach(b=>b.addEventListener("click",()=>showWhere(true,b.dataset.where||null)));
   panel.querySelectorAll("[data-practice]").forEach(b=>b.addEventListener("click",()=>showPractice(true)));
   panel.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>showReg(true)));
+  panel.querySelectorAll("[data-aware]").forEach(b=>b.addEventListener("click",()=>showAware(true)));
   panel.querySelectorAll("[data-patterns]").forEach(b=>b.addEventListener("click",()=>showPatterns(true)));
 }
 function applySel(){
@@ -975,6 +994,17 @@ function applySel(){
     else el("path",{d:sector(R.win[0]-2,R.out[1]+2,a0+0.3,a1-0.3,1,0)},so); }
 }
 
+const PURPOSE_HTML=`<div class="purpose">
+    <div class="eyebrow">The purpose of this mandala</div>
+    <h2>Three maps, one picture</h2>
+    <p>This mandala brings together three ways of understanding the inner life, so they can be used as one.</p>
+    <ul class="three">
+      <li><b>Where is my body?</b> Polyvagal theory: the safe and connected state of the window, the sympathetic charge of fight or flight, the dorsal shutdown of collapse, and the blends between them.</li>
+      <li><b>Who is here?</b> Internal Family Systems: the parts that take over when we leave the window, each trying to protect us, and the Self at the center, calm and curious, that can meet them.</li>
+      <li><b>How do I know, and how does the window grow?</b> Awareness, as <i>The Mind Illuminated</i> teaches it: attention and peripheral awareness working together, noticing the edge early, and the presence that widens the window over time.</li>
+    </ul>
+    <p>Used together: <b>notice</b> where you are, with awareness; <b>name</b> it, on the wheel and in the part that is speaking; and <b>return</b>, by orienting and letting the Self lead. With practice, the window widens.</p>
+  </div>`;
 const CENTER_HTML=`<div class="center-msg">
     <div class="eyebrow">Begin here</div>
     <h2>The Self at the center</h2>
@@ -984,7 +1014,7 @@ const CENTER_HTML=`<div class="center-msg">
   </div>`;
 function showIntro(){
   setView("intro");
-  panel.innerHTML=CENTER_HTML+`<div class="intro">
+  panel.innerHTML=PURPOSE_HTML+CENTER_HTML+`<div class="intro">
     <h2>Reading the wheel</h2>
     <ul class="legend">
       <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest.</div></li>
@@ -1052,6 +1082,30 @@ function findResult(a){
   wire();
 }
 
+// Awareness: the third map, how you know, after The Mind Illuminated
+function showAware(user){
+  setView("aware");
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">How you know</div><h2>Awareness</h2><div class="meta">Attention, peripheral awareness, and presence</div>
+      <p>The third map is awareness: not what you feel, but how you know what you feel. In <i>The Mind Illuminated</i>, John Yates describes two ways the mind knows, and teaches that both can be trained.</p></div>
+    <div class="ring"><h3>Attention and peripheral awareness</h3>
+      <p><b>Attention</b> picks one thing out and focuses on it: the breath, a sound, a thought, a worry. <b>Peripheral awareness</b> holds everything else, more softly, in the background: the room, the body, the mood, what the mind is doing.</p>
+      <p>Yates describes mindfulness as these two working together in balance: attention steady on what matters, awareness wide enough to hold the rest. When something captures attention completely, awareness narrows and the bigger picture is lost. That narrowing is often how we leave the window.</p></div>
+    <div class="ring"><h3>Noticing the edge early</h3>
+      <p>The early signals at the edge, a tightening jaw, a held breath, a pull to please, tend to show up in peripheral awareness before they capture attention. The stronger and wider your peripheral awareness, the sooner you notice that you are leaving the window, and the shorter the way back.</p>
+      <p>Yates calls awareness of the mind itself <b>metacognitive awareness</b>: knowing what the mind is doing while it does it. "I am revving." "I am going far away." Noticing a state is a small step outside it, and from there, coming back becomes a choice rather than an accident.</p></div>
+    <div class="ring"><h3>Presence, and the window</h3>
+      <p>When attention is stable and awareness is wide, there is presence: calm, clear, curious, and here. Practiced often, that presence is how the window widens. More can be felt at once without being swept away, because there is more room to hold it in.</p>
+      <p class="about">Research on mindfulness training finds gains in attention and in the regulation of emotion, though the science is still young (Tang, Hölzel, and Posner, 2015).</p></div>
+    <div class="ring"><h3>Parts, sub-minds, and the Self</h3>
+      <p>Yates describes the mind as a system of many sub-minds working in parallel, each with its own concerns, taking turns in consciousness. It is strikingly close to the parts of Internal Family Systems. With strong, spacious awareness, a part can be noticed as a part, one voice among others, rather than taking over.</p>
+      <p class="note">The two traditions speak differently. Buddhist practice, which <i>The Mind Illuminated</i> comes from, does not describe a lasting Self; it speaks of awareness. Internal Family Systems speaks of the Self. On this wheel they are held side by side: the Self at the center and the field of awareness around the whole wheel point to the same presence from two directions. That linking is this mandala's synthesis.</p></div>
+    <div class="ring"><h3>On the wheel</h3>
+      <p>The soft halo around the whole wheel is the field of peripheral awareness. It holds every state, the window and the defenses alike. Nothing on the wheel is outside it.</p>
+      <button type="button" class="linkbtn" data-practice>Try opening peripheral awareness</button></div>
+    <p class="src">Yates, Immergut &amp; Graves (2017); Tang, Hölzel &amp; Posner (2015); Schwartz (2021)</p>`;
+  wire(); if(user) bringPanel();
+}
+
 function showSelf(user, ci){
   setView("self");
   const S=SELF;
@@ -1062,6 +1116,7 @@ function showSelf(user, ci){
     <div class="ring"><h3>Blending, and unblending</h3><p>${S.blend}</p><button type="button" class="linkbtn" data-practice>Try the unblending practice</button></div>
     <div class="ring"><h3>Self, and self</h3><p>${S.small}</p></div>
     <div class="ring"><h3>One center, many names</h3><p>${S.links}</p></div>
+    <div class="ring"><h3>Self and awareness</h3><p>The third map on this wheel, awareness as <i>The Mind Illuminated</i> teaches it, comes from a tradition that speaks of awareness rather than Self. Held side by side, they meet in presence: the steady, open knowing in which parts can be seen as parts, and the Self can come forward.</p><button type="button" class="linkbtn" data-aware>Read about awareness</button></div>
     <div class="ring"><h3>Growing toward the Self</h3><p>Meditation and the practices here are ways of spending more time near the center: noticing the Cs, unblending from parts, and letting the body feel safe enough for Self to come forward. Over time the center grows, and the rings of threat thin, as the slider shows.</p>
       <p class="note">${S.evidence}</p></div>
     <p class="src">Schwartz (2021); Schwartz &amp; Sweezy (2020); Shadick et al. (2013); Hodgdon et al. (2022); Jung (1959); Dana (2018)</p>`;
@@ -1143,7 +1198,7 @@ function showPractice(user){
       <p>Practice inside your window, when you are steady enough to learn. Over time, these are how the center grows.</p></div>
     ${PRACTICES.map(p=>`<div class="ring" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
       ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Begin the guided breathing</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Begin the rings of kindness</button>`:""}</div>`).join("")}
-    <p class="src">Lehrer &amp; Gevirtz (2014); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
+    <p class="src">Lehrer &amp; Gevirtz (2014); Fredrickson et al. (2008); Hofmann et al. (2011); Yates et al. (2017); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
   panel.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
     if(b.dataset.run==="breath") startBreath(); else startKind();
   }));
