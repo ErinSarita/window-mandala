@@ -787,7 +787,6 @@ function draw(){
   grad("sun",{...U,r:R.core},[[0,"#fff"],[0.6,"#fff"],[0.85,"var(--sun1)"],[1,"var(--sun2)"]]);
   // a glow of light from the center that spills softly over the inner petals
   const CG=R.core*1.45;
-  grad("dotglow",{...U,r:Math.max(3.2,sr*0.16)+5},[[0,"#FFE680",1],[0.55,"#FFE680",0.7],[1,"#FFE680",0]]);
   grad("coreglow",{...U,r:CG},[[0,"#fff",0.9],[R.core/CG*0.8,"#fff",0.55],[R.core/CG,"#fff",0.32],[1,"#fff",0]]);
   grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
@@ -881,23 +880,18 @@ function draw(){
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
   el("circle",{cx:0,cy:0,r:f(CG),fill:"url(#coreglow)",stroke:"none","pointer-events":"none"},core);
-  // a fine gold outline where the Flower meets the petals
-  el("circle",{cx:0,cy:0,r:f(R.core-0.6),fill:"none",stroke:"var(--goldline)","stroke-width":1.3,"stroke-opacity":.85,"pointer-events":"none"},core);
+  // a fine double gold outline where the Flower meets the petals
+  [R.core-0.5,R.core-3.4].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),fill:"none",stroke:"var(--goldline)","stroke-width":0.75,"stroke-opacity":.85,"pointer-events":"none"},core));
   const sg=el("g",{fill:"none",stroke:"var(--goldline)","pointer-events":"none"},core);
   el("circle",{cx:0,cy:0,r:f(sr),fill:"url(#heart)",stroke:"none"},sg);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
     el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"#fff","fill-opacity":.6,stroke:"var(--goldline)","stroke-width":0.9,"stroke-opacity":.8},sg); }
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2; el("circle",{cx:f(sr*Math.cos(t)),cy:f(sr*Math.sin(t)),r:f(sr),"stroke-width":1.1,"stroke-opacity":.7},sg); }
-  // the central circle, the one holding the six-petaled flower, drawn in light: a white band edged in fine gold
-  el("circle",{cx:0,cy:0,r:f(sr),stroke:"var(--sun2)","stroke-width":6,"stroke-opacity":.9},sg);
-  el("circle",{cx:0,cy:0,r:f(sr),stroke:"#fff","stroke-width":2.6},sg);
-  [sr-3.2,sr+3.2].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),"stroke-width":0.6,"stroke-opacity":.7},sg));
-  // the witness: a small golden dot at the very center, the still point of the wheel
+  // the central circle, the one holding the six-petaled flower: a single line, true to the Seed of Life
+  el("circle",{cx:0,cy:0,r:f(sr),"stroke-width":1.1,"stroke-opacity":.8},sg);
+  // the witness: a small off-white dot at the very center, the still point of the wheel
   const dotR=CR.dot;
-  // it shines: a bright gold dot with a halo of light
-  el("circle",{cx:0,cy:0,r:f(dotR+5),fill:"url(#dotglow)","pointer-events":"none"},sunG);
-  el("circle",{cx:0,cy:0,r:f(dotR+2.6),fill:"none",stroke:"#FFE27A","stroke-width":2.2,"stroke-opacity":.9,"pointer-events":"none"},sunG);
-  el("circle",{cx:0,cy:0,r:f(dotR),fill:"#FFD54A",stroke:"#E0A21E","stroke-width":1.2,"pointer-events":"none"},sunG);
+  el("circle",{cx:0,cy:0,r:f(dotR),fill:"#FFFCF2",stroke:"var(--goldline)","stroke-width":0.8,"pointer-events":"none"},sunG);
   const wit=el("circle",{cx:0,cy:0,r:f(dotR+7),class:"witness-hit",tabindex:"0",role:"button","aria-label":"The witness, at the very center of the Self"},sunG);
   hookTip(wit,()=>({x:0,y:-dotR,html:`<span class="ringtag">The very center</span><b>The witness</b><span class="tl">The one who notices: steady and still, watching whatever arises without being swept away.</span><span>Tap to read about the layers of Self.</span>`,color:"--sun3"}),()=>showSelf(true,null,"witness"));
   core.addEventListener("click",()=>showSelf(true));
