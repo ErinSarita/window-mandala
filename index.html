@@ -147,6 +147,19 @@ svg.qfocus .q-dim,svg.qfocus .q-hi{opacity:1}
 svg.rimfocus .rim-focus{opacity:1}
 .rim-shade{fill:#1E1726;fill-opacity:.5}
 .rim-glow{fill:none;stroke:#FFE38A;stroke-opacity:.9;filter:drop-shadow(0 0 8px #FFD866)}
+/* the model tabs above the wheel: each lights the rings one source model became */
+.lenses{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 8px;max-width:740px;margin:0 auto;width:100%}
+.lenslbl{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.lens{font:inherit;font-size:13px;font-weight:600;line-height:1.2;padding:5px 12px 5px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .2s ease,border-color .2s ease}
+.lens svg{width:16px;height:16px;flex:none;color:var(--goldline)}
+.lens:hover{border-color:var(--goldline)}
+.lens[aria-pressed="true"]{background:var(--goldline);border-color:var(--goldline);color:#fff}
+.lens[aria-pressed="true"] svg{color:#fff}
+.lens-dim{fill:#1E1726;pointer-events:none}
+.lens-line{fill:none;stroke:#FFE38A;stroke-width:3;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 6px #FFD866)}
+@media (prefers-reduced-motion: no-preference){ #lensG{animation:lensin .35s ease} }
+@keyframes lensin{from{opacity:0}to{opacity:1}}
+.lensnav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .brake-ring{fill-opacity:.9;pointer-events:none}
 .window-rim{fill-opacity:1;pointer-events:none}
 .t-rim{fill:#3A2604;font-style:normal;font-weight:700;letter-spacing:.1em;stroke:none}
@@ -336,6 +349,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
 
   <div class="main">
     <div class="stage">
+      <div class="lenses" id="lenses" role="group" aria-label="Light up each model inside the mandala"><span class="lenslbl">Light up each model</span></div>
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
@@ -401,6 +415,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Thayer, J. F., &amp; Lane, R. D. (2009). Claude Bernard and the heart–brain connection: Further elaboration of a model of neurovisceral integration. <i>Neuroscience &amp; Biobehavioral Reviews, 33</i>(2), 81–88.</li>
       <li>Treleaven, D. A. (2018). <i>Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing</i>. Norton.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
+      <li>Yaden, D. B., Haidt, J., Hood, R. W., Vago, D. R., &amp; Newberg, A. B. (2017). The varieties of self-transcendent experience. <i>Review of General Psychology, 21</i>(2), 143–160.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
     </ol>
     <p class="foot">Created by Erin Singleton, a student in APPPAH's Prenatal &amp; Perinatal Educator certification, as a companion to The Return Mandala. A model for reflection and education, not diagnosis, therapy, or medical advice.</p>
@@ -866,7 +881,7 @@ function petal(r0,r1,a0,a1,bulgeIn){
   return `M${f(b0[0])} ${f(b0[1])} Q${f(c0[0])} ${f(c0[1])} ${f(tip[0])} ${f(tip[1])} Q${f(c1[0])} ${f(c1[1])} ${f(b1[0])} ${f(b1[1])} `+(bulgeIn ? `Q${f(P(r0+bulgeIn,m)[0])} ${f(P(r0+bulgeIn,m)[1])} ${f(b0[0])} ${f(b0[1])}` : arc(r0,a1,a0,0))+"Z";
 }
 // text path along an arc that reads upright
-let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null;
+let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null, LENS=null;
 /* ---------- Patterns on the wheel ----------
    A route is a list of [angle, depth] points: the angle is the direction (0 fight or flight at the top, 90 freeze,
    180 collapse, 270 fawn), and the depth runs from the Self (0) through the window (about .35), the edge (about .56),
@@ -1292,8 +1307,9 @@ function draw(){
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     el("path",{d:ringP(R.braid[1]+6)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"self-shade"},sf);
     el("circle",{cx:0,cy:0,r:f(r0),class:"self-glow"},sf); }
+  el("g",{id:"lensG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawLens();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1362,7 +1378,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1378,6 +1394,9 @@ function wire(){
   on("[data-aware]",()=>showAware(true));
   on("[data-pr]",b=>showPractice(true,b.dataset.pr));
   on("[data-patterns]",()=>showPatterns(true));
+  on("[data-lens]",b=>showLens(b.dataset.lens,true));
+  on("[data-lensoff]",()=>showIntro());
+  on("[data-loopread]",()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); });
   // hovering a layer of the Self in the panel lights it on the wheel
   panel.querySelectorAll("[data-lhl]").forEach(n=>{ if(n.dataset.bound) return; n.dataset.bound=1;
     const on=()=>setLayerHL(n.dataset.lhl), off=()=>setLayerHL(null);
@@ -1401,6 +1420,7 @@ const PURPOSE_HTML=`<div class="purpose">
       <li><b>How do I notice, and come back?</b> Awareness: knowing your state as it happens, which brings presence to it and helps you return toward the center.</li>
     </ul>
     <p>Used together: <b>notice</b> where you are, <b>name</b> it, and <b>return</b>, letting the Self lead.</p>
+    <p>The tabs above the wheel light up each model in turn: where it lives on the wheel, what it brings, and how the mandala reimagines it.</p>
     <p><b>What it is for.</b> Not to stay inside the window always: leaving it is human, and the defenses are part of how we survive. The aim is to come back more easily and more quickly each time, so the window widens. Along the way it cultivates <b>coherence</b>, heart and brain in rhythm and the parts working together, and a true sense of <b>Self beyond conditioning</b>: parts carry the old programs and imprints, the Self is not made of them, and each return lets you live a little less from them.</p>
   </div>`;
 function showIntro(){
@@ -1543,6 +1563,107 @@ function showAware(user){
       <button type="button" class="linkbtn" data-practice>Try opening peripheral awareness</button></div>
     <p class="src">Tang, Hölzel &amp; Posner (2015); Siegel (1999); Schwartz (2021)</p>`;
   wire(); if(user) bringPanel();
+}
+
+// The models inside the mandala: each tab above the wheel lights the rings one source model became, and its card
+// says what the model brings and how the wheel reimagines it
+const LENSES=[
+  {key:"window", tab:"Polyvagal and the window", icon:`<circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="2.6"/>`,
+   spans:()=>[[CR.L1+4,R.win[1]],R.rim,R.out,R.braid], dim:.5,
+   title:"Polyvagal theory and the window of capacity", meta:"Stephen Porges and Deb Dana; Dan Siegel",
+   intro:"Two maps of the same ground: how much the nervous system can hold, and what it does when there is too much. Together they give the wheel its shape: the window at the center, and the survival states around it.",
+   lit:[["The window of capacity","The ring of Energized, Settled, Still, and Connected: the states in which you can feel a great deal and still think, connect, and choose."],
+        ["Its border","The deep gold band at the window's edge. Inside it, you can come back on your own. Beyond it, survival takes over."],
+        ["Outside the window","The four survival states: fight or flight, freeze, collapse, and fawn."],
+        ["The braid","Polyvagal theory's three nervous systems, woven round the whole wheel."]],
+   brings:[`<b>The window of tolerance</b> comes from psychiatrist Dan Siegel (1999): a zone of arousal in which we can take in what is happening and respond. Above it lies hyperarousal, too much charge; below it, hypoarousal, too little. Pat Ogden and colleagues (2006) carried it into body-based trauma therapy. Many now call it the window of capacity, because it can widen.`,
+     `<b>Polyvagal theory</b> comes from neuroscientist Stephen Porges (2007, 2011): three states in an evolutionary order. The ventral vagal state is safe and social; the sympathetic mobilizes for fight or flight; the dorsal vagal immobilizes and shuts down. Therapist Deb Dana (2018) turned it into a ladder people can climb, and named its blends: play, mobilization held by safety, and stillness, rest held by safety.`],
+   reimagined:[`Siegel's window is a band, with too much above it and too little below. Here the band bends into a circle, so the window sits at the center and every way out leads somewhere: up into fight or flight, down into collapse, and to the sides into freeze and fawn.`,
+     `In polyvagal terms the whole window is ventral, and each of its four states is the safe root of the defense beyond it: Energized beneath fight or flight, Still beneath freeze, Settled beneath collapse, Connected beneath fawn.`,
+     `Freeze and fawn are read as blends: freeze holds accelerator and brake at once, and fawn uses the social system for defense, a response Pete Walker (2013) named.`,
+     `The slider widens the window, as both models hope: with safety, practice, and support, more can be held.`],
+   note:"Bending the window into a circle, and reading freeze and fawn as blends, are this mandala's synthesis. Parts of polyvagal theory's anatomy are disputed by physiologists; its three states remain a widely used clinical map.",
+   links:`<button type="button" class="linkbtn" data-dir="0">Read the four directions</button>`,
+   src:"Siegel (1999); Ogden, Minton &amp; Pain (2006); Porges (2007, 2011); Dana (2018); Walker (2013)"},
+  {key:"ifs", tab:"IFS: Self and parts", icon:`<circle cx="8" cy="8" r="3.2" fill="currentColor"/><circle cx="8" cy="1.8" r="1.5" fill="currentColor"/><circle cx="13.4" cy="11.1" r="1.5" fill="currentColor"/><circle cx="2.6" cy="11.1" r="1.5" fill="currentColor"/>`,
+   spans:()=>[[0,CR.L1+4]], dim:.26, parts:true,
+   title:"Internal Family Systems: the Self and its parts", meta:"Richard Schwartz",
+   intro:"Richard Schwartz developed Internal Family Systems in the 1980s, listening to clients describe parts of themselves as if they were people inside. Beneath the parts he kept meeting something else: a calm, curious, compassionate presence he called the Self.",
+   lit:[["The Self, at the center","The Flower of Life and its eight petals, the eight Cs of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness."],
+        ["The parts, in the rings around it","The dots show where a few familiar parts tend to live. The dashed lines are each part's way home to the Self."]],
+   brings:[`Every mind is made of many parts, and every part has a good intention, even when what it does hurts. <b>Protectors</b> try to keep pain away: managers by planning, pleasing, and controlling ahead of time, firefighters by acting fast once pain breaks through. <b>Exiles</b> are younger parts that carry the old pain, and the burdens of what happened.`,
+     `The <b>Self</b> is not a part. It is not damaged, only crowded out. When parts trust it enough to step back, it comes forward on its own, so healing is less about building it than about uncovering it.`],
+   reimagined:[`IFS maps who is here; it does not place parts on a map of the nervous system. The mandala does: parts live in every ring outside the Self.`,
+     `Inside the window they are present and Self-led. At the edge, a protector stirs and the alarm sounds. Beyond the border a protector has taken over, which IFS calls blending, and the body follows it into its home state: a pleaser into fawn, an angry protector into fight, a part that goes far away into collapse.`,
+     `So the way back is the same in both maps. A part unblending, and the nervous system returning to the window, are two views of one return.`],
+   note:"Linking parts with nervous-system states is this mandala's synthesis. IFS has a young but growing research base (Shadick and colleagues, 2013; Hodgdon and colleagues, 2022); the Self is a clinical and spiritual concept, offered here that way.",
+   links:`<button type="button" class="linkbtn" data-self>Read about the Self</button><button type="button" class="linkbtn" data-practice>Try the unblending practice</button>`,
+   src:"Schwartz (2021); Schwartz &amp; Sweezy (2020); Shadick et al. (2013); Hodgdon et al. (2022)"},
+  {key:"loop", tab:"The heart-brain loop", icon:`<circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>`,
+   spans:()=>[[R.heart[0],R.brake[1]]], dim:.5,
+   title:"The heart-brain loop: neurovisceral integration", meta:"Julian Thayer and Richard Lane",
+   intro:"Psychologist Julian Thayer and psychiatrist Richard Lane (2000, 2009) described a network linking the brain and the heart that keeps emotion in balance. Its name says what it does: the brain (neuro) and the body's organs (visceral), working as one.",
+   lit:[["The heart","Heart rate variability: the loop's rhythm, and its measure."],
+        ["The brainstem","The vagal centers, where signals pass both ways between brain and heart."],
+        ["The alarm","The amygdala, sounding at the window's edge."],
+        ["The brake","The prefrontal cortex, holding the alarm in check."]],
+   brings:[`In their model the prefrontal cortex calms the amygdala, and through the brainstem and the vagus nerve it steadies the heart. While the loop works, the heart's rhythm stays flexible, quickening a little on each in-breath and slowing on each out-breath. Higher resting heart rate variability goes with better regulation of emotion and attention, so the heart becomes a window onto the whole loop.`,
+     `When the prefrontal brake weakens, the alarm runs unchecked, the heart turns fast and rigid, and heart rate variability falls.`],
+   reimagined:[`The model is a network of brain regions. Here it is drawn as nested rings, to show which part holds which, not where each sits in the body.`,
+     `The brake's outer edge becomes the border of the window of capacity. While the brake holds, you are inside your window, even with the alarm sounding. Beyond the brake, the dotted line in the survival ring marks the loop broken: the brake gives way, the alarm runs, and the rhythm drops away.`,
+     `That joins three maps at one line: Thayer and Lane's prefrontal brake, Siegel's window, and Porges's vagal brake.`,
+     `It also shows two doors into the loop: breath, from the body up, through the heart; and awareness, from the top down, through the brake.`],
+   note:"Placing the brake at the window's border is this mandala's synthesis. The link between heart rate variability and the regulation of emotion is well studied; the anatomy here is simplified.",
+   links:`<button type="button" class="linkbtn" data-loopread>Read about the loop</button><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button>`,
+   src:"Thayer &amp; Lane (2000, 2009); Porges (2007); Siegel (1999); Lehrer &amp; Gevirtz (2014)"},
+  {key:"witness", tab:"The witness", icon:`<circle cx="8" cy="8" r="6.4" fill="currentColor" fill-opacity=".22"/><circle cx="8" cy="8" r="2.4" fill="currentColor"/>`,
+   spans:()=>[[0,R.core]], dim:.55,
+   title:"The witness: a gateway at the center", meta:"Contemplative traditions, and the Self",
+   intro:"At the very center of the wheel is a small dot of light: the witness, the one who notices. Every other ring holds something you can notice. The witness is the noticing itself.",
+   lit:[["The witness","The still point of the whole wheel."],
+        ["The Seed of Life around it","An ancient figure of circles grown from one: here, the Self unfolding from a single point."]],
+   brings:[`Many contemplative traditions point to a witness, or to awareness itself: the knowing that is present in every state, and is not made of what it knows. Vedanta calls it <i>sakshi</i>, the witness. Buddhist teachers speak of the one who knows; mindfulness teachers, of resting in awareness.`,
+     `In IFS, Schwartz writes of a spiritual side to the Self, a felt connection to something larger than any one person.`],
+   reimagined:[`Here the center is drawn as a gateway rather than an end. Resting as the witness, many people find the sense of self grows wider rather than smaller: less "I am this part," more "I am the space in which all of this happens." Beyond that, connection opens further, to other people, to the living world, to life itself.`,
+     `It is a doorway to more of the Self than we yet know. Contemplative traditions describe what lies through it in many ways, samadhi among them. The mandala leaves it open: a portal, not a map.`],
+   note:"This center draws on contemplative traditions more than on measured science. Research on self-transcendent experience is young but growing (Yaden and colleagues, 2017). Go gently: if resting here feels empty or unsettling rather than restful, open your eyes, feel your feet on the floor, and come back to the breath.",
+   links:`<button type="button" class="linkbtn" data-pr="rest">Practice: Resting as awareness</button><button type="button" class="linkbtn" data-aware>Read about awareness</button>`,
+   src:"Schwartz (2021); Yaden et al. (2017); Tang, Hölzel &amp; Posner (2015)"}
+];
+const lensbar=document.getElementById("lenses");
+LENSES.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.className="lens"; b.dataset.lens=L.key; b.setAttribute("aria-pressed","false");
+  b.innerHTML=`<svg viewBox="0 0 16 16" aria-hidden="true">${L.icon}</svg>${L.tab}`;
+  b.addEventListener("click",()=>{ if(LENS===L.key) showIntro(); else showLens(L.key,true); }); lensbar.appendChild(b); });
+function markLens(){ lensbar.querySelectorAll(".lens").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lens===LENS?"true":"false")); }
+// dims the whole wheel except the lit rings, which glow at their edges
+function drawLens(){
+  const g=document.getElementById("lensG"); if(!g) return; g.innerHTML="";
+  svg.classList.toggle("lensview",!!LENS); if(!LENS||!R.heart) return;
+  const L=LENSES.find(l=>l.key===LENS), spans=L.spans(), top=R.braid[1]+8;
+  const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+  // concentric circles, filled even-odd: each lit ring is a hole in the shade
+  let d=ring(top); spans.forEach(([a,b])=>{ d+=" "+ring(b); if(a>0.5) d+=" "+ring(a); });
+  el("path",{d,"fill-rule":"evenodd",class:"lens-dim","fill-opacity":L.dim},g);
+  spans.forEach(([a,b])=>{ el("circle",{cx:0,cy:0,r:f(b),class:"lens-line"},g); if(a>0.5) el("circle",{cx:0,cy:0,r:f(a),class:"lens-line"},g); });
+  if(L.parts) PATTERNS.parts.forEach(([name,a,dp])=>{
+    const [x,y]=P(depthR(dp),a), [sx,sy]=P(R.core+4,a), right=x>=0, vert=Math.abs(y)>Math.abs(x);
+    el("line",{x1:f(x),y1:f(y),x2:f(sx),y2:f(sy),class:"part-line"},g);
+    el("circle",{cx:f(x),cy:f(y),r:7,class:"part-dot"},g);
+    const t=el("text",vert?{x:f(x),y:f(y<0?y-14:y+28),"text-anchor":"middle",class:"lbl t-part"}:{x:f(x+(right?-12:12)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-part"},g); t.textContent=name; });
+}
+function showLens(key, user){
+  if(!LOOPON) setLoop(true);
+  LENS=key; setView("lens"); drawLens(); markLens();
+  const L=LENSES.find(l=>l.key===key), i=LENSES.indexOf(L), next=LENSES[(i+1)%LENSES.length];
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">A model inside the mandala</div><h2>${L.title}</h2><div class="meta">${L.meta}</div><p>${L.intro}</p></div>
+    <div class="ring"><h3>Lit on the wheel</h3><ul>${L.lit.map(([n,t])=>`<li><b>${n}.</b> ${t}</li>`).join("")}</ul></div>
+    <div class="ring"><h3>What it brings</h3>${L.brings.map(t=>`<p>${t}</p>`).join("")}</div>
+    <div class="ring"><h3>How the mandala reimagines it</h3>${L.reimagined.map(t=>`<p>${t}</p>`).join("")}
+      <p class="note">${L.note}</p><div class="lensnav">${L.links}</div></div>
+    <div class="lensnav"><button type="button" class="btn" data-lens="${next.key}">Next: ${next.tab}</button><button type="button" class="btn" data-lensoff>See the whole wheel</button></div>
+    <p class="src">${L.src}</p>`;
+  // on a phone the tabs sit right above the wheel, so stay with the lit wheel; the card waits below it
+  wire(); if(user&&!isNarrow()) bringPanel();
 }
 
 function showSelf(user, ci, layer){
