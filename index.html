@@ -102,12 +102,6 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .coretip.on{opacity:1}
 .coretip b{font-family:var(--display);font-weight:500;font-size:16px;display:block}
 .coretip span{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
-/* the practices on the wheel: the Self breathing, and rings of kindness widening */
-#core{transform-box:fill-box;transform-origin:center}
-@media (prefers-reduced-motion: no-preference){
-  svg.breathing #core{animation:breathe 10s ease-in-out infinite}
-  .kring{transform-box:fill-box;transform-origin:center;animation:widen 9s ease-out infinite}
-}
 @media (prefers-reduced-motion: no-preference){ .lhl{animation:lpulse 3.6s ease-in-out infinite} }
 @keyframes lpulse{0%,100%{fill-opacity:.1}50%{fill-opacity:.42}}
 .lhl{fill:#fff;fill-opacity:.28;pointer-events:none}
@@ -122,24 +116,12 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .layers>div.hl{background:color-mix(in srgb, var(--sun2) 26%, transparent);border-radius:10px;padding:10px 12px;border-top-color:transparent}
 .stages{margin:0;padding-left:22px;display:grid;gap:8px}
 .stages li b{font-weight:700}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
-@keyframes widen{0%{transform:scale(1);opacity:.85}100%{transform:scale(var(--to));opacity:0}}
-.kring{fill:none;stroke:var(--goldline);stroke-width:2.4;vector-effect:non-scaling-stroke;pointer-events:none;filter:drop-shadow(0 0 3px var(--sun3))}
 .capbar{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:740px;margin:0 auto;width:100%}
 .caprow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .caprow label{font-size:14px;font-weight:700}
 .caprow input{flex:1;min-width:160px;accent-color:var(--self)}
 .capname{font-family:var(--display);font-size:17px;min-width:12ch}
 .capbar p{margin:0;font-size:13.5px;color:var(--muted)}
-.practicebar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.guide{max-width:740px;margin:0 auto;width:100%;background:color-mix(in srgb, var(--sun2) 30%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 55%, var(--line));border-radius:16px;padding:14px 18px;display:grid;gap:6px;text-align:center;box-shadow:0 8px 28px color-mix(in srgb, var(--sun3) 22%, transparent)}
-.g-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.g-count{font-size:13px;color:var(--muted)}
-.g-cue{font-family:var(--display);font-size:clamp(28px,4vw,36px);font-weight:500;margin:2px 0 0;line-height:1.15;transition:opacity .45s ease}
-.g-sub{margin:0;color:var(--muted);font-family:var(--display);font-style:italic;font-size:19px;min-height:1.4em;transition:opacity .45s ease}
-.g-bar{height:3px;background:color-mix(in srgb, var(--line) 80%, transparent);border-radius:3px;overflow:hidden;margin-top:4px}
-.g-bar i{display:block;height:100%;width:0;background:var(--goldline)}
-.g-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
 .btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
 .btn:hover{background:var(--bg)} .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -193,12 +175,14 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .wq p{margin:0;font-size:15px}
 .result{border:1px solid var(--ink);border-radius:14px;padding:14px 16px;display:grid;gap:8px;background:var(--surface)}
 .result h3{margin:0;font-family:var(--display);font-weight:500;font-size:22px}
-.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (max-width:520px){.menu{grid-template-columns:1fr}}
-.menu div{border-top:4px solid var(--mc);background:var(--surface);border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0 0 12px 12px;padding:10px 12px}
-.menu b{font-family:var(--display);font-weight:500;font-size:18px;display:block;margin-bottom:4px}
-.menu ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
 .why{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.way h4{margin:4px 0 0}
+.wps{display:grid;gap:12px}
+.wp{border-left:3px solid var(--mc);padding:2px 0 2px 12px;display:grid;gap:3px;border-radius:0}
+.wp>b{font-family:var(--display);font-weight:500;font-size:19px}
+.wp p{margin:0}
+.notyet{background:color-mix(in srgb, var(--mc) 16%, var(--surface));border-radius:10px;padding:10px 12px;font-size:14.5px}
+.waychips button{display:inline-flex;align-items:center;gap:6px}
 .purpose{display:grid;gap:10px;background:color-mix(in srgb, var(--sun2) 24%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 45%, var(--line));border-radius:16px;padding:16px 18px;margin-bottom:22px}
 .purpose h2{font-family:var(--display);font-weight:500;font-size:30px;margin:0;line-height:1.15}
 .purpose p{margin:0;max-width:62ch}
@@ -241,18 +225,9 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <div class="main">
     <div class="stage">
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
-      <div class="guide" id="guide" hidden>
-        <div class="g-top"><span class="eyebrow" id="g-title"></span><span class="g-count" id="g-count"></span></div>
-        <p class="g-cue" id="g-cue" aria-live="polite"></p>
-        <p class="g-sub" id="g-sub"></p>
-        <div class="g-bar"><i id="g-bar"></i></div>
-        <div class="g-btns"><button type="button" class="btn" id="g-sound" aria-pressed="true">Sound on</button><button type="button" class="btn" id="g-voice" aria-pressed="false">Voice guidance</button><button type="button" class="btn" id="g-stop">End practice</button></div>
-      </div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
         <p>Drag to see the window widen, as awareness widens: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
-        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self · 2 min</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness · 2 min</button><button type="button" class="btn" id="pcenter" aria-pressed="false">Into the center · 2 min</button></div>
-        <p class="hint" style="text-align:center">All three are guided on screen, with gentle sound and an optional voice.</p>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -278,6 +253,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <p>Reading this map can itself move you toward an edge. Notice, and come home whenever you need to: the button at the top is always there. If you find yourself outside your window often, or for long, or if what surfaces is trauma, a trauma-informed therapist can help widen your window in a way a map cannot. If you are in crisis, contact your local emergency number, or in the United States call or text 988.</p>
     <h3>References</h3>
     <ol class="refs">
+      <li>Balban, M. Y., Neri, E., Kogon, M. M., Weed, L., Nouriani, B., Jo, B., Holl, G., Zeitzer, J. M., Spiegel, D., &amp; Huberman, A. D. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. <i>Cell Reports Medicine, 4</i>(1), 100895.</li>
       <li>Dana, D. (2018). <i>The Polyvagal Theory in Therapy</i>. Norton.</li>
       <li>Fredrickson, B. L., Cohn, M. A., Coffey, K. A., Pek, J., &amp; Finkel, S. M. (2008). Open hearts build lives: Positive emotions, induced through loving-kindness meditation, build consequential personal resources. <i>Journal of Personality and Social Psychology, 95</i>(5), 1045–1062.</li>
       <li>Grossman, P. (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. <i>Biological Psychology, 180</i>, 108589.</li>
@@ -286,6 +262,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Jung, C. G. (1959). <i>Aion: Researches into the Phenomenology of the Self</i>. Princeton University Press.</li>
       <li>Lehrer, P. M., &amp; Gevirtz, R. (2014). Heart rate variability biofeedback: How and why does it work? <i>Frontiers in Psychology, 5</i>, 756.</li>
       <li>Levine, P. A. (2010). <i>In an Unspoken Voice</i>. North Atlantic Books.</li>
+      <li>Lieberman, M. D., Eisenberger, N. I., Crockett, M. J., Tom, S. M., Pfeifer, J. H., &amp; Way, B. M. (2007). Putting feelings into words: Affect labeling disrupts amygdala activity in response to affective stimuli. <i>Psychological Science, 18</i>(5), 421–428.</li>
       <li>McCraty, R., Atkinson, M., Tomasino, D., &amp; Bradley, R. T. (2009). The coherent heart: Heart–brain interactions, psychophysiological coherence, and the emergence of system-wide order. <i>Integral Review, 5</i>(2), 10–115.</li>
       <li>National Scientific Council on the Developing Child. (2015). <i>Supportive Relationships and Active Skill-Building Strengthen the Foundations of Resilience</i> (Working Paper 13). Center on the Developing Child, Harvard University.</li>
       <li>Ogden, P., Minton, K., &amp; Pain, C. (2006). <i>Trauma and the Body</i>. Norton.</li>
@@ -297,6 +274,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
       <li>Tang, Y.-Y., Hölzel, B. K., &amp; Posner, M. I. (2015). The neuroscience of mindfulness meditation. <i>Nature Reviews Neuroscience, 16</i>(4), 213–225.</li>
       <li>Taylor, S. E., Klein, L. C., Lewis, B. P., Gruenewald, T. L., Gurung, R. A. R., &amp; Updegraff, J. A. (2000). Biobehavioral responses to stress in females: Tend-and-befriend, not fight-or-flight. <i>Psychological Review, 107</i>(3), 411–429.</li>
+      <li>Treleaven, D. A. (2018). <i>Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing</i>. Norton.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
     </ol>
@@ -324,7 +302,6 @@ const DIRS = [
      protects:"Your life, your boundaries, and the people you love. Fight carries the energy of a healthy no; flight carries the wisdom of getting out.",
      voice:"\"I have to stop this.\" \"I have to get out.\"",
      parts:"In Internal Family Systems terms, this is often the work of firefighter parts, which act fast to put out pain, and of angry protectors that stand guard.",
-     back:["Breathe out longer than you breathe in.","Push your palms into a wall, or your feet into the floor, and feel your strength.","Move it through: walk fast, shake out your arms, run up the stairs.","Orient: name five things you can see, slowly.","Find a steady face or voice, and let it slow you."],
      questions:["What did my body do first: heat, tightness, a pounding heart?","What am I trying to stop, or get away from?","Is the danger here now, or is this old?","What would a healthy no sound like here?"]}},
   {key:"fr", angle:90, color:"--fr", name:"Freeze", move:"Stopped, and charged",
    win:{name:"Still", words:"presence, listening, awe", text:"Stillness held by safety: deep listening, quiet attention, being moved by music or a sky full of stars. Your body is quiet and alert at once, and you are fully here. This is the healthy root of freeze: the pause that lets you take in what is happening."},
@@ -334,7 +311,6 @@ const DIRS = [
      protects:"Your life, by keeping you unseen and ready. Many animals freeze so a predator passes them by.",
      voice:"\"Don't move. Don't make a sound.\"",
      parts:"Often the work of protector parts that keep you hidden, still, and out of trouble, sometimes holding a younger part's terror.",
-     back:["Start with tiny movements: wiggle your fingers and toes, then let them grow.","Let your eyes move slowly around the room, and turn your head with them.","Breathe out with a sound: a sigh, a hum, a low voom.","Say to yourself, \"I can move. I can leave if I need to.\"","If shaking or trembling comes, let it: it is often the charge releasing."],
      questions:["Where in my body am I holding still?","What would happen if I moved?","Do I feel trapped? Is that true now?","What is the smallest movement I can make?"]}},
   {key:"co", angle:180, color:"--co", name:"Collapse", move:"Stopped, and emptied",
    win:{name:"Settled", words:"rest, surrender, intimacy", text:"Rest held by safety: sleep, digestion, lying in the grass, the soft surrender of being held by someone you trust. The body lets go because it can. This is the healthy root of collapse, the deep rest we all need."},
@@ -344,7 +320,6 @@ const DIRS = [
      protects:"You, from pain that could not be escaped or fought. Going numb and far away was the body's mercy.",
      voice:"\"What's the point.\" \"I'm not here.\"",
      parts:"Often protector parts that numb and disconnect, sometimes guarding exiles who carry the oldest pain.",
-     back:["Go gently. Warmth first: a blanket, a hot drink, a warm hand on your chest.","Orient: let your eyes find color and light; notice what is around you.","Small rhythmic movement: rocking, swaying, tapping.","A voice: someone's, or your own humming.","Expect the return to stir things up. Feeling more is a sign of coming back."],
      questions:["How long have I been here?","When did I first notice going away?","What was too much just before?","What is one small sign of life I can feel right now?"]}},
   {key:"fa", angle:270, color:"--fa", name:"Fawn", move:"Moving toward",
    win:{name:"Connected", words:"warmth, care, kindness", text:"Care held by safety: warmth, kindness, attunement to another, with your own needs still in the room. You can tend to someone and stay yourself, and say no when you need to. This is the healthy root of fawn: our deep capacity to reach toward others for safety, which researchers call tend and befriend."},
@@ -354,7 +329,6 @@ const DIRS = [
      protects:"Your belonging and your safety, by keeping the people you depend on calm.",
      voice:"\"Whatever you need.\" \"It's fine, really.\"",
      parts:"Often manager parts that keep everyone happy and keep you out of trouble, protecting younger parts that learned love had to be earned.",
-     back:["Pause before you answer: \"Let me think about that.\"","Ask, \"What do I feel? What do I want?\" and wait for the answer.","Find your feet and your own breath; feel your back against the chair.","Practice a small no, somewhere safe.","Let the anger that comes up be information about your limits."],
      questions:["Whose feelings am I tracking right now?","What do I actually want here?","What am I afraid will happen if I say no?","Is this person safe to disagree with?"]}}
 ];
 
@@ -395,6 +369,80 @@ const FEEL = [
    held:"Love inside the window includes you: you can care for someone and still know what you feel and want. Outside it, the same longing to be close becomes fear of losing them, and your own anger and needs go underground, where they often turn into resentment."}
 ];
 const emoList=a=>a.map((w,i)=>i?w.charAt(0).toLowerCase()+w.slice(1):w).join(", ");
+
+// The way back, matched to where you are. Each state needs something different: a body revved for action needs to
+// move before it can rest, and a body that has shut down needs warming before it can settle. Meet the state where it
+// is, then lead it home. Drawn from somatic and polyvagal-informed practice (Levine, Dana, Ogden) and trauma-sensitive
+// mindfulness (Treleaven), in our own words.
+const WAYS = {
+  ff:{
+    traits:["Heart pounding, breath fast and high, heat in the face or chest","Clenched jaw or fists, tight shoulders, restless legs","Racing thoughts, talking fast, tunnel vision","Irritation, anger, or panic, with an urge to argue, push, or get out"],
+    needs:"Fight or flight is energy for action: the body has mobilized to push the threat away or to escape it, and that energy needs somewhere to go. Asking a revved body to lie still and relax can feel like being trapped, and can tip it toward freeze. So let the energy move first, then slow it down, and only then rest.",
+    practices:[
+      {name:"Move it through", how:"Walk fast, climb stairs, run, dance, or shake out your arms and legs hard for a minute or two.", why:"Movement completes what the body was preparing to do, and uses up the stress chemistry instead of holding it in. Peter Levine describes this as letting the defensive response finish."},
+      {name:"Push against something", how:"Press your palms into a wall and lean in, push your feet into the floor, or squeeze your fists for five seconds and let go. Repeat a few times.", why:"It gives the urge to fight a safe outlet. Feeling your own strength tells the body you can protect yourself, so it can stand down."},
+      {name:"A long breath out", how:"Once you have moved, breathe in through the nose, take a second short sip of air on top, then let a long, slow breath out through the mouth. Repeat for a minute or two.", why:"A long exhale slows the heart through the vagus nerve. In one study, five minutes a day of this sighing breath lowered arousal and lifted mood (Balban and colleagues, 2023)."},
+      {name:"Cool water", how:"Splash cold water on your face, or hold something cold to your wrists or the back of your neck.", why:"Cold on the face sets off the dive reflex, which slows the heart quickly. Go gently with this if you have a heart condition."},
+      {name:"Find the way out", how:"Look around slowly. Notice the doors, the windows, the open space. Remind yourself, \"I can leave if I need to.\"", why:"Flight settles when the body knows there is a way out. Knowing you can go often makes it easier to stay."}
+    ],
+    notyet:"Yoga nidra, long body scans lying down, and eyes-closed meditation can wait until the energy has moved. They are wonderful inside the window, but to a body ready for action, stillness can feel like a trap. Holding anger in, or forcing yourself calm, tends to keep the charge stuck.",
+    then:"As the charge eases, slow the movement down: a slower walk, a stretch, a longer exhale. When you can feel your feet and your breath again, you are coming back into the window, toward energized: energy that stays connected."},
+  fr:{
+    traits:["Holding your breath, or breathing very shallow","Unable to move or speak, as if stuck in place","A racing heart in a still body, a fixed stare","The mind going blank, time slowing, startling easily","Feeling small, watched, or trapped"],
+    needs:"Freeze is a full charge held still by a brake: accelerator and brake at once. The way out is to show the body it can move again, gently and a little at a time, so the charge can release without flooding. Big, intense movement can overwhelm a frozen system, and being told to relax often makes it hold tighter.",
+    practices:[
+      {name:"Tiny movements that grow", how:"Start very small: wiggle your fingers and toes, roll your shoulders, slowly turn your head. Let each movement grow a little, at your own pace.", why:"Each small, chosen movement tells the body it is not trapped and that it is in charge again, which is what lets the brake release."},
+      {name:"Orient slowly", how:"Let your eyes move to the edges of the room, and turn your head to follow them. Find the door. Let your gaze rest on something steady.", why:"Freeze often comes from feeling trapped. Slowly taking in the space shows the body there is room, and a way out."},
+      {name:"Breathe out with a sound", how:"Let the breath out with a sigh, a hum, or a low \"voo\" that vibrates in your belly. Repeat a few times.", why:"Sound loosens the held breath, and the vibration and long exhale help the body come out of the hold. Levine teaches the \"voo\" sound for this."},
+      {name:"Let the shaking come", how:"If trembling, shaking, or tears come as you thaw, let them, as long as it feels manageable. Pause and look around if it gets to be too much.", why:"Animals shake after a freeze to discharge the stored energy. Trembling is often the charge leaving the body, a sign of coming back."},
+      {name:"Firm, steady contact", how:"Press your back against a wall or a chair, wrap your arms around yourself and squeeze, or rest a firm hand on your chest.", why:"Firm pressure gives the body clear edges, a felt sense of where you are, which makes it safer to start moving."}
+    ],
+    notyet:"Intense exercise and anything cathartic can wait until the body moves freely again; going from frozen to full speed can flood the system. Long stillness with eyes closed can deepen the hold. And \"just relax\" rarely works: the brake releases through safety, not instruction.",
+    then:"As movement returns, let it grow: stand, stretch, walk slowly. You are coming back toward still: quiet, alert presence, with a body that is free to move."},
+  co:{
+    traits:["Heaviness, low energy, wanting to lie down or sleep","Numb, foggy, or far away; things seeming unreal","A flat voice, a slumped body, eyes that stare or close","Hopelessness, emptiness, or shame; nothing seeming to matter","Finding it hard to start even small things"],
+    needs:"Collapse is the oldest brake: the body has dropped its energy to protect you. Calming practices can take you deeper here rather than out. The way back is gentle activation: warmth, rhythm, sensation, and connection, a little at a time. Energy comes back before calm does, and that is the right order.",
+    practices:[
+      {name:"Warmth first", how:"Wrap up in a blanket, hold a hot drink, take a warm shower, or rest a warm hand on your chest.", why:"Warmth is one of the first signals of safety a body can take in, even when it has shut down."},
+      {name:"Gentle rhythm", how:"Rock, sway, tap your thighs or chest in a slow beat, or walk slowly. Keep it easy and steady.", why:"Rhythm is deeply regulating, and gentle movement raises energy gradually, without the shock of doing too much at once."},
+      {name:"Wake up the senses", how:"Hold something cold, smell something strong such as mint, citrus, or coffee, taste something sour, or open a window and feel the air.", why:"Strong, clear sensations bring you back into the present and into your body when you feel far away. It is a common grounding practice for dissociation."},
+      {name:"Sit up, and look around", how:"Lengthen your spine a little, lift your gaze, and let your eyes find color and light. Name a few things you see.", why:"Posture and orienting gently raise the body's energy, and naming what you see brings the thinking mind back online."},
+      {name:"A voice, a face", how:"Hum, sing along to a song, call someone kind, or spend a few minutes with a pet.", why:"Face and voice are the tools of the safe, social state. Connection is often the bridge back from shutdown, because it signals safety in a way the body trusts."},
+      {name:"One small step", how:"Choose one small, doable thing: drink a glass of water, stand up, step outside. Then notice that you did it.", why:"Collapse feels as if nothing can be done. One small action restores the sense that you can act, and that you are here."}
+    ],
+    notyet:"Deep relaxation, yoga nidra, and long, slow breathing with long exhales can deepen the shutdown, so save them for later. A long silent meditation, or lying in a dark room, can do the same. And skip straight-to-intense effort: let energy rise gradually.",
+    then:"As energy and feeling return, things can feel stirred up for a while; that is a sign of coming back. Keep moving gently, and stay near people who feel safe. You are coming back toward settled: rest that feels safe.",
+    care:"If collapse lasts for days, or comes with thoughts of not wanting to be alive, please reach out to someone you trust, a doctor, or a crisis line where you live. You do not have to find the way back alone."},
+  fa:{
+    traits:["Your attention fixed on someone else's mood or needs","Saying yes when you mean no, or not being able to say no","Apologizing, smoothing things over, smiling when you are not okay","Losing track of what you feel, want, or think","Over-giving, then resentment or exhaustion later"],
+    needs:"Fawn turns all your attention outward, onto keeping someone else calm. The way back is turning toward yourself: your body, your feelings, your wants, and your limits, with a little space from the person you are tracking. Practices that ask you to focus on others can wait.",
+    practices:[
+      {name:"Pause before you answer", how:"Buy a little time: \"Let me think about that and get back to you.\" Then step away, even briefly.", why:"Fawn answers instantly, before you know what you want. A pause makes room for your own response to arrive."},
+      {name:"Come back into your body", how:"Feel your feet on the floor and your back against the chair. Notice your breath. Then ask, \"What do I feel? What do I want?\" and wait for the answer.", why:"Fawning overrides your own signals to track someone else's. Turning your attention inward brings your own needs back into the room."},
+      {name:"Make a little space", how:"Step back, take a break alone, or put a table or some distance between you and the other person.", why:"Physical space eases the pull to track and please, and tells your body that your needs matter too."},
+      {name:"Practice a small no", how:"Somewhere safe and low-stakes, say no to something small: a second helping, a favor you do not want to do.", why:"Each safe no teaches the body that disagreeing does not end in danger, which is the old fear fawn protects against."},
+      {name:"Let anger be information", how:"Notice any irritation or resentment under the smile. Write it down, or say it out loud to yourself.", why:"Anger marks the limits that fawn swallowed. Listening to it, privately at first, helps you find them again."}
+    ],
+    notyet:"Practices centered on others can wait: loving-kindness that begins with someone else, partner exercises, or tending to a group. Begin with yourself. And watch for performing calm for someone, which can look like regulation but is fawn in disguise.",
+    then:"As you come back to yourself, warmth toward others can return too, now with you in it. You are coming back toward connected: care, with your own needs still in the room."},
+  edge:{
+    traits:null,
+    needs:"The edge is the easiest place to come back from. Awareness is what catches it: the earlier you notice, the shorter the way home. Name what is happening, then take the small step that fits the way you are leaning.",
+    practices:[
+      {name:"Name it", how:"Say it to yourself: \"I'm revving.\" \"I'm bracing.\" \"I'm sinking.\" \"I'm over-tuning.\" Or, \"A part of me is upset.\"", why:"Putting a state into words is a small step outside it. Studies of affect labeling find that naming a feeling can quiet the brain's alarm (Lieberman and colleagues, 2007)."},
+      {name:"Orient", how:"Pause, look around slowly, and name three things you can see and two you can hear.", why:"Orienting is the first thing a body does before it leaves the window, and the first step back in. It tells the nervous system where you are, and that right now, you are here."},
+      {name:"The small step for your direction", how:"Revving: move, or press your palms together. Bracing: wiggle your fingers and turn your head. Sinking: sit up, warm up, look at something bright. Over-tuning: pause, and feel your own feet.", why:"Each direction has its own way back, and at the edge a small version of it is usually enough."},
+      {name:"One easy breath out", how:"Breathe in, then let the breath out slowly, with a sigh if you like. Once or twice is enough.", why:"A long exhale gently slows the heart. If you are sinking, keep it light and follow it with movement."}
+    ],
+    notyet:"Pushing through, or ignoring the signal until it grows. The edge is information, not a failure.",
+    then:"Each time you notice the edge and come back, the return gets easier, and over time the window widens."},
+  win:{
+    needs:"You are inside your window, steady enough to learn. This is the time for the practices that widen the window and bring the Self forward: stillness and meditation, getting to know your parts, and touching the edge on purpose, a little at a time. These are the practices that would not suit a body outside the window, and that is why they belong here."}
+};
+WAYS.edge.traits=DIRS.map(d=>`<b>${d.edge.name}</b>, toward ${d.name.toLowerCase()}: ${d.edge.words}`);
+const WAY_KEYS=["ff","fr","co","fa","edge","win"];
+const wayName=k=>k==="edge"?"At the edge":k==="win"?"Inside the window":DIRS[["ff","fr","co","fa"].indexOf(k)].name;
+const wayColor=k=>k==="edge"?"--e-ff":k==="win"?"--win":DIRS[["ff","fr","co","fa"].indexOf(k)].color;
 
 // Moving around the circle: each neighbor pair, both ways, and the two crossings
 const MOVES = [
@@ -494,22 +542,15 @@ const PATTERNS = {
 const REG = {
   neuro:"Beneath awareness, the nervous system is always scanning for safety and danger. Stephen Porges calls this neuroception. A trigger is a cue, a tone of voice, a smell, a look, a time of year, that the body links with past danger, so it reacts before the mind knows why. Many triggers are implicit memories: the body remembering what the mind cannot.",
   notice:["What happened just before? Where was I, who was there, what was said?","What did my body do first: tighten, heat, sink, freeze?","Which direction did I go: fight or flight, freeze, collapse, or fawn?","How far: just to the edge, or all the way out?","What helped me come back, and how long did it take?","Is this reaction the right size for now, or is it older?"],
-  menu:[
-    {name:"Bringing it down", dir:0, items:["A long exhale, out longer than in","Push against a wall, or squeeze and release your fists","Move: walk, shake, dance it through","Cool water on your face or wrists"]},
-    {name:"Unfreezing", dir:1, items:["Tiny movements that grow","Slow orienting with eyes and head","A sigh or a hum on the out-breath","\"I can move. I can leave.\""]},
-    {name:"Coming back up", dir:2, items:["Warmth and gentle rhythm: rocking, swaying","Something strong to taste or smell","Orienting to color and light","A voice, someone's or your own"]},
-    {name:"Coming back to yourself", dir:3, items:["Pause before you answer","\"What do I feel? What do I want?\"","Feel your own back and feet","A small, safe no"]}
-  ],
-  glimmers:"Deb Dana calls the tiny moments of safety and connection glimmers: sunlight on a wall, a friendly face, a cat stretching, the smell of rain. Noticing them, often and on purpose, trains the nervous system to find its way back to the center.",
   resilience:["One supportive relationship. The most common finding in resilience research is at least one steady, caring person.","Skills, practiced inside the window. Regulation is easier to learn when you are calm than when you need it.","Manageable challenges. Small, supported stresses are how the window widens.","Good experiences. Play, beauty, rest, and meaning tip the scale.","Meaning and belonging. Faith, culture, and tradition are among the foundations of resilience."]
 };
 
 // Practices: cultivating the Self and widening the window
 const PRACTICES = [
-  {key:"breath", name:"Breathe with the Self", how:"Coherent breathing. Breathe in as the center widens and out as it softens: about five seconds in and five seconds out, six breaths a minute. Partway through, the guided version moves the breath to the heart and adds a feeling of care or thanks. Ten breaths is enough to begin.", why:"Slow breathing near six breaths a minute brings heart rhythm and breath into a smooth, synchronized pattern researchers call coherence (Lehrer and Gevirtz). It is one of the most reliable ways to steady the nervous system, and the most direct way this mandala cultivates coherence."},
+  {key:"breath", name:"Coherent breathing", how:"Breathe softly through the nose, about five seconds in and five seconds out: six breaths a minute. After a few breaths, imagine the breath moving in and out through your heart, and let in a feeling of care or thanks. Ten breaths is enough to begin; five minutes is plenty.", why:"Slow breathing near six breaths a minute brings heart rhythm and breath into a smooth, synchronized pattern researchers call coherence (Lehrer and Gevirtz). It is one of the most reliable ways to steady the nervous system, and the most direct way this mandala cultivates coherence. Best inside the window or at the edge; in collapse, warm up and move first."},
   {key:"heart", name:"Heart-focused breathing", how:"Rest a hand on your heart. Breathe a little slower and deeper than usual, imagining the breath flowing in and out through the area of your heart, about five seconds in and five out. After a minute, bring to mind someone or something you feel care or appreciation for, and let that feeling grow as you keep breathing. Stay with it for a few minutes.", why:"Adapted from the HeartMath Institute's quick coherence technique. Pairing slow breathing with a warm feeling such as appreciation is meant to bring the heart's rhythm into coherence, and with it a sense of harmony between heart and mind (McCraty and colleagues, 2009)."},
-  {key:"kind", name:"Widening rings of kindness", how:"Begin with yourself: \"May I be safe. May I be at ease.\" Then widen the ring to someone you love, someone neutral, someone difficult, and all beings, as the rings move outward from the center.", why:"Loving-kindness practice begins at the center and widens, like this mandala. Studies find it increases positive emotion and a sense of connection over time (Fredrickson and colleagues, 2008; Hofmann and colleagues, 2011)."},
-  {key:"center", name:"Into the center", how:"A guided journey through the layers of the wheel, and back: noticing where you are, unblending from a part, the qualities of Self, the Self itself, resting as awareness, and returning to your window. Each layer lights on the wheel as you reach it. About two minutes.", why:"This is the path of returning in a single sitting: in to the center, and back out to live from it. Practiced often, the path gets shorter."},
+  {key:"kind", name:"Widening rings of kindness", how:"Begin with yourself: \"May I be safe. May I be at ease.\" Then widen the circle to someone you love, someone neutral, someone difficult, and all beings, like rings moving outward from the center.", why:"Loving-kindness practice begins at the center and widens, like this mandala. Studies find it increases positive emotion and a sense of connection over time (Fredrickson and colleagues, 2008; Hofmann and colleagues, 2011)."},
+  {key:"center", name:"Into the center", how:"Sit comfortably, and move inward through the layers of the wheel, a few breaths at each. Notice where you are on the wheel. Notice any part that is here, and ask it, kindly, to step back a little. Notice any calm, curiosity, or warmth in the space that opens. Notice the one who is noticing: the witness. Then let go of doing anything, and rest as awareness. To finish, let that presence widen back out into your window: feel your body, your feet, the room around you.", why:"This is the path of returning in a single sitting: in to the center, and back out to live from it. Practiced often, the path gets shorter."},
   {key:"checkin", name:"A parts check-in", how:"Once a day, sit for a few minutes and ask, \"Who is here today?\" Notice two or three parts: a planner, a worrier, a tired one, an eager one. Greet each one, and thank it for what it is trying to do. Then ask whether it would be willing to let the Self lead today, and notice what changes in your body.", why:"For the window, and Self-led living. Being Self-led is less about getting rid of parts than about parts trusting the Self enough to relax. A daily check-in builds that trust, a little at a time."},
   {key:"unblend", name:"Unblending", how:"Notice a feeling or a voice that has taken over. Find where it lives in your body. Ask it, kindly, \"Would you be willing to step back a little, so I can be with you?\" Notice any space that opens, and any calm, curiosity, or warmth that comes into it. Then ask the part what it wants you to know.", why:"Adapted from Internal Family Systems. When a part steps back, there is room for Self, and the defensive state often eases with it."},
   {key:"sixf", name:"Meeting a part: the six Fs", how:"<b>Find</b> a part: a feeling, a voice, a sensation. <b>Focus</b> on it, and notice where it is in or around your body. <b>Flesh it out</b>: how does it look or feel, and how old does it seem? Ask, \"How do I <b>feel toward</b> this part?\" If the answer is not curiosity, warmth, or calm, another part is blended; kindly ask it to step back too. <b>Befriend</b> the part: ask what it does for you, and let it know you see it. Then ask about its <b>fears</b>: \"What are you afraid would happen if you stopped doing this?\"", why:"For the petals, the qualities of Self. These are the steps Internal Family Systems uses to get to know a protective part. The question \"How do I feel toward it?\" is a simple test of whether Self is present: when the answer is one of the Cs, it is."},
@@ -855,10 +896,9 @@ function draw(){
   const tip=document.getElementById("coretip");
   ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
   ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
-  el("g",{id:"kind"});
   el("g",{id:"layerHL"});
   el("g",{id:"selOutline"});
-  applySel(); setKind(kindOn); setLayerHL(layerKey);
+  applySel(); setLayerHL(layerKey);
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -907,157 +947,6 @@ function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(
 cap.addEventListener("input",()=>setCap(cap.value/100));
 document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
 
-/* ---------- Guided practices ----------
-   Two practices, guided on screen with gentle sound and an optional voice. Breathing with the Self paces ten slow
-   breaths, five seconds in and five out, with the center swelling and softening in time. Rings of kindness walks the
-   loving-kindness phrases outward in five circles, and the rings of light reach further at each one, so the circle of
-   care visibly widens: from the window, to its edge, to the defenses, to the braid. */
-let kindOn=false, kindStage=null;
-const pbreath=document.getElementById("pbreath"), pkind=document.getElementById("pkind");
-const guide=document.getElementById("guide"), gTitle=document.getElementById("g-title"), gCue=document.getElementById("g-cue"),
-      gSub=document.getElementById("g-sub"), gCount=document.getElementById("g-count"), gBar=document.getElementById("g-bar"),
-      gSound=document.getElementById("g-sound"), gVoice=document.getElementById("g-voice");
-let PR=null, soundOn=true, voiceOn=false, AC=null;
-const canSpeak="speechSynthesis" in window;
-if(!canSpeak){ gVoice.disabled=true; gVoice.textContent="Voice not available"; }
-
-// sound: soft sine tones that rise with the in-breath and fall with the out-breath, and a small bell
-function audio(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ AC=null; } } if(AC&&AC.state==="suspended") AC.resume(); return AC; }
-function tone(f0,f1,dur,vol){
-  if(!soundOn) return; const ac=audio(); if(!ac) return; const t=ac.currentTime, g=ac.createGain();
-  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+dur*0.4); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  g.connect(ac.destination);
-  [[1,1],[1.5,0.22],[2,0.08]].forEach(([m,v])=>{ const o=ac.createOscillator(), og=ac.createGain(); o.type="sine";
-    o.frequency.setValueAtTime(f0*m,t); o.frequency.linearRampToValueAtTime(f1*m,t+dur); og.gain.value=v; o.connect(og); og.connect(g); o.start(t); o.stop(t+dur+0.05); });
-}
-function bell(freq){
-  if(!soundOn) return; const ac=audio(); if(!ac) return; const t=ac.currentTime;
-  [[1,0.08,5],[2.76,0.025,3],[5.4,0.01,1.6]].forEach(([m,v,d])=>{ const o=ac.createOscillator(), g=ac.createGain(); o.type="sine"; o.frequency.value=freq*m;
-    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
-    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+d+0.05); });
-}
-function say(text){ if(!voiceOn||!canSpeak) return; try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=0.8; u.pitch=0.95; u.volume=0.9; speechSynthesis.speak(u); }catch(e){} }
-
-function setCue(cue, sub, count){
-  gCue.style.opacity=0; gSub.style.opacity=0;
-  setTimeout(()=>{ gCue.textContent=cue; gSub.textContent=sub||""; gCount.textContent=count||""; gCue.style.opacity=1; gSub.style.opacity=1; },220);
-}
-function openGuide(title){
-  guide.hidden=false; gTitle.textContent=title; gBar.style.width="0%";
-  // keep the guide in view, with as much of the wheel above it as fits
-  requestAnimationFrame(()=>{ const r=guide.getBoundingClientRect(); if(r.bottom>window.innerHeight||r.top<0) guide.scrollIntoView({behavior:"smooth",block:"end"}); });
-}
-function stopPractice(){
-  if(PR&&PR.timer) clearInterval(PR.timer);
-  PR=null; svg.classList.remove("breathing"); kindStage=null; setKind(false);
-  guide.hidden=true; if(canSpeak) speechSynthesis.cancel();
-  pbreath.setAttribute("aria-pressed","false"); pkind.setAttribute("aria-pressed","false"); pcenter.setAttribute("aria-pressed","false"); setLayerHL(null);
-}
-function finish(cue, sub){
-  if(PR.done) return; PR.done=true; gBar.style.width="100%";
-  setCue(cue, sub, ""); bell(392); say(cue+". "+sub);
-  const mine=PR; setTimeout(()=>{ if(PR===mine) stopPractice(); }, 14000);
-}
-
-const LEAD=4500, HALF=5000, BREATHS=10;
-function startBreath(){
-  stopPractice(); audio();
-  PR={kind:"breath",t0:performance.now(),step:-2}; pbreath.setAttribute("aria-pressed","true");
-  openGuide("Breathe with the Self: coherence"); setCue("Settle in","Let your eyes rest on the center. Breathe with it as it widens and softens, about six breaths a minute: the rhythm of coherence.","");
-  say("Settle in. Let your eyes rest on the center, and breathe with it.");
-  PR.timer=setInterval(tickBreath,80);
-}
-function tickBreath(){
-  const e=performance.now()-PR.t0;
-  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
-  const b=e-LEAD, step=Math.floor(b/HALF);
-  if(step>=BREATHS*2){ svg.classList.remove("breathing"); finish("Rest in the rhythm","This steady, harmonious rhythm is coherence. Notice how you feel."); return; }
-  gBar.style.width=((b%HALF)/HALF*100)+"%";
-  if(step!==PR.step){
-    if(step===0){ svg.classList.remove("breathing"); void svg.getBoundingClientRect(); svg.classList.add("breathing"); }
-    PR.step=step; const inhale=step%2===0, n=Math.floor(step/2)+1;
-    const sub=n<=3?(inhale?"as the Self widens":"as it softens"):n<=6?"through the heart":(inhale?"with a feeling of care, or thanks":"letting it spread through you");
-    setCue(inhale?"Breathe in":"Breathe out", sub, `Breath ${n} of ${BREATHS}`);
-    if(inhale) tone(196,262,4.7,0.07); else tone(262,196,4.7,0.06);
-    say((inhale?"Breathe in":"Breathe out")+(n===4&&inhale?", through the heart":n===7&&inhale?", with a feeling of care":""));
-  }
-}
-
-const STAGE=21000, LINE0=1500, LINEGAP=6000;
-const KIND_STAGES=[
-  {who:"Begin with yourself", sub:"Rest a hand on your heart if you like.", lines:["May I be safe.","May I be at ease.","May I be kind to myself."]},
-  {who:"Someone you love", sub:"Bring them to mind, and picture them smiling.", lines:["May you be safe.","May you be at ease.","May you be held in kindness."]},
-  {who:"Someone you barely know", sub:"A neighbor, a face you passed today.", lines:["May you be safe.","May you be at ease.","May you be held in kindness."]},
-  {who:"Someone who is difficult for you", sub:"Only as far as feels right. You can return to yourself at any time.", lines:["May you be safe.","May you be at ease.","May you be free from suffering."]},
-  {who:"All beings, everywhere", sub:"Let the circle open as wide as it will go.", lines:["May all beings be safe.","May all beings be at ease.","May all beings be held in kindness."]}
-];
-// how far the rings of light reach at each circle of kindness
-const kindReach=i=>[R.win[1]+3, R.edge[1], (R.out[0]+R.out[1])/2, R.out[1], R.braid[1]+6][i];
-function startKind(){
-  stopPractice(); audio();
-  PR={kind:"kind",t0:performance.now(),stage:-1,line:-1}; pkind.setAttribute("aria-pressed","true");
-  openGuide("Rings of kindness"); setCue("Settle in","Feel the warmth at the center of the wheel, and in your own chest.","");
-  say("Settle in. Feel the warmth at the center.");
-  PR.timer=setInterval(tickKind,100);
-}
-function tickKind(){
-  const e=performance.now()-PR.t0;
-  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
-  const k=e-LEAD, st=Math.floor(k/STAGE);
-  if(st>=KIND_STAGES.length){ finish("Rest in the warmth","Let it settle back into the center, into you."); return; }
-  const within=k-st*STAGE, S=KIND_STAGES[st];
-  gBar.style.width=(within/STAGE*100)+"%";
-  if(st!==PR.stage){ PR.stage=st; PR.line=-1; kindStage=st; setKind(true); bell(st===0?330:392); gTitle.textContent=S.who; }
-  const ln=Math.max(0,Math.min(S.lines.length-1,Math.floor((within-LINE0)/LINEGAP)));
-  if(within>=LINE0 && ln!==PR.line){ PR.line=ln; setCue(S.lines[ln], ln===0?S.sub:"", `Circle ${st+1} of ${KIND_STAGES.length}`); say(S.lines[ln]); }
-}
-
-const CENTER_STAGES=[
-  {hl:"out", title:"Notice", bell:392, lines:["Notice where you are on the wheel right now.","Your body, your breath, your mood.","No need to change it. Just notice."]},
-  {hl:"edge", title:"Unblend", bell:349, lines:["Is there a part here: a feeling, a voice, a pull?","Ask it, kindly, to step back a little.","Notice any space that opens."]},
-  {hl:"petals", title:"The qualities of Self", bell:330, lines:["Into that space, notice any calm.","Any curiosity.","Any warmth, toward yourself, or toward the part."]},
-  {hl:"flower", title:"The Self", bell:294, lines:["Notice the one who is noticing.","Not a part: the witness, the one who is here.","This is the Self."]},
-  {hl:"gate", title:"Resting as awareness", bell:262, lines:["Let go of doing anything at all.","Rest as the quiet knowing in which everything appears.","Nothing to fix. Just this."]},
-  {hl:"win", title:"Returning", bell:392, lines:["Now let this presence widen, back into your window.","Feel your body, your feet, the room around you.","Bring the center with you."]}
-];
-const pcenter=document.getElementById("pcenter");
-function startCenter(){
-  stopPractice(); audio();
-  PR={kind:"center",t0:performance.now(),stage:-1,line:-1}; pcenter.setAttribute("aria-pressed","true");
-  openGuide("Into the center"); setCue("Settle in","Let your eyes rest on the wheel. We will move inward, layer by layer, and back.","");
-  say("Settle in. We will move inward, layer by layer, and back.");
-  PR.timer=setInterval(tickCenter,100);
-}
-function tickCenter(){
-  const e=performance.now()-PR.t0;
-  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
-  const k=e-LEAD, st=Math.floor(k/STAGE);
-  if(st>=CENTER_STAGES.length){ setLayerHL(null); finish("Live from the center","The center is here whenever you come back to it."); return; }
-  const within=k-st*STAGE, S=CENTER_STAGES[st];
-  gBar.style.width=(within/STAGE*100)+"%";
-  if(st!==PR.stage){ PR.stage=st; PR.line=-1; setLayerHL(S.hl); bell(S.bell); gTitle.textContent=S.title; }
-  const ln=Math.max(0,Math.min(S.lines.length-1,Math.floor((within-LINE0)/LINEGAP)));
-  if(within>=LINE0 && ln!==PR.line){ PR.line=ln; setCue(S.lines[ln], "", `Layer ${st+1} of ${CENTER_STAGES.length}`); say(S.lines[ln]); }
-}
-
-function setKind(on){
-  kindOn=on;
-  const g=document.getElementById("kind"); if(!g) return; g.innerHTML="";
-  if(!on) return;
-  const reach=kindStage!=null?kindReach(kindStage):R.out[1];
-  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  [0,3,6].forEach((delay,i)=>{
-    if(reduce){ el("circle",{cx:0,cy:0,r:f(R.self+(reach-R.self)*(i+1)/3),class:"kring",style:"opacity:.55"},g); return; }
-    el("circle",{cx:0,cy:0,r:f(R.self),class:"kring",style:`--to:${f(reach/R.self)};animation-delay:${delay}s`},g);
-  });
-}
-pbreath.addEventListener("click",()=>{ if(PR&&PR.kind==="breath") stopPractice(); else startBreath(); });
-pkind.addEventListener("click",()=>{ if(PR&&PR.kind==="kind") stopPractice(); else startKind(); });
-pcenter.addEventListener("click",()=>{ if(PR&&PR.kind==="center") stopPractice(); else startCenter(); });
-document.getElementById("g-stop").addEventListener("click",stopPractice);
-gSound.addEventListener("click",()=>{ soundOn=!soundOn; gSound.setAttribute("aria-pressed",soundOn?"true":"false"); gSound.textContent=soundOn?"Sound on":"Sound off"; });
-gVoice.addEventListener("click",()=>{ voiceOn=!voiceOn; gVoice.setAttribute("aria-pressed",voiceOn?"true":"false"); if(!voiceOn&&canSpeak) speechSynthesis.cancel(); });
-
 /* ---------- Panel ---------- */
 const panel=document.getElementById("panel"), tabs=document.getElementById("tabs"), dnav=document.getElementById("dirnav");
 let sel={kind:null,k:null,layer:null}, view="intro";
@@ -1067,9 +956,7 @@ addTab("Where am I?","where",()=>showWhere(true));
 addTab("The Self","self",()=>showSelf(true));
 addTab("Awareness","aware",()=>showAware(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
-addTab("Moving between","moves",()=>showMoves(null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
-addTab("Triggers and regulation","reg",()=>showReg(true));
 addTab("Practices","practice",()=>showPractice(true));
 DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${d.name}`; b.dataset.k=k; b.addEventListener("click",()=>showDir(k,null,true)); dnav.appendChild(b); });
 function sw(v){ return `<span class="sw" style="background:var(${v})"></span>`; }
@@ -1083,20 +970,23 @@ function markTabs(){
 function setView(v,s){ view=v; sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
-  panel.querySelectorAll("[data-dir]").forEach(b=>b.addEventListener("click",()=>showDir(+b.dataset.dir,b.dataset.layer||null,true)));
-  panel.querySelectorAll("[data-move]").forEach(b=>b.addEventListener("click",()=>showMoves(+b.dataset.move,true)));
-  panel.querySelectorAll("[data-home]").forEach(b=>b.addEventListener("click",()=>showHome(true)));
-  panel.querySelectorAll("[data-self]").forEach(b=>b.addEventListener("click",()=>showSelf(true)));
-  panel.querySelectorAll("[data-where]").forEach(b=>b.addEventListener("click",()=>showWhere(true,b.dataset.where||null)));
-  panel.querySelectorAll("[data-practice]").forEach(b=>b.addEventListener("click",()=>showPractice(true)));
-  panel.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>showReg(true)));
-  panel.querySelectorAll("[data-aware]").forEach(b=>b.addEventListener("click",()=>showAware(true)));
-  panel.querySelectorAll("[data-pr]").forEach(b=>b.addEventListener("click",()=>showPractice(true,b.dataset.pr)));
+  // each control is bound once, even when part of the panel is redrawn and wire runs again
+  const on=(sel,fn)=>panel.querySelectorAll(sel).forEach(b=>{ if(b.dataset.bound) return; b.dataset.bound=1; b.addEventListener("click",()=>fn(b)); });
+  on("[data-dir]",b=>showDir(+b.dataset.dir,b.dataset.layer||null,true));
+  on("[data-move]",b=>showMoves(+b.dataset.move,true));
+  on("[data-moves]",()=>showMoves(null,true));
+  on("[data-home]",()=>showHome(true));
+  on("[data-self]",()=>showSelf(true));
+  on("[data-where]",b=>showWhere(true,b.dataset.where||null));
+  on("[data-way]",b=>showWhere(true,null,b.dataset.way||null));
+  on("[data-practice]",()=>showPractice(true));
+  on("[data-aware]",()=>showAware(true));
+  on("[data-pr]",b=>showPractice(true,b.dataset.pr));
+  on("[data-patterns]",()=>showPatterns(true));
   // hovering a layer of the Self in the panel lights it on the wheel
-  panel.querySelectorAll("[data-lhl]").forEach(n=>{
-    const on=()=>{ if(!PR) setLayerHL(n.dataset.lhl); }, off=()=>{ if(!PR) setLayerHL(null); };
+  panel.querySelectorAll("[data-lhl]").forEach(n=>{ if(n.dataset.bound) return; n.dataset.bound=1;
+    const on=()=>setLayerHL(n.dataset.lhl), off=()=>setLayerHL(null);
     n.addEventListener("mouseenter",on); n.addEventListener("mouseleave",off); n.addEventListener("focusin",on); n.addEventListener("focusout",off); });
-  panel.querySelectorAll("[data-patterns]").forEach(b=>b.addEventListener("click",()=>showPatterns(true)));
 }
 function applySel(){
   cells.forEach(c=>c.classList.toggle("sel", sel.kind==="dir" && +c.dataset.k===sel.k && (!sel.layer||c.dataset.layer===sel.layer)));
@@ -1118,7 +1008,7 @@ const PURPOSE_HTML=`<div class="purpose">
     </ul>
     <p>Used together: <b>notice</b> where you are, with awareness; <b>name</b> it, on the wheel and in the part that is speaking; and <b>return</b>, by orienting and letting the Self lead.</p>
     <p><b>Awareness is what lets you know you are at the edge</b>, while there is still time to choose, and to bring yourself back. Each return is practice, and the pattern builds: the way home grows shorter and easier, and over time the window widens. The aim is not to stay inside the window always, or to be rid of what lies outside it. Leaving the window is human. We will still feel fear, anger, and grief, and the defenses outside the window are part of how we are made to survive. The aim is to find the way back, more easily and more quickly, each time.</p>
-    <p><b>The aim is coherence</b>: harmony within. In the body, coherence is heart and brain in rhythm: when you feel safe and settled, the heart's rhythm grows smooth and steady and moves in step with the breath, and the nervous system works as one rather than pulling against itself. Among the parts, coherence is harmony: parts working together with the Self leading. In the mind, it is a collected, unified awareness. The window is where coherence lives, and the practices here, beginning with breathing with the Self, cultivate it directly.</p>
+    <p><b>The aim is coherence</b>: harmony within. In the body, coherence is heart and brain in rhythm: when you feel safe and settled, the heart's rhythm grows smooth and steady and moves in step with the breath, and the nervous system works as one rather than pulling against itself. Among the parts, coherence is harmony: parts working together with the Self leading. In the mind, it is a collected, unified awareness. The window is where coherence lives, and the practices here, beginning with coherent breathing, cultivate it directly.</p>
     <p><b>The deeper aim</b> is a true sense of Self, beyond conditioning. Many of the ways we leave the window are old programs: imprints laid down by early experience, when a part learned to fight, flee, freeze, collapse, or please to stay safe. Those patterns can keep a life small long after they were needed. Parts carry the imprints; the Self is not made of them. Each time you notice, name, and return, you meet the Self a little more directly, and live a little less from the old programs.</p>
   </div>`;
 const CENTER_HTML=`<div class="center-msg">
@@ -1151,16 +1041,41 @@ function showIntro(){
 }
 
 // Where am I? The finder, and how wide is my window
-function showWhere(user, focus){
+// One way back, matched to a state: how to recognize it, what it needs, practices and why each fits, and what can wait
+function wayHTML(k){
+  const W=WAYS[k], c=wayColor(k);
+  if(k==="win") return `<div class="ring way" id="way-win" style="--mc:var(${c})"><h3>${sw(c)}Inside the window</h3><p>${W.needs}</p>
+    <div class="chips">${PRACTICES.map(p=>`<button type="button" data-pr="${p.key}">${p.name}</button>`).join("")}</div></div>`;
+  return `<div class="ring way" id="way-${k}" style="--mc:var(${c})"><h3>${sw(c)}${wayName(k)}</h3>
+    <h4>How to recognize it</h4>${ul(W.traits)}
+    <h4>What it needs</h4><p>${W.needs}</p>
+    <h4>Ways back</h4><div class="wps">${W.practices.map(p=>`<div class="wp"><b>${p.name}</b><p>${p.how}</p><span class="why"><b>Why it helps here.</b> ${p.why}</span></div>`).join("")}</div>
+    <div class="notyet"><b>Not yet.</b> ${W.notyet}</div>
+    <p><b>Then.</b> ${W.then}</p>
+    ${W.care?`<p class="note">${W.care}</p>`:""}
+    ${k!=="edge"?`<p><button type="button" class="linkbtn" data-dir="${["ff","fr","co","fa"].indexOf(k)}" data-layer="out">Read about ${wayName(k).toLowerCase()}</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>`:`<p><button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>`}</div>`;
+}
+function showWay(k, scroll){
+  panel.querySelectorAll("[data-wk]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.wk===k?"true":"false"));
+  const out=document.getElementById("wayout"); out.innerHTML=k?wayHTML(k):""; wire();
+  const d=["ff","fr","co","fa"].indexOf(k);
+  if(d>=0){ sel={kind:"dir",k:d,layer:"out"}; applySel(); }
+  if(k&&scroll) bringPanel(document.getElementById("way-"+k));
+}
+function showWhere(user, focus, way){
   setView("where");
-  panel.innerHTML=`<div class="phasehead"><h2>Where am I?</h2><div class="meta">Right now, and lately</div>
-      <p>Two short reflections: where you are in this moment, and how wide your window tends to be. Neither is a test. They are ways of noticing.</p></div>
+  panel.innerHTML=`<div class="phasehead"><h2>Where am I?</h2><div class="meta">Find where you are, and the way back from there</div>
+      <p>Each state needs something different. A body revved for action needs to move before it can rest; a body that has shut down needs warming before it can settle; a body tracking someone else needs to come back to itself. Notice where you are, then meet that state where it is, and lead it home.</p></div>
     <div class="ring" id="finder"><h3>Right now</h3><div class="finder">${FINDER.map((f,i)=>`<div class="fq"><p>${f.q}</p><div class="fopts">${f.a.map(([t,v])=>`<button type="button" data-q="${i}" data-v="${v}" aria-pressed="false">${t}</button>`).join("")}</div></div>`).join("")}</div>
       <div id="findout"></div></div>
+    <div class="ring"><h3>Or choose where you are</h3><div class="fopts waychips">${WAY_KEYS.map(k=>`<button type="button" data-wk="${k}" aria-pressed="false">${sw(wayColor(k))}${wayName(k)}</button>`).join("")}</div></div>
+    <div id="wayout"></div>
     <div class="ring" id="width"><h3>How wide is my window?</h3><p class="about">${WIDTH.intro}</p>
       ${WIDTH.items.map((t,i)=>`<div class="wq"><p>${t}</p><div class="fopts">${["Rarely","Sometimes","Often"].map((l,v)=>`<button type="button" data-w="${i}" data-v="${v}" aria-pressed="false">${l}</button>`).join("")}</div></div>`).join("")}
-      <div id="widthout"><p class="hint">Answer all eight to see your window drawn on the wheel.</p></div></div>`;
+      <div id="widthout"><p class="hint">Answer all eight to see your window drawn on the wheel.</p></div></div>
+    <p class="src">Levine (2010); Dana (2018); Ogden, Minton &amp; Pain (2006); Treleaven (2018); Balban et al. (2023); Lieberman et al. (2007)</p>`;
   const ans={}, wans={};
+  panel.querySelectorAll("[data-wk]").forEach(b=>b.addEventListener("click",()=>showWay(b.dataset.wk,true)));
   panel.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{
     const q=+b.dataset.q; ans[q]=b.dataset.v;
     panel.querySelectorAll(`[data-q="${q}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
@@ -1176,7 +1091,9 @@ function showWhere(user, focus){
       wire();
     }
   }));
-  if(user) bringPanel(focus?document.getElementById(focus):null);
+  wire();
+  if(way) showWay(way,false);
+  if(user) bringPanel(way?document.getElementById("way-"+way):focus?document.getElementById(focus):null);
 }
 function findResult(a){
   // energy, connection, and urge together point to a place on the wheel
@@ -1191,11 +1108,10 @@ function findResult(a){
   const text = layer==="win" ? `You may be inside your window, in its ${d.win.name.toLowerCase()} side: ${d.win.words}.`
     : layer==="edge" ? `You may be near the edge, toward ${d.name.toLowerCase()}: ${d.edge.words}. This is the easiest place to come back from.`
     : `You may be outside your window, in ${d.name.toLowerCase()}. Nothing is wrong with you: your body is protecting you.`;
-  sel={kind:"dir",k,layer}; applySel();
   document.getElementById("findout").innerHTML=`<div class="result"><h3>${name}</h3><p>${text}</p>
-    ${layer!=="win"?`<h4>A first step back</h4>${ul(d.out.back.slice(0,3))}`:""}
-    <p><button type="button" class="linkbtn" data-dir="${k}" data-layer="${layer}">Read about ${name.toLowerCase()}</button> · <button type="button" class="linkbtn" data-home>Coming home</button></p></div>`;
-  wire();
+    <p class="about">${layer==="win"?"Below are the practices that suit this state.":"Below: how to recognize it, and the ways back that fit it."}</p></div>`;
+  showWay(layer==="win"?"win":layer==="edge"?"edge":KEYS[k], true);
+  sel={kind:"dir",k,layer}; applySel();
 }
 
 // Awareness: the third map. Understanding the nervous system is the beginning; awareness of one's own state brings
@@ -1237,7 +1153,7 @@ function showSelf(user, ci, layer){
     <div class="ring" id="self-layers"><h3>The center, in layers</h3><p class="about">From the deepest layer out. Hover a layer to light it on the wheel.</p>
       <div class="layers">${S.layers.map(L=>`<div data-lhl="${L.key}" id="ly-${L.key}"${layer===L.key?' class="hl"':""} tabindex="-1"><h4>${sw(lsw[L.key])}${L.name}</h4><p class="where">${L.where}</p><p>${L.text}</p><button type="button" class="linkbtn" data-pr="${L.practice}">Practice: ${prName(L.practice)}</button></div>`).join("")}</div></div>
     <div class="ring"><h3>The stages of returning</h3><ol class="stages">${S.stages.map(([n,t,k])=>`<li data-lhl="${k}"><b>${n}.</b> ${t}</li>`).join("")}</ol>
-      <p class="about">${S.stagesNote}</p><button type="button" class="btn" data-pr="center" style="justify-self:start">The guided journey: Into the center</button></div>
+      <p class="about">${S.stagesNote}</p><button type="button" class="linkbtn" data-pr="center">Practice: Into the center</button></div>
     <div class="ring"><h3>Parts</h3><p>${S.parts}</p></div>
     <div class="ring"><h3>Blending, and unblending</h3><p>${S.blend}</p><button type="button" class="linkbtn" data-practice>Try the unblending practice</button></div>
     <div class="ring"><h3>Self, and self</h3><p>${S.small}</p></div>
@@ -1248,9 +1164,9 @@ function showSelf(user, ci, layer){
       <ul><li><b>In the body:</b> heart and brain in rhythm. In the safe, connected state, the heart's rhythm becomes smooth and wave-like and moves in step with the breath, and the nervous system works as one.</li>
         <li><b>Among the parts:</b> harmony. Parts stop pulling against each other and work together, with the Self leading. In Internal Family Systems, this harmony within is the aim of healing.</li>
         <li><b>In the mind:</b> a collected, unified awareness, steady and at ease.</li></ul>
-      <p>On the wheel, the braid weaves the three nervous systems together: in coherence they move as one plait. When you breathe with the Self, the center widens and softens at about six breaths a minute, the pace at which heart rhythm and breath fall most easily into step.</p>
+      <p>On the wheel, the braid weaves the three nervous systems together: in coherence they move as one plait. Coherent breathing, at about six breaths a minute, is the pace at which heart rhythm and breath fall most easily into step.</p>
       <p class="note">What is measured, and what is a model. Slow breathing near six breaths a minute reliably increases heart rate variability and the smooth heart rhythm researchers call coherence (Lehrer and Gevirtz, 2014). The HeartMath Institute's wider account of heart-brain coherence (McCraty and colleagues, 2009) is promising, though not all of it is firmly established. Linking it with harmony among parts is this mandala's synthesis.</p>
-      <p><button type="button" class="linkbtn" data-pr="breath">Practice: Breathe with the Self</button> · <button type="button" class="linkbtn" data-pr="heart">Practice: Heart-focused breathing</button></p></div>
+      <p><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button> · <button type="button" class="linkbtn" data-pr="heart">Practice: Heart-focused breathing</button></p></div>
     <div class="ring"><h3>Growing toward the Self</h3><p>Meditation and the practices here are ways of spending more time near the center: noticing the Cs, unblending from parts, and letting the body feel safe enough for Self to come forward. Over time the center grows, and the rings of threat thin, as the slider shows. They do not vanish: you will still leave the window, because you are human. What grows is the ease, and the speed, of coming home.</p>
       <p class="note">${S.evidence}</p></div>
     <p class="src">Schwartz (2021); Schwartz &amp; Sweezy (2020); Lehrer &amp; Gevirtz (2014); McCraty et al. (2009); Shadick et al. (2013); Hodgdon et al. (2022); Jung (1959); Dana (2018)</p>`;
@@ -1265,7 +1181,7 @@ function showDir(k, layer, user){
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">${d.move}</div><h2>${d.name}</h2>
       <p>${o.text}</p></div>
     <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals that you are leaving the window toward ${d.name.toLowerCase()}. Catching them here makes the way back short, whenever you choose to take it.</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals that you are leaving the window toward ${d.name.toLowerCase()}. Catching them here makes the way back short, whenever you choose to take it.</p>${ul(d.edge.signs)}<button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p></div>
     <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p>
       <h4>How it can feel</h4>${ul(o.feels)}
       <h4>Emotions that tend to arise here</h4><p>${emoList(FEEL[k].out)}.</p>
@@ -1273,7 +1189,9 @@ function showDir(k, layer, user){
       <h4>What it protects</h4><p>${o.protects}</p>
       <h4>Parts</h4><p>${o.parts}</p></div>
     <div class="ring"><h3>The same emotion, in and out of the window</h3><p>${FEEL[k].held}</p><p class="about">Emotions can show up in more than one place on the wheel: fear, for one, can belong to fight or flight, to freeze, or to fawn. What tells you where you are is the body: how much energy there is, and whether you feel held.</p></div>
-    <div class="ring"><h3>The way back toward the Self</h3>${ul(o.back)}<button type="button" class="linkbtn" data-home>Orienting, and coming home</button></div>
+    <div class="ring"><h3>Coming back from ${d.name.toLowerCase()}</h3><p>${WAYS[KEYS[k]].needs}</p>${ul(WAYS[KEYS[k]].practices.map(p=>`<b>${p.name}.</b> ${p.how}`))}
+      <p class="about"><b>Not yet.</b> ${WAYS[KEYS[k]].notyet}</p>
+      <p><button type="button" class="linkbtn" data-way="${KEYS[k]}">Why each of these helps</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p></div>
     <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
     <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
     <p class="src">Siegel (1999); Dana (2018); Schauer &amp; Elbert (2010); ${k===3?"Walker (2013); Taylor et al. (2000); ":""}Levine (2010); Schwartz (2021)</p>`;
@@ -1282,8 +1200,8 @@ function showDir(k, layer, user){
 }
 
 function showMoves(i, user){
-  setView("moves", i!=null?{kind:"move",k:i,layer:null}:null);
-  panel.innerHTML=`<div class="phasehead"><h2>Moving between</h2><div class="meta">Around the circle, in both directions</div>
+  setView("patterns", i!=null?{kind:"move",k:i,layer:null}:null);
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow"><button type="button" class="linkbtn" data-patterns>Patterns</button></div><h2>Moving between</h2><div class="meta">Around the circle, in both directions</div>
       <p>The defenses are not separate rooms. The body moves between them, often in the same order, and the way back can pass through them too. Each arrow on the wheel is one of these movements.</p></div>
     ${DIRS.map((d,k)=>{ const n=(k+1)%4; return [moveIndex(k,n),moveIndex(n,k)]; }).flat().map(j=>{ const m=MOVES[j]; return `<div class="move${i===j?" hl":""}" id="mv-${j}" style="--mc:var(${DIRS[m.to].color})">
       <h4>${m.title}</h4><p>${m.text}</p><p><b>Signs.</b> ${m.signs}</p><p><b>What helps.</b> ${m.helps}</p></div>`; }).join("")}
@@ -1309,35 +1227,26 @@ function showPatterns(user){
   const Pt=PATTERNS;
   panel.innerHTML=`<div class="phasehead"><h2>Patterns</h2><div class="meta">The routes your nervous system tends to take</div><p>${Pt.intro}</p></div>
     ${Pt.list.map(p=>`<div class="ring"><h3>${p.name}</h3><p>${p.text}</p><p class="voice">${p.q}</p></div>`).join("")}
+    <div class="ring"><h3>Moving between</h3><p>The defenses are not separate rooms: the body moves between them, often in the same order. Each arrow on the wheel is one of these movements.</p>
+      <div class="chips">${MOVES.map((m,j)=>`<button type="button" data-move="${j}">${m.title.replace(/^From /,"")}</button>`).join("")}</div><button type="button" class="linkbtn" data-moves>All the movements, and the crossings</button></div>
+    <div class="ring"><h3>What a trigger is</h3><p>${REG.neuro}</p></div>
+    <div class="ring"><h3>After a trigger: notice</h3>${ul(REG.notice)}<p class="about">Keeping a few notes like this for a week or two shows your patterns.</p></div>
     <div class="ring"><h3>Finding your route</h3>${ul(Pt.prompts)}<p class="about">Answer in writing, over a week or two. Patterns show themselves slowly.</p></div>
     <div class="ring"><h3>Where patterns come from</h3><p>${Pt.rights} <a href="https://erinsarita.github.io/return-mandala/">Open The Return Mandala</a>.</p></div>
     <p class="src">Walker (2013); Schwartz (2021)</p>`;
   wire(); if(user) bringPanel();
 }
 
-function showReg(user){
-  setView("reg");
-  panel.innerHTML=`<div class="phasehead"><h2>Triggers and regulation</h2><div class="meta">Noticing, coming back, and building resilience</div></div>
-    <div class="ring"><h3>What a trigger is</h3><p>${REG.neuro}</p></div>
-    <div class="ring"><h3>After a trigger: notice</h3>${ul(REG.notice)}<p class="about">Keeping a few notes like this for a week or two shows your patterns.</p><button type="button" class="linkbtn" data-patterns>Patterns</button></div>
-    <div class="ring"><h3>Regulation, by direction</h3><div class="menu">${REG.menu.map(m=>`<div style="--mc:var(${DIRS[m.dir].color})"><b>${m.name}</b><span class="about">from ${DIRS[m.dir].name.toLowerCase()}</span>${ul(m.items)}</div>`).join("")}</div>
-      <p class="about">Self-regulation and co-regulation work together: the steadiest way back is often another steady person.</p></div>
-    <div class="ring"><h3>Glimmers</h3><p>${REG.glimmers}</p></div>
-    <div class="ring"><h3>Building resilience</h3>${ul(REG.resilience)}<p class="about">From the Harvard Center on the Developing Child: resilience is built from relationships, skills, and good experiences, and can be strengthened at any age.</p></div>
-    <p class="src">Porges (2011); Dana (2018); Levine (2010); National Scientific Council on the Developing Child (2015)</p>`;
-  wire(); if(user) bringPanel();
-}
 
 function showPractice(user, focus){
   setView("practice");
-  panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">Cultivating the Self, and widening the window</div>
-      <p>Practice inside your window, when you are steady enough to learn. Over time, these are how the center grows.</p></div>
+  panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">For inside the window: cultivating the Self, and widening the window</div>
+      <p>Practice these when you are steady enough to learn. Over time, they are how the window widens and the center grows. Some of them, especially the still and quiet ones, can feel unsettling when you are outside your window. If you are outside it right now, begin with the way back that fits where you are.</p>
+      <p><button type="button" class="btn" data-way="">Find the way back for where I am</button></p></div>
     ${PRACTICES.map(p=>`<div class="ring${focus===p.key?" hl":""}" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
-      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Begin the guided breathing</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Begin the rings of kindness</button>`:p.key==="center"?`<button type="button" class="btn" data-run="center">Begin the journey into the center</button>`:""}</div>`).join("")}
-    <p class="src">Lehrer &amp; Gevirtz (2014); McCraty et al. (2009); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
-  panel.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
-    if(b.dataset.run==="breath") startBreath(); else if(b.dataset.run==="center") startCenter(); else startKind();
-  }));
+</div>`).join("")}
+    <div class="ring"><h3>Building resilience</h3>${ul(REG.resilience)}<p class="about">From the Harvard Center on the Developing Child: resilience is built from relationships, skills, and good experiences, and can be strengthened at any age.</p></div>
+    <p class="src">Lehrer &amp; Gevirtz (2014); McCraty et al. (2009); National Scientific Council on the Developing Child (2015); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
   wire(); if(user) bringPanel(focus?document.getElementById("pr-"+focus):null);
 }
 document.getElementById("homebtn").addEventListener("click",()=>showHome(true));

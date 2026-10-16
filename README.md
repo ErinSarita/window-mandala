@@ -32,7 +32,7 @@ A synthesis of earlier models, described in our own words: the window of toleran
 - **Look and feel:** a soft pastel palette on warm ivory (a deep plum night in dark mode, where the window stays yellow), Cormorant Garamond for the wheel and headings, and a halo of light round the ring. Hovering lights only the section under the pointer.
 - **Your window:** a slider that widens the Self and the window and thins the rings of threat. The "How wide is mine?" reflection sets it.
 
-Tabs: How to read, Where am I? (a three-question finder and an eight-question window reflection), The Self, Awareness, The four directions, Moving between, Patterns, Triggers and regulation, and Practices (breathing with the Self and rings of kindness both animate the wheel).
+Tabs: How to read, Where am I?, The Self, Awareness, The four directions, Patterns (the routes, moving between, and triggers), and Practices (for inside the window: cultivating the Self and widening the window, plus building resilience).
 
 ## The file
 
@@ -42,10 +42,6 @@ The mandala is the single file `index.html`. The content lives in constants near
 
 The Self tab describes the center in four layers, each with a practice: awareness at the very center (the gateway, to connection beyond oneself; "Resting as awareness"), the Flower of Life (the Self, the witness; "A meditation into the Self"), the petals (the qualities, Self-present; "Meeting a part: the six Fs"), and the window (Self-led; "A parts check-in"). Hovering a layer lights it on the wheel, and the center has its own hover card. The stages of returning run in and back out: notice, unblend, Self-present, rest, Self-led. The Awareness tab adds how a wider awareness widens the window and deepens the Self, toward samadhi.
 
-## Guided practices
+## Where am I? The way back that fits
 
-The three buttons under the wheel start guided sessions of about two minutes, shown in a card beneath the wheel, with gentle sound (on by default) and an optional spoken voice (the browser's own speech).
-
-- **Breathe with the Self:** a short settling-in, then ten breaths of five seconds in and five out, with on-screen cues, a breath counter, soft rising and falling tones, and the Self swelling and softening in time.
-- **Rings of kindness:** the loving-kindness phrases through five circles (yourself, someone you love, someone you barely know, someone difficult, all beings), with a bell at each circle and rings of light that reach further each time: the window, its edge, the defenses, the braid.
-- **Into the center:** a journey in through the layers and back out (notice, unblend, the qualities, the Self, resting as awareness, returning), with each layer lit on the wheel and a bell that deepens as you go in.
+The finder (three questions) or a row of choices (fight or flight, freeze, collapse, fawn, at the edge, inside the window) opens the way back for that state: how to recognize it, what it needs, practices with why each one fits that state, what can wait ("Not yet"), and what comes next. Each state needs something different: fight or flight moves the energy before slowing it (stillness such as yoga nidra can feel like a trap), freeze starts with tiny movements, collapse warms and gently activates rather than calming further, fawn turns attention back to oneself. The content is `WAYS` in the script; each direction's panel summarizes its way back and links here. Inside the window, the Practices tab holds the still, inward practices. There are no animated or audio-guided practices; all practices are written.
