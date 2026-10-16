@@ -126,7 +126,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
-svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door,svg.loopview .winborder,svg.loopview .t-win,svg.loopview .t-out.t-sub{display:none}
+svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door,svg.loopview .winborder,svg.loopview .t-out.t-sub{display:none}
 svg.loopview .t-edge.t-sub{display:inline}
 .t-alarm{fill:var(--etext);stroke:var(--halo)}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
@@ -809,7 +809,7 @@ function smoothPath(pts, sharp){
   return d;
 }
 function drawTrace(animate){
-  const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; const oldGlow=document.getElementById("alarmglowpath"); if(oldGlow) oldGlow.remove(); if(!TRACE) return;
+  const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; ["alarmglowpath","loopbase"].forEach(id=>{ const o=document.getElementById(id); if(o) o.remove(); }); if(!TRACE) return;
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(TRACE.loop){
     const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
@@ -817,33 +817,34 @@ function drawTrace(animate){
     const go=()=>{ const t=document.getElementById("loop"); if(t) bringPanel(t); };
     const tipHit=(r0,r1,label,info)=>{ const h=el("path",{d:band(r0,r1),"fill-rule":"evenodd",class:"loop-hit",tabindex:"0",role:"button","aria-label":label},g);
       hookTip(h,()=>{ const [x,y]=P((r0+r1)/2,0); return {x,y,html:`<span class="ringtag">${info.tag}</span><b>${info.name}</b><i>${info.role}</i><span class="tl">${info.tip}</span><span>Tap to read more.</span>`}; },go); };
+    // the colored rings are laid under the wheel's own words, so energized, still, settled, and connected stay readable
+    const base=el("g",{id:"loopbase","pointer-events":"none"}), lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(base,lab);
     // inside the window: the heart at the core, the brainstem around it
     const r0=CR.L1+3, rw=R.win[1], hs=r0+(rw-r0)/2;
-    el("path",{d:band(r0,hs),"fill-rule":"evenodd",fill:"#FFFAEA",class:"loop-ring"},g);
-    el("path",{d:band(hs,rw),"fill-rule":"evenodd",fill:"#FBEDC4",class:"loop-ring"},g);
+    el("path",{d:band(r0,hs),"fill-rule":"evenodd",fill:"#FFFAEA",class:"loop-ring"},base);
+    el("path",{d:band(hs,rw),"fill-rule":"evenodd",fill:"#FBEDC4",class:"loop-ring"},base);
     [[hs,"#9C6E17"],[rw,"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":1,"stroke-opacity":.7,"pointer-events":"none"},g));
     const fs=w=>Math.min(15,w*0.42);
-    arcText((r0+hs)/2,-44,44,"heart · rhythm · heart rate variability","lbl t-ring",fs(hs-r0),0.3,g);
-    arcText((hs+rw)/2,-40,40,"brainstem · the vagal centers","lbl t-ring",fs(rw-hs),0.3,g);
-    arcText((r0+hs)/2,160,240,"from the body up: breath","lbl t-door",fs(hs-r0)*0.95,0.3,g);
-    arcText((hs+rw)/2,158,242,"from awareness down: noticing, naming","lbl t-door",fs(rw-hs)*0.95,0.3,g);
+    arcText((r0+hs)/2,293,341,"heart · heart rate variability","lbl t-ring",fs(hs-r0),0.3,g);
+    arcText((hs+rw)/2,18,72,"brainstem · the vagal centers","lbl t-ring",fs(rw-hs),0.3,g);
+    arcText((r0+hs)/2,192,242,"from the body up: breath","lbl t-door",fs(hs-r0)*0.92,0.3,g);
+    arcText((hs+rw)/2,112,172,"from awareness down: noticing, naming","lbl t-door",fs(rw-hs)*0.92,0.3,g);
     // the edge is the alarm: its own gradient stays, with a border and a name
     const e0=rw, e1=R.edge[1];
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(e1)},g);
       [[e0/e1,"#FBEDC4",.95],[(e0+(e1-e0)*0.5)/e1,"#F7E2A8",.45],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       // laid under the ring's own words, so the early signals stay readable
-      const ap=el("path",{d:band(e0,e1),"fill-rule":"evenodd",fill:"url(#alarmglow)","pointer-events":"none",id:"alarmglowpath"},g);
-      const lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(ap,lab); }
+      el("path",{d:band(e0,e1),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
     el("circle",{cx:0,cy:0,r:f(e0),fill:"none",stroke:"#C0704F","stroke-width":1.2,"stroke-opacity":.8,"pointer-events":"none"},g);
     [45,225].forEach(a=>arcText((e0+e1)/2,a-26,a+26,"the alarm · amygdala","lbl t-ring t-alarm",15,0.3,g));
     // the brake: a strong rim around the alarm, at the outer edge of the edge
     const k0=e1-2, k1=R.out[0]+14;
-    el("path",{d:band(k0,k1),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring"},g);
+    el("path",{d:band(k0,k1),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring"},base);
     // the rim of the window of capacity: the darkest gold, a strong line at the brake's outer edge
     el("circle",{cx:0,cy:0,r:f(k0),fill:"none",stroke:"#B98428","stroke-width":1,"pointer-events":"none"},g);
     // the border of the window of capacity: a band of deeper gold just outside the brake, wide enough to hover
     const b0=k1, b1=k1+17;
-    el("path",{d:band(b0,b1),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},g);
+    el("path",{d:band(b0,b1),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},base);
     [b0,b1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:"#A9781F","stroke-width":1,"pointer-events":"none"},g));
     [0,45,135,225,315].forEach(a=>arcText((b0+b1)/2,a-20,a+20,"window of capacity","lbl t-ring t-rim",Math.min(14,(b1-b0)*0.9),0.8,g));
     [90,270].forEach(a=>arcText((k0+k1)/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(13,(k1-k0)*0.62),0.4,g));
