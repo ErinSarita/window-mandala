@@ -758,8 +758,13 @@ function draw(){
   });
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
-  el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"var(--goldline)","stroke-width":1.5},core);
-  el("circle",{cx:0,cy:0,r:f(R.core-4.5),fill:"none",stroke:"var(--goldline)","stroke-width":0.7,"stroke-opacity":.6,"pointer-events":"none"},core);
+  el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
+  // the rim where the flower meets the petals, drawn in light like the central circle: a pale band, white at its
+  // heart, edged in fine gold
+  const rimR=R.core-3.6, rim=el("g",{fill:"none","pointer-events":"none"},core);
+  el("circle",{cx:0,cy:0,r:f(rimR),stroke:"var(--sun2)","stroke-width":7.2,"stroke-opacity":.95},rim);
+  el("circle",{cx:0,cy:0,r:f(rimR),stroke:"#fff","stroke-width":3},rim);
+  [rimR-3.6,rimR+3.6].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),stroke:"var(--goldline)","stroke-width":0.7,"stroke-opacity":.75},rim));
   const sg=el("g",{fill:"none",stroke:"var(--goldline)","pointer-events":"none"},core);
   el("circle",{cx:0,cy:0,r:f(sr),fill:"url(#heart)",stroke:"none"},sg);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
