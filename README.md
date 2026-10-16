@@ -10,9 +10,9 @@ Three maps of the inner life, brought into one picture, each answering a questio
 
 - **Where is my body?** Polyvagal theory: the ventral window, sympathetic fight or flight, dorsal collapse, and the blends between.
 - **Who is here?** Internal Family Systems: the parts that take over when we leave the window, and the Self at the center.
-- **How do I know, and how does the window grow?** Awareness, as *The Mind Illuminated* (Yates, Immergut, and Graves) teaches it: attention and peripheral awareness, metacognitive awareness that notices the edge early, and the presence that widens the window.
+- **How do I notice, and how do I come back?** Awareness: noticing your own state as it happens, with attention and peripheral awareness. Awareness brings presence, presence helps you return toward the ventral center, and over time it widens the window.
 
-Used together: notice where you are, name it, and return, letting the Self lead. On the wheel, the soft halo around everything is the field of peripheral awareness; the Awareness tab explains it, and the Practices tab adds "Opening peripheral awareness."
+Used together: notice where you are, name it, and return, letting the Self lead. Beneath all three is the deeper aim: to cultivate a true sense of Self beyond conditioning, the old programs and imprints from early experience that once protected us and now hold us back. Parts carry the imprints; the Self is not made of them. On the wheel, the soft halo around everything is the field of peripheral awareness; the Awareness tab explains it, and the Practices tab adds "Opening peripheral awareness."
 
 ## The model
 
