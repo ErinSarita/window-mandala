@@ -108,6 +108,20 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
   svg.breathing #core{animation:breathe 10s ease-in-out infinite}
   .kring{transform-box:fill-box;transform-origin:center;animation:widen 9s ease-out infinite}
 }
+@media (prefers-reduced-motion: no-preference){ .lhl{animation:lpulse 3.6s ease-in-out infinite} }
+@keyframes lpulse{0%,100%{fill-opacity:.1}50%{fill-opacity:.42}}
+.lhl{fill:#fff;fill-opacity:.28;pointer-events:none}
+.lhl-line{fill:none;stroke:var(--goldline);stroke-width:2.4;pointer-events:none;filter:drop-shadow(0 0 4px var(--sun3))}
+.heart-hit{fill:transparent;cursor:pointer;outline:none}
+.layers{display:grid;gap:12px}
+.layers>div{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px;border-radius:0}
+.layers>div:first-child{border-top:0;padding-top:0}
+.layers h4{display:flex;align-items:center;gap:8px}
+.layers .where{font-family:var(--display);font-style:italic;color:var(--muted);font-size:16px;margin:0}
+.layers p{margin:0}
+.layers>div.hl{background:color-mix(in srgb, var(--sun2) 26%, transparent);border-radius:10px;padding:10px 12px;border-top-color:transparent}
+.stages{margin:0;padding-left:22px;display:grid;gap:8px}
+.stages li b{font-weight:700}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
 @keyframes widen{0%{transform:scale(1);opacity:.85}100%{transform:scale(var(--to));opacity:0}}
 .kring{fill:none;stroke:var(--goldline);stroke-width:2.4;vector-effect:non-scaling-stroke;pointer-events:none;filter:drop-shadow(0 0 3px var(--sun3))}
@@ -236,9 +250,9 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       </div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <p>Drag to see the window widen: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
-        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self · 2 min</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness · 2 min</button></div>
-        <p class="hint" style="text-align:center">Both are guided on screen, with gentle sound and an optional voice.</p>
+        <p>Drag to see the window widen, as awareness widens: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
+        <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self · 2 min</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness · 2 min</button><button type="button" class="btn" id="pcenter" aria-pressed="false">Into the center · 2 min</button></div>
+        <p class="hint" style="text-align:center">All three are guided on screen, with gentle sound and an optional voice.</p>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -433,6 +447,26 @@ const HOME = {
 const SELF = {
   intro:"At the center of this mandala is the Self, with a capital S: the calm, clear, compassionate presence at the core of every person. In Internal Family Systems, the therapy Richard Schwartz developed, the Self is never damaged, only crowded out, and healing is less about building it than about uncovering it.",
   cs:[["Calm","a settled body and mind"],["Curiosity","wanting to know, without judging"],["Compassion","warmth toward suffering, including your own"],["Confidence","a quiet trust that you can meet this"],["Courage","willing to turn toward what is hard"],["Clarity","seeing what is, without distortion"],["Creativity","new possibilities, playfulness"],["Connectedness","belonging to yourself, to others, to life"]],
+  // the center in layers, from the deepest out; each has a practice
+  layers:[
+    {key:"heart", name:"The heart: resting as awareness", where:"The white circle at the very center", practice:"rest",
+     text:"At the deepest layer, even the sense of someone doing something softens. What remains is open, quiet awareness: knowing, without effort. Contemplative traditions give it many names: presence, stillness, the ground of being. Schwartz, too, writes of a spiritual side to the Self, a felt connection to something larger than any one person. It is the deepest point of the wheel, and in a sense the highest: the white heart at the center and the field of awareness around the whole wheel are the same presence, seen from two sides."},
+    {key:"flower", name:"The Self: the one who is here", where:"The Flower of Life", practice:"selfmed",
+     text:"Not a quality you feel, but the one who feels them: the presence that can be with any part without becoming it. In IFS the Self is not built but uncovered. It is already whole, waiting behind the parts, and it comes forward on its own when they step back."},
+    {key:"petals", name:"The qualities: Self-present", where:"The eight petals", practice:"sixf",
+     text:"How the Self feels from inside: the eight Cs. When you notice calm, curiosity, or compassion toward a part, Self is present. IFS also names five Ps for how the Self acts in the world: presence, patience, perspective, persistence, and playfulness."},
+    {key:"win", name:"The window: Self-led", where:"The window of capacity", practice:"checkin",
+     text:"Life lived from the center. Parts are still here, but they trust the Self enough to relax into their healthy roots: energy, stillness, rest, and closeness. Self-led is not being calm all the time. It is being able to feel a great deal, and still be yourself."}
+  ],
+  // the stages of returning: in to the center, and back out to live from it
+  stages:[
+    ["Notice","\"Where am I?\" Awareness catches the state, often at the edge or beyond it.","out"],
+    ["Unblend","\"A part of me is afraid.\" The part is asked, kindly, to step back a little, and some space opens.","edge"],
+    ["Self-present","Calm, curiosity, or warmth comes into that space. You can be with the part, rather than being it.","petals"],
+    ["Rest","Nothing to fix, for a while: resting as the Self, and deeper, as awareness itself.","heart"],
+    ["Self-led","Back out into life. The part trusts the Self a little more, and you act from the center.","win"]
+  ],
+  stagesNote:"The way in is also the way out: returning is not leaving life for the center, but bringing the center back into life. Each stage can take a breath or a year, and they loop. Most days we move through the first two; the deeper ones come with practice, and with time.",
   parts:"IFS describes the mind as made of parts, each with its own feelings and job. Managers try to keep life under control and pain away: the planner, the critic, the pleaser. Firefighters rush in when pain breaks through: the binge, the rage, the numbing. Exiles carry the old hurts, often from childhood, that the others protect. Every part has a good intention, even when its strategy causes harm. No bad parts.",
   blend:"When a part takes over, we say it is blended: you feel its fear as if it were all of you. Unblending is asking it, kindly, to step back a little, so there is room for the Self. Then you can be with the part, rather than being it. On this wheel, the defensive states are often parts blending; the window is where there is room for Self.",
   small:"So is there a lowercase self? In everyday life, what we call \"myself\" is usually a mix of parts: our habits, roles, and protections. That everyday self matters, and it is not the enemy. The capital Self is what remains when the parts relax: not a better personality, but the awareness that can hold all of them. This wheel does not give the small self its own ring, because it lives in every ring: it is whichever part is speaking.",
@@ -473,7 +507,12 @@ const REG = {
 const PRACTICES = [
   {key:"breath", name:"Breathe with the Self", how:"Breathe in as the center widens and out as it softens: about five seconds in and five seconds out, six breaths a minute. Ten breaths is enough to begin.", why:"Slow breathing near six breaths a minute brings heart rhythm and breath into a smooth, synchronized pattern researchers call coherence (Lehrer and Gevirtz). It is one of the most reliable ways to steady the nervous system."},
   {key:"kind", name:"Widening rings of kindness", how:"Begin with yourself: \"May I be safe. May I be at ease.\" Then widen the ring to someone you love, someone neutral, someone difficult, and all beings, as the rings move outward from the center.", why:"Loving-kindness practice begins at the center and widens, like this mandala. Studies find it increases positive emotion and a sense of connection over time (Fredrickson and colleagues, 2008; Hofmann and colleagues, 2011)."},
+  {key:"center", name:"Into the center", how:"A guided journey through the layers of the wheel, and back: noticing where you are, unblending from a part, the qualities of Self, the Self itself, resting as awareness, and returning to your window. Each layer lights on the wheel as you reach it. About two minutes.", why:"This is the path of returning in a single sitting: in to the center, and back out to live from it. Practiced often, the path gets shorter."},
+  {key:"checkin", name:"A parts check-in", how:"Once a day, sit for a few minutes and ask, \"Who is here today?\" Notice two or three parts: a planner, a worrier, a tired one, an eager one. Greet each one, and thank it for what it is trying to do. Then ask whether it would be willing to let the Self lead today, and notice what changes in your body.", why:"For the window, and Self-led living. Being Self-led is less about getting rid of parts than about parts trusting the Self enough to relax. A daily check-in builds that trust, a little at a time."},
   {key:"unblend", name:"Unblending", how:"Notice a feeling or a voice that has taken over. Find where it lives in your body. Ask it, kindly, \"Would you be willing to step back a little, so I can be with you?\" Notice any space that opens, and any calm, curiosity, or warmth that comes into it. Then ask the part what it wants you to know.", why:"Adapted from Internal Family Systems. When a part steps back, there is room for Self, and the defensive state often eases with it."},
+  {key:"sixf", name:"Meeting a part: the six Fs", how:"<b>Find</b> a part: a feeling, a voice, a sensation. <b>Focus</b> on it, and notice where it is in or around your body. <b>Flesh it out</b>: how does it look or feel, and how old does it seem? Ask, \"How do I <b>feel toward</b> this part?\" If the answer is not curiosity, warmth, or calm, another part is blended; kindly ask it to step back too. <b>Befriend</b> the part: ask what it does for you, and let it know you see it. Then ask about its <b>fears</b>: \"What are you afraid would happen if you stopped doing this?\"", why:"For the petals, the qualities of Self. These are the steps Internal Family Systems uses to get to know a protective part. The question \"How do I feel toward it?\" is a simple test of whether Self is present: when the answer is one of the Cs, it is."},
+  {key:"selfmed", name:"A meditation into the Self", how:"Sit, and close your eyes or soften your gaze. Each time a thought, a feeling, or an urge arises, notice it as a part, and ask it, kindly, to relax and step aside for a while, trusting that you will come back to it. Do this again and again, without force. Then notice what is left when the parts step back: often spaciousness, warmth, and a quiet sense of being here. That is the Self, not something you make, but something you uncover.", why:"For the Flower of Life, the Self itself. Adapted from the Self meditations taught in Internal Family Systems. Each time a part steps back and the Self comes forward, the part and the body both learn that the center is safe."},
+  {key:"rest", name:"Resting as awareness", how:"After some time in stillness, let go of any focus at all. Notice that sounds, sensations, and thoughts are already being known, without effort. Turn gently toward the knowing itself: not a thing you can see, but the open, quiet awareness in which everything appears. Rest as that, for a few breaths or a few minutes. When the mind grabs hold of something, notice it, and rest again.", why:"For the white heart at the center. Many contemplative traditions describe this as the deepest rest: awareness resting in itself. Go gently. If it feels unsettling or empty rather than restful, open your eyes, feel your feet on the floor, and come back to the breath. That is a wise choice, not a failure."},
   {key:"glimmer", name:"Glimmers", how:"Three times today, notice something small that feels safe or good, and stay with it for three breaths.", why:"Practicing safety, not only managing danger, gives the nervous system a well-worn way home (Dana)."},
   {key:"aware", name:"Opening peripheral awareness", how:"Sit comfortably and rest your attention on the breath, at the nose or the belly. Without letting go of the breath, let your awareness open around it: sounds in the room, the feeling of your body, the space around you. Keep the breath at the center and everything else in the background, like the halo around the wheel. Every so often, notice the mind itself: where am I on the wheel right now? Five to ten minutes is plenty.", why:"Training peripheral awareness, and awareness of your own state, means the edge is noticed earlier, so there is more time and more choice. Over time it is one of the steadiest ways the window widens."},
   {key:"edge", name:"Touch the edge, and come back", how:"Inside your window, bring to mind something a little stressful. Notice your body begin to move toward the edge, then return to something steady. Back and forth, a few times, never going far.", why:"Titration and pendulation (Levine). Each safe return widens the window a little."}
@@ -561,7 +600,16 @@ function petal(r0,r1,a0,a1,bulgeIn){
   return `M${f(b0[0])} ${f(b0[1])} Q${f(c0[0])} ${f(c0[1])} ${f(tip[0])} ${f(tip[1])} Q${f(c1[0])} ${f(c1[1])} ${f(b1[0])} ${f(b1[1])} `+(bulgeIn ? `Q${f(P(r0+bulgeIn,m)[0])} ${f(P(r0+bulgeIn,m)[1])} ${f(b0[0])} ${f(b0[1])}` : arc(r0,a1,a0,0))+"Z";
 }
 // text path along an arc that reads upright
-let tpId=0;
+let tpId=0, CR={sr:30,L1:200}, layerKey=null;
+// light one layer of the wheel: the heart, the Flower, the petals, the window, the edge, or the outer ring
+function setLayerHL(key){
+  layerKey=key; const g=document.getElementById("layerHL"); if(!g) return; g.innerHTML=""; if(!key) return;
+  const span={heart:[0,CR.sr],flower:[CR.sr,R.core],petals:[R.core,CR.L1],win:R.win,edge:R.edge,out:R.out}[key]; if(!span) return;
+  const [r0,r1]=span, ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+  el("path",{d:ring(r1)+(r0>0?" "+ring(r0):"")+"Z","fill-rule":"evenodd",class:"lhl"},g);
+  el("circle",{cx:0,cy:0,r:f(r1),class:"lhl-line"},g);
+  if(r0>0) el("circle",{cx:0,cy:0,r:f(r0),class:"lhl-line",style:"stroke-width:1.2"},g);
+}
 function arcText(r,a0,a1,text,cls,size,ls,parent){
   const m=((a0+a1)/2+360)%360, flip = m>95 && m<265;
   const id="tp"+(tpId++);
@@ -689,6 +737,7 @@ function draw(){
   // the Self: a pale-gold disc, a bright heart, one ring of lotus petals, and a glow that spills into the window
   // one layer of eight lotus petals, large enough to reach out over the inner window, stopping short of its words
   const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=Math.min(R.self+(R.win[1]-R.win[0])*0.32, wmid-26), sr=R.core*0.42, GL=R.self+60;
+  CR={sr,L1};
   grad("sun",{...U,r:R.core},[[0,"var(--sun1)"],[0.72,"var(--sun2)"],[1,"var(--sun3)"]]);
   grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun1)"],[0.78,"var(--sun2)"],[1,"var(--sun3)"]]);
@@ -796,14 +845,18 @@ function draw(){
   el("circle",{cx:0,cy:0,r:f(sr),stroke:"var(--sun2)","stroke-width":6,"stroke-opacity":.9},sg);
   el("circle",{cx:0,cy:0,r:f(sr),stroke:"#fff","stroke-width":2.6},sg);
   [sr-3.2,sr+3.2].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),"stroke-width":0.6,"stroke-opacity":.7},sg));
+  // the white heart: the deepest layer, resting as awareness
+  const heart=el("circle",{cx:0,cy:0,r:f(sr+3),class:"heart-hit",tabindex:"0",role:"button","aria-label":"The heart of the Self: resting as awareness"},sunG);
+  hookTip(heart,()=>({x:0,y:-sr*0.4,html:`<span class="ringtag">The deepest layer</span><b>The heart</b><span class="tl">Resting as awareness: open, quiet knowing, with nothing to do.</span><span>Tap to read about the layers of Self.</span>`,color:"--sun3"}),()=>showSelf(true,null,"heart"));
   core.addEventListener("click",()=>showSelf(true));
   core.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showSelf(true); } });
   const tip=document.getElementById("coretip");
   ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
   ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
   el("g",{id:"kind"});
+  el("g",{id:"layerHL"});
   el("g",{id:"selOutline"});
-  applySel(); setKind(kindOn);
+  applySel(); setKind(kindOn); setLayerHL(layerKey);
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -896,7 +949,7 @@ function stopPractice(){
   if(PR&&PR.timer) clearInterval(PR.timer);
   PR=null; svg.classList.remove("breathing"); kindStage=null; setKind(false);
   guide.hidden=true; if(canSpeak) speechSynthesis.cancel();
-  pbreath.setAttribute("aria-pressed","false"); pkind.setAttribute("aria-pressed","false");
+  pbreath.setAttribute("aria-pressed","false"); pkind.setAttribute("aria-pressed","false"); pcenter.setAttribute("aria-pressed","false"); setLayerHL(null);
 }
 function finish(cue, sub){
   if(PR.done) return; PR.done=true; gBar.style.width="100%";
@@ -956,6 +1009,34 @@ function tickKind(){
   if(within>=LINE0 && ln!==PR.line){ PR.line=ln; setCue(S.lines[ln], ln===0?S.sub:"", `Circle ${st+1} of ${KIND_STAGES.length}`); say(S.lines[ln]); }
 }
 
+const CENTER_STAGES=[
+  {hl:"out", title:"Notice", bell:392, lines:["Notice where you are on the wheel right now.","Your body, your breath, your mood.","No need to change it. Just notice."]},
+  {hl:"edge", title:"Unblend", bell:349, lines:["Is there a part here: a feeling, a voice, a pull?","Ask it, kindly, to step back a little.","Notice any space that opens."]},
+  {hl:"petals", title:"The qualities of Self", bell:330, lines:["Into that space, notice any calm.","Any curiosity.","Any warmth, toward yourself, or toward the part."]},
+  {hl:"flower", title:"The Self", bell:294, lines:["Notice the one who is noticing.","Not a part: the one who is here.","This is the Self."]},
+  {hl:"heart", title:"Resting as awareness", bell:262, lines:["Let go of doing anything at all.","Rest as the quiet knowing in which everything appears.","Nothing to fix. Just this."]},
+  {hl:"win", title:"Returning", bell:392, lines:["Now let this presence widen, back into your window.","Feel your body, your feet, the room around you.","Bring the center with you."]}
+];
+const pcenter=document.getElementById("pcenter");
+function startCenter(){
+  stopPractice(); audio();
+  PR={kind:"center",t0:performance.now(),stage:-1,line:-1}; pcenter.setAttribute("aria-pressed","true");
+  openGuide("Into the center"); setCue("Settle in","Let your eyes rest on the wheel. We will move inward, layer by layer, and back.","");
+  say("Settle in. We will move inward, layer by layer, and back.");
+  PR.timer=setInterval(tickCenter,100);
+}
+function tickCenter(){
+  const e=performance.now()-PR.t0;
+  if(e<LEAD){ gBar.style.width=(e/LEAD*100)+"%"; return; }
+  const k=e-LEAD, st=Math.floor(k/STAGE);
+  if(st>=CENTER_STAGES.length){ setLayerHL(null); finish("Live from the center","The center is here whenever you come back to it."); return; }
+  const within=k-st*STAGE, S=CENTER_STAGES[st];
+  gBar.style.width=(within/STAGE*100)+"%";
+  if(st!==PR.stage){ PR.stage=st; PR.line=-1; setLayerHL(S.hl); bell(S.bell); gTitle.textContent=S.title; }
+  const ln=Math.max(0,Math.min(S.lines.length-1,Math.floor((within-LINE0)/LINEGAP)));
+  if(within>=LINE0 && ln!==PR.line){ PR.line=ln; setCue(S.lines[ln], "", `Layer ${st+1} of ${CENTER_STAGES.length}`); say(S.lines[ln]); }
+}
+
 function setKind(on){
   kindOn=on;
   const g=document.getElementById("kind"); if(!g) return; g.innerHTML="";
@@ -969,6 +1050,7 @@ function setKind(on){
 }
 pbreath.addEventListener("click",()=>{ if(PR&&PR.kind==="breath") stopPractice(); else startBreath(); });
 pkind.addEventListener("click",()=>{ if(PR&&PR.kind==="kind") stopPractice(); else startKind(); });
+pcenter.addEventListener("click",()=>{ if(PR&&PR.kind==="center") stopPractice(); else startCenter(); });
 document.getElementById("g-stop").addEventListener("click",stopPractice);
 gSound.addEventListener("click",()=>{ soundOn=!soundOn; gSound.setAttribute("aria-pressed",soundOn?"true":"false"); gSound.textContent=soundOn?"Sound on":"Sound off"; });
 gVoice.addEventListener("click",()=>{ voiceOn=!voiceOn; gVoice.setAttribute("aria-pressed",voiceOn?"true":"false"); if(!voiceOn&&canSpeak) speechSynthesis.cancel(); });
@@ -1006,6 +1088,11 @@ function wire(){
   panel.querySelectorAll("[data-practice]").forEach(b=>b.addEventListener("click",()=>showPractice(true)));
   panel.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>showReg(true)));
   panel.querySelectorAll("[data-aware]").forEach(b=>b.addEventListener("click",()=>showAware(true)));
+  panel.querySelectorAll("[data-pr]").forEach(b=>b.addEventListener("click",()=>showPractice(true,b.dataset.pr)));
+  // hovering a layer of the Self in the panel lights it on the wheel
+  panel.querySelectorAll("[data-lhl]").forEach(n=>{
+    const on=()=>{ if(!PR) setLayerHL(n.dataset.lhl); }, off=()=>{ if(!PR) setLayerHL(null); };
+    n.addEventListener("mouseenter",on); n.addEventListener("mouseleave",off); n.addEventListener("focusin",on); n.addEventListener("focusout",off); });
   panel.querySelectorAll("[data-patterns]").forEach(b=>b.addEventListener("click",()=>showPatterns(true)));
 }
 function applySel(){
@@ -1041,7 +1128,7 @@ function showIntro(){
   panel.innerHTML=PURPOSE_HTML+CENTER_HTML+`<div class="intro">
     <h2>Reading the wheel</h2>
     <ul class="legend">
-      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest.</div></li>
+      <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life at the heart, ringed by eight petals, one for each quality of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness. What remains when every part can rest. The white circle at its heart is the deepest layer: resting as awareness.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction: energized, still, settled, and connected. The dashed line is the window's edge.</div></li>
       <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals that you are leaving the window: revving, bracing, sinking, over-tuning. Catching them here makes the way back short.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses: fight or flight at the top, freeze to the right, collapse below, fawn to the left.</div></li>
@@ -1121,6 +1208,10 @@ function showAware(user){
     <div class="ring"><h3>Presence brings you back</h3>
       <p>Awareness does more than notice. When you turn toward your state with steady, kind attention, presence comes with it: calm, clear, curious, and here. Presence is ventral in nature. It tends to soothe the very system it is aware of, so awareness itself becomes one of the ways back to the center. Practiced often, it widens the window: more can be felt at once without being swept away, because there is more room to hold it.</p>
       <p class="about">Research on mindfulness training finds gains in attention and in the regulation of emotion, though the science is still young (Tang, Hölzel, and Posner, 2015).</p></div>
+    <div class="ring"><h3>A wider awareness, a wider window, a deeper Self</h3>
+      <p>Awareness is something you can cultivate, and as it widens, the window widens with it: more can be felt at once without leaving. The protective rings outside the window thin, because less needs defending, and less of you is spent on defense.</p>
+      <p>As the protections soften, more of the true Self comes through, deeper and wider at once. Deeper, as the Self is felt more fully at the center, beneath the old conditioning. Wider, as connection reaches beyond yourself, to other people, to the living world, to life itself. Contemplative traditions describe where this leads as samadhi: a collected, unified mind, steady and at ease, in which the line between self and world grows soft.</p>
+      <p class="about">On the wheel, the slider shows it: as the window widens, the Self grows and the rings of threat thin, and the field of awareness holds it all.</p></div>
     <div class="ring"><h3>Parts, and the one who notices</h3>
       <p>Many traditions describe the mind as made of many parts, each with its own concerns, taking turns at the front. Internal Family Systems calls them parts. With spacious awareness, a part can be noticed as a part, one voice among others, rather than taking over.</p>
       <p class="note">Some contemplative traditions speak of awareness rather than a lasting Self; Internal Family Systems speaks of the Self. On this wheel they are held side by side: the Self at the center and the field of awareness around the whole wheel point to the same presence from two directions. That linking is this mandala's synthesis.</p></div>
@@ -1131,12 +1222,16 @@ function showAware(user){
   wire(); if(user) bringPanel();
 }
 
-function showSelf(user, ci){
+function showSelf(user, ci, layer){
   setView("self");
-  const S=SELF;
+  const S=SELF, prName=k=>PRACTICES.find(p=>p.key===k).name, lsw={heart:"--sun1",flower:"--sun3",petals:"--sun2",win:"--win"};
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The center</div><h2>The Self</h2><div class="meta">With a capital S</div><p>${S.intro}</p></div>
     <div class="ring"><h3>The qualities of Self</h3><p class="about">Schwartz describes eight Cs. When you notice them, Self is near.</p>
       <ul class="cs">${S.cs.map(([n,t],i)=>`<li${ci===i?` class="hl" id="cq-${i}"`:""}><b>${n}</b>${t}</li>`).join("")}</ul></div>
+    <div class="ring" id="self-layers"><h3>The center, in layers</h3><p class="about">From the deepest layer out. Hover a layer to light it on the wheel.</p>
+      <div class="layers">${S.layers.map(L=>`<div data-lhl="${L.key}" id="ly-${L.key}"${layer===L.key?' class="hl"':""} tabindex="-1"><h4>${sw(lsw[L.key])}${L.name}</h4><p class="where">${L.where}</p><p>${L.text}</p><button type="button" class="linkbtn" data-pr="${L.practice}">Practice: ${prName(L.practice)}</button></div>`).join("")}</div></div>
+    <div class="ring"><h3>The stages of returning</h3><ol class="stages">${S.stages.map(([n,t,k])=>`<li data-lhl="${k}"><b>${n}.</b> ${t}</li>`).join("")}</ol>
+      <p class="about">${S.stagesNote}</p><button type="button" class="btn" data-pr="center" style="justify-self:start">The guided journey: Into the center</button></div>
     <div class="ring"><h3>Parts</h3><p>${S.parts}</p></div>
     <div class="ring"><h3>Blending, and unblending</h3><p>${S.blend}</p><button type="button" class="linkbtn" data-practice>Try the unblending practice</button></div>
     <div class="ring"><h3>Self, and self</h3><p>${S.small}</p></div>
@@ -1145,7 +1240,7 @@ function showSelf(user, ci){
     <div class="ring"><h3>Growing toward the Self</h3><p>Meditation and the practices here are ways of spending more time near the center: noticing the Cs, unblending from parts, and letting the body feel safe enough for Self to come forward. Over time the center grows, and the rings of threat thin, as the slider shows.</p>
       <p class="note">${S.evidence}</p></div>
     <p class="src">Schwartz (2021); Schwartz &amp; Sweezy (2020); Shadick et al. (2013); Hodgdon et al. (2022); Jung (1959); Dana (2018)</p>`;
-  wire(); if(user) bringPanel(ci!=null?document.getElementById("cq-"+ci):null);
+  wire(); if(user) bringPanel(ci!=null?document.getElementById("cq-"+ci):layer?document.getElementById("self-layers"):null);
 }
 
 function showDir(k, layer, user){
@@ -1219,17 +1314,17 @@ function showReg(user){
   wire(); if(user) bringPanel();
 }
 
-function showPractice(user){
+function showPractice(user, focus){
   setView("practice");
   panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">Cultivating the Self, and widening the window</div>
       <p>Practice inside your window, when you are steady enough to learn. Over time, these are how the center grows.</p></div>
-    ${PRACTICES.map(p=>`<div class="ring" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
-      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Begin the guided breathing</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Begin the rings of kindness</button>`:""}</div>`).join("")}
+    ${PRACTICES.map(p=>`<div class="ring${focus===p.key?" hl":""}" id="pr-${p.key}"><h3>${p.name}</h3><p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
+      ${p.key==="breath"?`<button type="button" class="btn" data-run="breath">Begin the guided breathing</button>`:p.key==="kind"?`<button type="button" class="btn" data-run="kind">Begin the rings of kindness</button>`:p.key==="center"?`<button type="button" class="btn" data-run="center">Begin the journey into the center</button>`:""}</div>`).join("")}
     <p class="src">Lehrer &amp; Gevirtz (2014); Fredrickson et al. (2008); Hofmann et al. (2011); Schwartz (2021); Dana (2018); Levine (2010)</p>`;
   panel.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
-    if(b.dataset.run==="breath") startBreath(); else startKind();
+    if(b.dataset.run==="breath") startBreath(); else if(b.dataset.run==="center") startCenter(); else startKind();
   }));
-  wire(); if(user) bringPanel();
+  wire(); if(user) bringPanel(focus?document.getElementById("pr-"+focus):null);
 }
 document.getElementById("homebtn").addEventListener("click",()=>showHome(true));
 

@@ -32,9 +32,14 @@ Tabs: How to read, Where am I? (a three-question finder and an eight-question wi
 
 The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `FEEL` for the emotions that tend to arise in each part of each direction (shown in its panel), `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers is saved; only the light or dark choice is kept, under the `wm-` key.
 
+## The center, in layers
+
+The Self tab describes the center in four layers, each with a practice: the white heart (resting as awareness; "Resting as awareness"), the Flower of Life (the Self itself; "A meditation into the Self"), the petals (the qualities, Self-present; "Meeting a part: the six Fs"), and the window (Self-led; "A parts check-in"). Hovering a layer lights it on the wheel, and the heart has its own hover card. The stages of returning run in and back out: notice, unblend, Self-present, rest, Self-led. The Awareness tab adds how a wider awareness widens the window and deepens the Self, toward samadhi.
+
 ## Guided practices
 
-The two buttons under the wheel start guided sessions of about two minutes, shown in a card beneath the wheel, with gentle sound (on by default) and an optional spoken voice (the browser's own speech).
+The three buttons under the wheel start guided sessions of about two minutes, shown in a card beneath the wheel, with gentle sound (on by default) and an optional spoken voice (the browser's own speech).
 
 - **Breathe with the Self:** a short settling-in, then ten breaths of five seconds in and five out, with on-screen cues, a breath counter, soft rising and falling tones, and the Self swelling and softening in time.
 - **Rings of kindness:** the loving-kindness phrases through five circles (yourself, someone you love, someone you barely know, someone difficult, all beings), with a bell at each circle and rings of light that reach further each time: the window, its edge, the defenses, the braid.
+- **Into the center:** a journey in through the layers and back out (notice, unblend, the qualities, the Self, resting as awareness, returning), with each layer lit on the wheel and a bell that deepens as you go in.
