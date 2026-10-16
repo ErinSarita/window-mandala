@@ -334,26 +334,18 @@ const DIRS = [
 ];
 
 // Where each part of the wheel sits in the three nervous-system states of polyvagal theory (Porges, Dana), and how
-// each edge works both ways: the signs that you are leaving the window, and the signs that you are coming back in.
+// each part of the wheel feels.
 // The window is ventral throughout; the top is sympathetic and the bottom dorsal. Freeze and fawn are read here as
 // blends: that reading is this mandala's synthesis, and fawn itself comes from Walker, not from polyvagal theory.
 const NERVE = [
   {state:"Sympathetic", stateLong:"sympathetic: the accelerator", feel:"Heart pounding, heat, the urge to push or run.", way:"Breathe out longer than you breathe in.",
-   blend:"Ventral and sympathetic together: energy that stays connected.",
-   back:["A deeper breath, or a sigh","Shoulders dropping, the jaw unclenching","The urge to act softening into energy you can use","Seeing more of the room again"],
-   step:"Breathe out slowly and feel your feet on the floor."},
+   blend:"Ventral and sympathetic together: energy that stays connected.", },
   {state:"Sympathetic and dorsal at once", stateLong:"sympathetic and dorsal at once: accelerator and brake together", feel:"A racing heart in a body that cannot move.", way:"Start with a tiny movement, then let it grow.",
-   blend:"Ventral holding stillness and alertness together: quiet, open presence.",
-   back:["A breath you did not know you were holding","Your eyes moving freely again","A stretch, a yawn, small movements returning","Being able to choose again"],
-   step:"Move something small, and look slowly around the room."},
+   blend:"Ventral holding stillness and alertness together: quiet, open presence.", },
   {state:"Dorsal", stateLong:"dorsal: the oldest brake", feel:"Numb, heavy, far away; nothing seems to matter.", way:"Warmth first, then gentle rhythm.",
-   blend:"Ventral and dorsal together: stillness that feels safe.",
-   back:["Warmth returning to your hands and face","Colors and sounds growing clearer","A little energy to move or speak","Caring again about something small"],
-   step:"Something warm, and a gentle rhythm: rocking, swaying, humming."},
+   blend:"Ventral and dorsal together: stillness that feels safe.", },
   {state:"The social system, used for defense", stateLong:"the ventral system's face and voice, recruited for defense, with sympathetic fear (or dorsal submission) underneath", feel:"Smiling and agreeing while your own self disappears.", way:"Pause before you answer, and ask what you want.",
-   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.",
-   back:["Noticing what you feel and what you want","A pause before you answer","Feeling your own back and feet","A small, honest yes or no"],
-   step:"Ask yourself, \"What do I want here?\" and wait for the answer."}
+   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.", }
 ];
 
 // Moving around the circle: each neighbor pair, both ways, and the two crossings
@@ -577,11 +569,11 @@ const hexRGB=h=>{ h=h.trim().replace("#",""); if(h.length===3) h=h.split("").map
 const mixRGB=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
 const rgb=c=>`rgb(${c.map(v=>Math.round(v)).join(",")})`;
 let PAL=null;
-function readPalette(){ PAL={base:DIRS.map(d=>hexRGB(cssv(d.color))), surface:hexRGB(cssv("--surface")), win:hexRGB(cssv("--win"))}; }
+function readPalette(){ PAL={base:DIRS.map(d=>hexRGB(cssv(d.color))), surface:hexRGB(cssv("--surface")), win:hexRGB(cssv("--win")), dark:isDark()}; }
 function colorAt(theta, layer){
   const pos=(((theta%360)+360)%360)/90, i=Math.floor(pos)%4, j=(i+1)%4, u=pos-Math.floor(pos), s=u*u*(3-2*u);
   const c=mixRGB(PAL.base[i],PAL.base[j],s);
-  return rgb(layer==="edge" ? mixRGB(c,PAL.surface,0.55) : layer==="win" ? mixRGB(PAL.win,c,0.2) : c);
+  return rgb(layer==="edge" ? mixRGB(c,PAL.surface,PAL.dark?0.24:0.55) : layer==="win" ? mixRGB(PAL.win,c,0.2) : c);
 }
 // One continuous ring: thin wedges, each colored by where it sits round the circle, so the defenses melt into
 // one another with no border between them. The outer ring also gets a soft sheen, light inside and deeper at the rim.
@@ -598,7 +590,7 @@ const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the w
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
   if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">Ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
-  if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">A threshold, both ways</span><b>${d.edge.name}</b><span class="tl"><em>Moving out:</em> ${d.edge.words}.</span><span class="tl"><em>Coming back in:</em> ${n.back[0].toLowerCase()}, ${n.back[1].toLowerCase()}.</span>${more}`;
+  if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${more}`;
   return `<span class="ringtag">Outside the window</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
 }
 function hookTip(node, info, go){
@@ -677,7 +669,10 @@ function draw(){
   ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.win[0],R.win[1]);
   // the window's light radiates out through the edge and fades into the defenses, so the edge reads as a passage
   const eR=R.edge[1], oR=R.out[0]+16;
-  grad("edgeglow",{...U,r:eR},[[R.edge[0]/eR,"var(--sun2)",0.92],[(R.edge[0]+et*0.6)/eR,"var(--sun2)",0.32],[1,"var(--sun2)",0.06]]);
+  // in dark mode the edge takes its defense's color and the window's light only touches its inner rim
+  grad("edgeglow",{...U,r:eR},isDark()
+    ? [[R.edge[0]/eR,"var(--sun2)",0.5],[(R.edge[0]+et*0.35)/eR,"var(--sun2)",0.08],[(R.edge[0]+et*0.6)/eR,"var(--sun2)",0]]
+    : [[R.edge[0]/eR,"var(--sun2)",0.92],[(R.edge[0]+et*0.6)/eR,"var(--sun2)",0.32],[1,"var(--sun2)",0.06]]);
   grad("outglow",{...U,r:oR},[[R.out[0]/oR,"var(--sun2)",isDark()?0.1:0.16],[1,"var(--sun2)",0]]);
   el("circle",{cx:0,cy:0,r:f((R.edge[0]+R.edge[1])/2),fill:"none",stroke:"url(#edgeglow)","stroke-width":f(et),"pointer-events":"none"});
   el("circle",{cx:0,cy:0,r:f(R.out[0]+8),fill:"none",stroke:"url(#outglow)","stroke-width":16,"pointer-events":"none"});
@@ -1003,8 +998,6 @@ function showIntro(){
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with the Self at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
     <p><b>Freeze</b> sits on the right, halfway between, because it is both at once: the sympathetic charge still running while the dorsal brake holds the body still. <b>Fawn</b> sits opposite it, on the left: the ventral system's own tools, a soft face and a warm voice, used for defense, with sympathetic fear or dorsal submission underneath. Inside the window, each direction is a blend held by safety: energized is ventral with sympathetic, settled is ventral with dorsal, still holds both, and connected is ventral at its most social.</p>
     <p class="note">The window, top, and bottom follow polyvagal theory. Reading freeze and fawn as blends is this mandala's synthesis; fawn itself comes from Pete Walker's work, not from polyvagal theory.</p>
-    <h2>The edge works both ways</h2>
-    <p>The edge is a threshold you can cross in either direction. Hover it to see the signs of leaving the window and the signs of coming home; open it for what helps right at the threshold.</p>
     <p class="note">This is a model: a map drawn from earlier maps, theory-based and offered from an evolutionary perspective. See About this mandala, below the wheel.</p>
     <p><button type="button" class="btn" data-where>Where am I right now?</button></p>
   </div>`;
@@ -1083,10 +1076,7 @@ function showDir(k, layer, user){
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">${d.move}</div><h2>${d.name}</h2>
       <p>${o.text}</p></div>
     <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The edge is a threshold you can cross both ways. Catching the signs here makes the way back short.</p>
-      <h4>Moving out of the window</h4>${ul(d.edge.signs)}
-      <h4>Coming back in</h4>${ul(NERVE[k].back)}
-      <p class="note"><b>What helps, right here:</b> ${NERVE[k].step}</p></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals that you are leaving the window toward ${d.name.toLowerCase()}. Catching them here makes the way back short, whenever you choose to take it.</p>${ul(d.edge.signs)}</div>
     <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p>
       <h4>How it can feel</h4>${ul(o.feels)}
       <p class="voice">${o.voice}</p>
