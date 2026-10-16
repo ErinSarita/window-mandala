@@ -784,11 +784,12 @@ function draw(){
   const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=Math.min(R.self+(R.win[1]-R.win[0])*0.32, wmid-26), sr=R.core*0.42, GL=R.self+60;
   CR={sr,L1,dot:Math.max(3.2,sr*0.16)};
   // the center is the brightest part of the Self: white at the heart, pale gold to the rim; the petals carry the deeper gold
-  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.6,"#fff"],[0.85,"var(--sun1)"],[1,"var(--sun2)"]]);
+  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.42,"#fff"],[0.62,"var(--sun1)"],[1,"var(--sun2)"]]);
   // a glow of light from the center that spills softly over the inner petals
   const CG=R.core*1.45;
   grad("coreglow",{...U,r:CG},[[0,"#fff",0.9],[R.core/CG*0.8,"#fff",0.55],[R.core/CG,"#fff",0.32],[1,"#fff",0]]);
-  grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
+  // the six-petaled flower in the central circle is the brightest place of all
+  grad("heart",{...U,r:sr},[[0,"#fff",1],[1,"#fff",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
