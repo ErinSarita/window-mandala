@@ -160,6 +160,8 @@ svg.rimfocus .rim-focus{opacity:1}
 @media (prefers-reduced-motion: no-preference){ #lensG{animation:lensin .35s ease} }
 @keyframes lensin{from{opacity:0}to{opacity:1}}
 .lensnav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.hybrid{background:color-mix(in srgb, var(--self) 10%, transparent);border-radius:10px;padding:10px 12px;font-size:14.5px;margin:10px 0 0}
+.hybrid .linkbtn{font-size:inherit}
 .fig{margin:2px 0 6px}
 .fig svg{display:block;width:100%;max-width:400px;height:auto;margin:0 auto;overflow:visible}
 .fig text{fill:var(--ink);font-family:var(--body)}
@@ -356,7 +358,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
 
   <div class="main">
     <div class="stage">
-      <div class="lenses" id="lenses" role="group" aria-label="Light up each model inside the mandala"><span class="lenslbl">Light up each model</span></div>
+      <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
@@ -1427,7 +1429,7 @@ const PURPOSE_HTML=`<div class="purpose">
       <li><b>How do I notice, and come back?</b> Awareness: knowing your state as it happens, which brings presence to it and helps you return toward the center.</li>
     </ul>
     <p>Used together: <b>notice</b> where you are, <b>name</b> it, and <b>return</b>, letting the Self lead.</p>
-    <p>The tabs above the wheel light up each model in turn: where it lives on the wheel, what it brings, and how the mandala reimagines it.</p>
+    <p>This mandala is a hybrid, woven from four models. The tabs above the wheel light up each one in turn: what this version does with it, where it lives on the wheel, the original model, and how the mandala reimagines it.</p>
     <p><b>What it is for.</b> Not to stay inside the window always: leaving it is human, and the defenses are part of how we survive. The aim is to come back more easily and more quickly each time, so the window widens. Along the way it cultivates <b>coherence</b>, heart and brain in rhythm and the parts working together, and a true sense of <b>Self beyond conditioning</b>: parts carry the old programs and imprints, the Self is not made of them, and each return lets you live a little less from them.</p>
   </div>`;
 function showIntro(){
@@ -1577,7 +1579,8 @@ function showAware(user){
 const LENSES=[
   {key:"window", tab:"Polyvagal and the window", icon:`<circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="2.6"/>`,
    spans:()=>[[CR.L1+4,R.win[1]],R.rim,R.out], dim:.5,
-   title:"Polyvagal theory and the window of capacity", meta:"Stephen Porges and Deb Dana; Dan Siegel",
+   title:"Polyvagal theory and the window of capacity", meta:"Stephen Porges and Deb Dana; Dan Siegel", name:"polyvagal theory and the window of capacity",
+   short:"The mandala bends the window into a circle. The window of capacity sits at the center with four healthy states, and the survival states ring it in four directions, each with its safe root just inside.",
    intro:"Two maps of the same ground: how much the nervous system can hold, and what it does when there is too much. Together they give the wheel its shape: the window at the center, and the survival states around it.",
    lit:[["The window of capacity","The ring of Energized, Settled, Still, and Connected: the states in which you can feel a great deal and still think, connect, and choose."],
         ["Its border","The deep gold band at the window's edge. Inside it, you can come back on your own. Beyond it, survival takes over."],
@@ -1593,7 +1596,8 @@ const LENSES=[
    src:"Siegel (1999); Ogden, Minton &amp; Pain (2006); Porges (2007, 2011); Dana (2018); Walker (2013)"},
   {key:"ifs", tab:"IFS: Self and parts", icon:`<circle cx="8" cy="8" r="3.2" fill="currentColor"/><circle cx="8" cy="1.8" r="1.5" fill="currentColor"/><circle cx="13.4" cy="11.1" r="1.5" fill="currentColor"/><circle cx="2.6" cy="11.1" r="1.5" fill="currentColor"/>`,
    spans:()=>[[0,CR.L1+4]], dim:.26, parts:true,
-   title:"Internal Family Systems: the Self and its parts", meta:"Richard Schwartz",
+   title:"Internal Family Systems: the Self and its parts", meta:"Richard Schwartz", name:"Internal Family Systems",
+   short:"The mandala puts the Self at the center and gives the parts a place in the nervous system. Every ring outside the Self is somewhere a part can take over, and the way back is the same in both maps: unblending.",
    intro:"Richard Schwartz developed Internal Family Systems in the 1980s, listening to clients describe parts of themselves as if they were people inside. Beneath the parts he kept meeting something else: a calm, curious, compassionate presence he called the Self.",
    lit:[["The Self, at the center","The Flower of Life and its eight petals, the eight Cs of Self: calm, curiosity, compassion, confidence, courage, clarity, creativity, and connectedness."],
         ["The parts, in the rings around it","The dots show where a few familiar parts tend to live. The dashed lines are each part's way home to the Self."]],
@@ -1607,7 +1611,8 @@ const LENSES=[
    src:"Schwartz (2021); Schwartz &amp; Sweezy (2020); Shadick et al. (2013); Hodgdon et al. (2022)"},
   {key:"loop", tab:"The heart-brain loop", icon:`<circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>`,
    spans:()=>[[R.heart[0],R.brake[1]]], dim:.5,
-   title:"The heart-brain loop: neurovisceral integration", meta:"Julian Thayer and Richard Lane",
+   title:"The heart-brain loop: neurovisceral integration", meta:"Julian Thayer and Richard Lane", name:"the heart-brain loop of neurovisceral integration",
+   short:"The mandala draws the loop as rings around the window, and makes the brake's outer edge the border of your window of capacity. While the brake holds, you are inside, even with the alarm sounding.",
    intro:"Psychologist Julian Thayer and psychiatrist Richard Lane (2000, 2009) described a network linking the brain and the heart that keeps emotion in balance. Its name says what it does: the brain (neuro) and the body's organs (visceral), working as one.",
    lit:[["The heart","Heart rate variability: the loop's rhythm, and its measure."],
         ["The brainstem","The vagal centers, where signals pass both ways between brain and heart."],
@@ -1624,7 +1629,8 @@ const LENSES=[
    src:"Thayer &amp; Lane (2000, 2009); Porges (2007); Siegel (1999); Lehrer &amp; Gevirtz (2014)"},
   {key:"witness", tab:"The witness", icon:`<circle cx="8" cy="8" r="6.4" fill="currentColor" fill-opacity=".22"/><circle cx="8" cy="8" r="2.4" fill="currentColor"/>`,
    spans:()=>[[0,R.core]], dim:.55,
-   title:"The witness: a gateway at the center", meta:"Contemplative traditions, and the Self",
+   title:"The witness: a gateway at the center", meta:"Contemplative traditions, and the Self", name:"the contemplative witness",
+   short:"The mandala places a point of light at the very center: the witness, the one who notices. It treats the center as a gateway to more of the Self and to wider connection, rather than an end.",
    intro:"At the very center of the wheel is a small dot of light: the witness, the one who notices. Every other ring holds something you can notice. The witness is the noticing itself.",
    lit:[["The witness","The still point of the whole wheel."],
         ["The Seed of Life around it","An ancient figure of circles grown from one: here, the Self unfolding from a single point."]],
@@ -1702,9 +1708,14 @@ function showLens(key, user){
   if(!LOOPON) setLoop(true);
   LENS=key; setView("lens"); drawLens(); markLens();
   const L=LENSES.find(l=>l.key===key), i=LENSES.indexOf(L), next=LENSES[(i+1)%LENSES.length];
-  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">A model inside the mandala</div><h2>${L.title}</h2><div class="meta">${L.meta}</div><p>${L.intro}</p></div>
+  // the four sources, named together, this one in bold and the others a tap away
+  const names=LENSES.map(o=>o===L?`<b>${o.name}</b>`:`<button type="button" class="linkbtn" data-lens="${o.key}">${o.name}</button>`);
+  const list=names.slice(0,-1).join(", ")+", and "+names[names.length-1];
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">A model this mandala comes from</div><h2>${L.title}</h2><div class="meta">${L.meta}</div>
+      <p class="hybrid">The Window Mandala is a hybrid, woven from four models: ${list}.</p></div>
+    <div class="ring"><h3>What this mandala does with it</h3><p>${L.short}</p></div>
     <div class="ring"><h3>Lit on the wheel</h3><ul>${L.lit.map(([n,t])=>`<li><b>${n}.</b> ${t}</li>`).join("")}</ul></div>
-    <div class="ring"><h3>The original model</h3>${figHTML(key)}${L.brings.map(t=>`<p>${t}</p>`).join("")}</div>
+    <div class="ring"><h3>The original model</h3><p>${L.intro}</p>${figHTML(key)}${L.brings.map(t=>`<p>${t}</p>`).join("")}</div>
     <div class="ring"><h3>How the mandala reimagines it</h3>${L.reimagined.map(t=>`<p>${t}</p>`).join("")}
       <p class="note">${L.note}</p><div class="lensnav">${L.links}</div></div>
     <div class="lensnav"><button type="button" class="btn" data-lens="${next.key}">Next: ${next.tab}</button><button type="button" class="btn" data-lensoff>See the whole wheel</button></div>
