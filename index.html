@@ -1417,7 +1417,12 @@ const MAPTYPES=[
 ];
 // how it tends to affect you: a glimmer brings you toward the window, a trigger takes you out of it
 const EFFECTS=[{key:"glimmer", name:"Glimmer", long:"brings me toward the window"},{key:"trigger", name:"Trigger", long:"takes me out of the window"},{key:"both", name:"Both, or neither", long:""}];
-const EFFECT_COLOR={glimmer:"#C08A1E", trigger:"#B4503A", both:"#6F6578"};
+// each kind has its own color, drawn from the mandala's palette in deeper tones so a white icon reads on it:
+// parts in the warm rose, coral, lavender, and plum of the defenses; things in a life in the pink, blue, gold, sage,
+// and slate around them. The glimmer and trigger badges keep their own two colors.
+const TYPE_COLOR={manager:"#B8665C", firefighter:"#C47A45", exile:"#7E63A8", part:"#8E6F92",
+  person:"#B5658D", place:"#5577A8", thing:"#B98428", env:"#5E8C7E", sit:"#6B6680"};
+const EFFECT_COLOR={glimmer:"#C9962E", trigger:"#B4503A", both:"#6F6578"};
 // icons, drawn white on the marker's disc, in a box of about thirteen units
 const ICON={
   manager:"M0 -6 L5 -4 L5 0 C5 3.5 2.5 5.5 0 6.5 C-2.5 5.5 -5 3.5 -5 0 L-5 -4 Z",
@@ -1434,10 +1439,10 @@ const BADGE={glimmer:"M0 -5 C0.6 -1.4 1.4 -0.6 5 0 C1.4 0.6 0.6 1.4 0 5 C-0.6 1.
 const effectOf=it=>it.effect||(["self","win"].includes(regionOf(it.a,it.d).L)?"glimmer":"trigger");
 // one marker as SVG markup: a colored disc for its effect, a white icon for what it is, and a small glimmer or trigger badge
 function markerMarkup(type,effect,x,y,r){
-  const c=EFFECT_COLOR[effect]||EFFECT_COLOR.both, k=r/9.5, bx=x+r*0.82, by=y-r*0.82, br=r*0.55;
+  const c=TYPE_COLOR[type]||TYPE_COLOR.part, ec=EFFECT_COLOR[effect]||c, k=r/9.5, bx=x+r*0.82, by=y-r*0.82, br=r*0.55;
   return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}" stroke="#fff" stroke-width="${f(r*0.18)}"/>`+
     `<path d="${ICON[type]||ICON.part}" transform="translate(${f(x)} ${f(y)}) scale(${f(k)})" fill="#fff" fill-rule="evenodd"/>`+
-    (BADGE[effect]?`<circle cx="${f(bx)}" cy="${f(by)}" r="${f(br)}" fill="#fff" stroke="${c}" stroke-width="${f(r*0.12)}"/><path d="${BADGE[effect]}" transform="translate(${f(bx)} ${f(by)}) scale(${f(br/6.2)})" fill="${c}"/>`:"");
+    (BADGE[effect]?`<circle cx="${f(bx)}" cy="${f(by)}" r="${f(br)}" fill="#fff" stroke="${ec}" stroke-width="${f(r*0.12)}"/><path d="${BADGE[effect]}" transform="translate(${f(bx)} ${f(by)}) scale(${f(br/6.2)})" fill="${ec}"/>`:"");
 }
 const symSVG=(t,e)=>`<svg class="sym" viewBox="-13 -13 26 26" aria-hidden="true">${markerMarkup(t,e||"both",0,1,10)}</svg>`;
 const badgeSVG=e=>`<svg class="sym" viewBox="-7 -7 14 14" aria-hidden="true"><path d="${BADGE[e]}" fill="${EFFECT_COLOR[e]}"/></svg>`;
@@ -1581,7 +1586,7 @@ function showMap(user, focusForm){
       ${MAP.items.length?`<p><button type="button" class="btn" id="mp-print">Print my wheel</button> <button type="button" class="btn" id="mp-dl">Download my wheel</button> <button type="button" class="linkbtn" id="mp-clear">Clear my map</button></p><p class="about" id="mp-status"></p>`:""}</div>
     <div class="ring"><h3>Reading your map</h3>${keyHTML()}
       <p><b>The icon</b> is what it is. Parts come in three kinds, from Internal Family Systems: <b>managers</b>, protectors that plan, control, please, or criticize to keep pain away; <b>firefighters</b>, protectors that act fast when pain breaks through; and <b>exiles</b>, young parts carrying old hurt. Choose "not sure" until you know.</p>
-      <p><b>The color and badge</b> show how it tends to affect you. A gold marker with a spark is a <b>glimmer</b>, Deb Dana's word for the small moments that bring you toward the window. A red marker with a bolt is a <b>trigger</b>, something that takes you out. Each starts out matching where you place it, inside the window or outside, and you can change it: a person can be a glimmer you meet at the edge, or a trigger inside an otherwise good day.</p>
+      <p><b>The color and icon</b> show what it is, in the mandala's own colors. <b>The small badge</b> shows how it tends to affect you: a gold spark is a <b>glimmer</b>, Deb Dana's word for the small moments that bring you toward the window, and a red bolt is a <b>trigger</b>, something that takes you out. Each starts out matching where you place it, inside the window or outside, and you can change it: a person can be a glimmer you meet at the edge, or a trigger inside an otherwise good day.</p>
       <p>Seeing them together often shows a pattern: where you go most, which parts take you there, and what helps you come back.</p></div>
     <p class="src">Dana (2018); Schwartz (2021)</p>`;
   const $=id=>document.getElementById(id);
@@ -1639,11 +1644,11 @@ function printMap(){
   });
 }
 function drawMarkerCanvas(x,type,effect,cx,cy,r){
-  const c=EFFECT_COLOR[effect]||EFFECT_COLOR.both;
+  const c=TYPE_COLOR[type]||TYPE_COLOR.part, ec=EFFECT_COLOR[effect]||c;
   x.save(); x.beginPath(); x.arc(cx,cy,r,0,Math.PI*2); x.fillStyle=c; x.fill(); x.lineWidth=r*0.18; x.strokeStyle="#fff"; x.stroke();
   x.translate(cx,cy); x.scale(r/9.5,r/9.5); x.fillStyle="#fff"; x.fill(new Path2D(ICON[type]||ICON.part),"evenodd"); x.restore();
-  if(BADGE[effect]){ const bx=cx+r*0.82, by=cy-r*0.82, br=r*0.55; x.save(); x.beginPath(); x.arc(bx,by,br,0,Math.PI*2); x.fillStyle="#fff"; x.fill(); x.lineWidth=r*0.12; x.strokeStyle=c; x.stroke();
-    x.translate(bx,by); x.scale(br/6.2,br/6.2); x.fillStyle=c; x.fill(new Path2D(BADGE[effect])); x.restore(); }
+  if(BADGE[effect]){ const bx=cx+r*0.82, by=cy-r*0.82, br=r*0.55; x.save(); x.beginPath(); x.arc(bx,by,br,0,Math.PI*2); x.fillStyle="#fff"; x.fill(); x.lineWidth=r*0.12; x.strokeStyle=ec; x.stroke();
+    x.translate(bx,by); x.scale(br/6.2,br/6.2); x.fillStyle=ec; x.fill(new Path2D(BADGE[effect])); x.restore(); }
 }
 // the download: one tall page image, the wheel above and the legend below, drawn on a canvas at print resolution
 let fontCSS=null;
