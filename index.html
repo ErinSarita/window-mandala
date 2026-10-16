@@ -93,6 +93,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .moontip.ringed{border-top:5px solid var(--tipc);background:color-mix(in srgb, var(--tipc) 12%, var(--surface))}
 .moontip b{font-family:var(--display);font-weight:600;font-size:19px;display:block}
 .moontip span{color:var(--muted);font-size:12.5px;display:block}
+.moontip .nstag{font-family:var(--display);font-style:italic;font-size:14px;color:var(--muted);margin:1px 0 2px}
 .moontip .tl{color:var(--ink);font-size:13.5px;margin-top:4px;line-height:1.4} .moontip em{font-style:normal;font-weight:700} .moontip i{display:block;font-family:var(--display);font-size:16px}
 .moontip .ringtag{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .coretip{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-100% - 12%));width:min(250px,70%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--sun3);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.45;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .2s ease}
@@ -596,9 +597,9 @@ const cells=[];
 const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the window"};
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
-  if(layer==="win") return `<span class="ringtag">Inside the window · ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
-  if(layer==="edge") return `<span class="ringtag">At the edge · a threshold</span><b>${d.edge.name}</b><span class="tl"><em>Moving out:</em> ${d.edge.words}.</span><span class="tl"><em>Coming back in:</em> ${n.back[0].toLowerCase()}, ${n.back[1].toLowerCase()}.</span>${more}`;
-  return `<span class="ringtag">Outside the window · ${n.state.toLowerCase()}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
+  if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">Ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
+  if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">A threshold, both ways</span><b>${d.edge.name}</b><span class="tl"><em>Moving out:</em> ${d.edge.words}.</span><span class="tl"><em>Coming back in:</em> ${n.back[0].toLowerCase()}, ${n.back[1].toLowerCase()}.</span>${more}`;
+  return `<span class="ringtag">Outside the window</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
 }
 function hookTip(node, info, go){
   node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(null); go(); });
