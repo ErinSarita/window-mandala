@@ -784,7 +784,11 @@ function draw(){
   const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=Math.min(R.self+(R.win[1]-R.win[0])*0.32, wmid-26), sr=R.core*0.42, GL=R.self+60;
   CR={sr,L1,dot:Math.max(3.2,sr*0.16)};
   // the center is the brightest part of the Self: white at the heart, pale gold to the rim; the petals carry the deeper gold
-  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.45,"var(--sun1)"],[1,"var(--sun2)"]]);
+  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.6,"#fff"],[0.85,"var(--sun1)"],[1,"var(--sun2)"]]);
+  // a glow of light from the center that spills softly over the inner petals
+  const CG=R.core*1.45;
+  grad("dotglow",{...U,r:Math.max(3.2,sr*0.16)+5},[[0,"#FFE680",1],[0.55,"#FFE680",0.7],[1,"#FFE680",0]]);
+  grad("coreglow",{...U,r:CG},[[0,"#fff",0.9],[R.core/CG*0.8,"#fff",0.55],[R.core/CG,"#fff",0.32],[1,"#fff",0]]);
   grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
@@ -876,6 +880,7 @@ function draw(){
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
+  el("circle",{cx:0,cy:0,r:f(CG),fill:"url(#coreglow)",stroke:"none","pointer-events":"none"},core);
   // a fine gold outline where the Flower meets the petals
   el("circle",{cx:0,cy:0,r:f(R.core-0.6),fill:"none",stroke:"var(--goldline)","stroke-width":1.3,"stroke-opacity":.85,"pointer-events":"none"},core);
   const sg=el("g",{fill:"none",stroke:"var(--goldline)","pointer-events":"none"},core);
@@ -889,8 +894,10 @@ function draw(){
   [sr-3.2,sr+3.2].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),"stroke-width":0.6,"stroke-opacity":.7},sg));
   // the witness: a small golden dot at the very center, the still point of the wheel
   const dotR=CR.dot;
-  el("circle",{cx:0,cy:0,r:f(dotR+2.6),fill:"none",stroke:"var(--sun3)","stroke-width":2.2,"stroke-opacity":.9,"pointer-events":"none"},sunG);
-  el("circle",{cx:0,cy:0,r:f(dotR),fill:"var(--sun4)",stroke:"var(--goldline)","stroke-width":1.2,"pointer-events":"none"},sunG);
+  // it shines: a bright gold dot with a halo of light
+  el("circle",{cx:0,cy:0,r:f(dotR+5),fill:"url(#dotglow)","pointer-events":"none"},sunG);
+  el("circle",{cx:0,cy:0,r:f(dotR+2.6),fill:"none",stroke:"#FFE27A","stroke-width":2.2,"stroke-opacity":.9,"pointer-events":"none"},sunG);
+  el("circle",{cx:0,cy:0,r:f(dotR),fill:"#FFD54A",stroke:"#E0A21E","stroke-width":1.2,"pointer-events":"none"},sunG);
   const wit=el("circle",{cx:0,cy:0,r:f(dotR+7),class:"witness-hit",tabindex:"0",role:"button","aria-label":"The witness, at the very center of the Self"},sunG);
   hookTip(wit,()=>({x:0,y:-dotR,html:`<span class="ringtag">The very center</span><b>The witness</b><span class="tl">The one who notices: steady and still, watching whatever arises without being swept away.</span><span>Tap to read about the layers of Self.</span>`,color:"--sun3"}),()=>showSelf(true,null,"witness"));
   core.addEventListener("click",()=>showSelf(true));
