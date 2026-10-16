@@ -131,6 +131,8 @@ svg.loopview .t-edge.t-sub{display:inline}
 .t-alarm{fill:var(--etext);stroke:var(--halo)}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
 .brake-ring{fill-opacity:.9;pointer-events:none}
+.window-rim{fill-opacity:1;pointer-events:none}
+.t-rim{fill:#3A2604;font-style:normal;font-weight:700;letter-spacing:.1em;stroke:none}
 .window-line{fill:#FFF8E1;fill-opacity:1;pointer-events:none}
 .t-window{fill:#7A5410;font-style:normal;font-weight:700;letter-spacing:.08em;stroke:none}
 .loop-ring{fill-opacity:.8;pointer-events:none}
@@ -551,6 +553,8 @@ const LOOP={
     tip:"Where brain and heart talk. Through the vagus nerve, signals run both ways: most of its fibers carry news from the body up to the brain, and the rest carry the brake down to the heart. Here, in the heart of your window, the ventral vagal brake is on: polyvagal theory's safe, connected state."},
   alarm:{name:"The alarm", role:"amygdala, at the edge", tag:"Inside your window, at its edge: the loop, straining",
     tip:"You are still inside your window of capacity, at its outer reaches, where the alarm sounds. The amygdala has picked up danger, and the early signals begin: revving, bracing, sinking, over-tuning. The brake still holds, but it strains: the heart speeds up and heart rate variability begins to fall, and in polyvagal terms the vagal brake starts to withdraw. Caught here, the loop closes again; this is the easiest place to come back from."},
+  rim:{name:"The border of your window of capacity", role:"where the brake gives way", tag:"Your window of capacity",
+    tip:"Everything inside this border is your window of capacity: the heart's flexible rhythm and the brainstem at its center, polyvagal theory's safe, connected state, and the alarm at its outer reaches, held by the brake. You can feel a great deal in here and still come back. Crossing this border is the brake rupturing: the loop breaks, and survival takes over. With practice, the border widens."},
   brake:{name:"The brake", role:"prefrontal cortex, the rim of your window", tag:"The rim of your window of capacity",
     tip:"The prefrontal cortex holds the alarm in check and keeps the vagal brake on the heart. Its outer edge is the edge of your window of capacity: while the brake holds, you are inside your window, even with the alarm sounding. When there is more energy than it can hold, the brake ruptures, the loop breaks, and you are outside your window, where the survival states take over. Awareness strengthens it: noticing, naming, seeing another way. This is the door from awareness down."},
   broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]],
@@ -832,15 +836,18 @@ function drawTrace(animate){
     el("path",{d:band(k0,k1),"fill-rule":"evenodd",fill:"#EDCB72",class:"brake-ring"},g);
     // the rim of the window of capacity: the darkest gold, a strong line at the brake's outer edge
     el("circle",{cx:0,cy:0,r:f(k0),fill:"none",stroke:"#B98428","stroke-width":1,"pointer-events":"none"},g);
-    el("circle",{cx:0,cy:0,r:f(k1+2),fill:"none",stroke:"#8A6417","stroke-width":5,"pointer-events":"none"},g);
+    // the border of the window of capacity: a band of deeper gold just outside the brake, wide enough to hover
+    const b0=k1, b1=k1+15;
+    el("path",{d:band(b0,b1),"fill-rule":"evenodd",fill:"#D4A23C",class:"window-rim"},g);
+    [b0,b1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:"#A9781F","stroke-width":1,"pointer-events":"none"},g));
+    [90,270].forEach(a=>arcText((b0+b1)/2,a-36,a+36,"the border of your window of capacity","lbl t-ring t-rim",Math.min(13,(b1-b0)*0.84),0.6,g));
     [0,180].forEach(a=>arcText((k0+k1)/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(13,(k1-k0)*0.62),0.4,g));
-    [90,270].forEach(a=>arcText((k0+k1)/2,a-34,a+34,"the rim of your window of capacity","lbl t-ring t-brake",Math.min(12,(k1-k0)*0.56),0.3,g));
     if(!reduce){
       el("circle",{cx:0,cy:0,r:f(r0+2),class:"pulse-up",style:`--to:${f(k1/(r0+2))}`},g);
       el("circle",{cx:0,cy:0,r:f(k1),class:"pulse-down",style:`--to:${f((r0+2)/k1)}`},g);
     }
     // beyond the brake: the loop broken, and survival takes over
-    const o0=k1+5, o1=R.out[0]+62, ro=k1+14, rot=k1+32;
+    const o0=k1+17, o1=R.out[0]+70, ro=k1+26, rot=k1+43;
     el("path",{d:band(o0,o1),"fill-rule":"evenodd",class:"broken-band"},g);
     el("circle",{cx:0,cy:0,r:f(o1),class:"broken-border"},g);
     const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
@@ -850,6 +857,7 @@ function drawTrace(animate){
     tipHit(hs,rw,"Brainstem, the vagal centers",LOOP.stem);
     tipHit(e0,e1,"The alarm, at the edge",LOOP.alarm);
     tipHit(k0,k1,"The brake, the rim of your window of capacity",LOOP.brake);
+    tipHit(b0,b1,"The border of your window of capacity",LOOP.rim);
     tipHit(o0,o1,"The loop, broken",{tag:"Outside the window: survival",name:"The loop, broken",role:"the brake has given way",tip:LOOP.tips.broken});
     return;
   }
