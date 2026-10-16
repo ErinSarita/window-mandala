@@ -8,7 +8,7 @@ A companion to [The Return Mandala](https://erinsarita.github.io/return-mandala/
 
 Three maps of the inner life, brought into one picture, each answering a question:
 
-- **Where is my body?** Polyvagal theory: the ventral window, sympathetic fight or flight, dorsal collapse, and the blends between.
+- **Where is my body?** Polyvagal theory: the ventral window, sympathetic fight or flight, dorsal collapse, and the blends between. And the neurovisceral integration model (Julian Thayer and Richard Lane, 2000, 2009): the loop between the prefrontal cortex, the amygdala, and the heart (through the vagus nerve) that holds the window, strains at the edge, and breaks outside it. How to read explains it, with a "Show the loop on the wheel" button that draws the three rings.
 - **Who is here?** Internal Family Systems: the parts that take over when we leave the window, and the Self at the center.
 - **How do I notice, and how do I come back?** Awareness: noticing your own state as it happens, with attention and peripheral awareness. Awareness brings presence, presence helps you return toward the ventral center, and over time it widens the window.
 
