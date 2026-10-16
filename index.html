@@ -124,8 +124,13 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .maphint{font-size:13.5px;color:var(--ink);font-weight:600}
 .svgbox.mapping svg{cursor:crosshair}
 .svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
-.map-mark{fill:var(--ink);stroke:var(--surface);stroke-width:2.2;cursor:grab}
-.map-mark.draft{fill:var(--goldline)}
+.map-mark{cursor:grab}
+.map-mark.draft{opacity:.85}
+svg.mapview .t-sub,svg.mapview .t-aware{display:none}
+.mf .fopts button .sym{width:20px;height:20px;vertical-align:-5px}
+.mapkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
+.mapkey span{display:inline-flex;align-items:center;gap:5px}
+.mapkey .sym{width:20px;height:20px}
 .map-ring{fill:none;stroke:var(--goldline);stroke-width:2.5;pointer-events:none}
 .t-map{fill:var(--ink);font-size:19px;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
 .mf{display:grid;gap:10px}
@@ -138,7 +143,8 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .legend-map ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .legend-map li{display:flex;gap:8px;align-items:baseline}
 .legend-map li .what{color:var(--muted);font-size:13px}
-.legend-map li .note{display:block;color:var(--muted);font-size:14px}
+.legend-map li .mnote{display:block;color:var(--muted);font-size:14px}
+.legend-map li .sym{width:22px;height:22px;flex:none;align-self:flex-start}
 #printsheet{display:none}
 @media print{
   @page{size:letter;margin:0.5in}
@@ -1399,23 +1405,43 @@ document.getElementById("homebtn").addEventListener("click",()=>showHome(true));
    wheel, where each tends to take them, then print or download the result. Items are kept in memory only: nothing is
    saved, so the map is gone when the page is closed or reloaded. Each item stores an angle and a depth (as routes do),
    so it keeps its place as the window slider moves. */
+// what each marker is: three kinds of part, from Internal Family Systems, and five kinds of thing in a life
 const MAPTYPES=[
-  {key:"part", name:"Part"},{key:"person", name:"Person"},{key:"place", name:"Place"},
-  {key:"thing", name:"Thing"},{key:"env", name:"Environment"},{key:"sit", name:"Situation"}
+  {key:"manager", name:"Manager", long:"Manager, a protector", group:"part", tip:"plans, controls, pleases, or criticizes to keep pain away"},
+  {key:"firefighter", name:"Firefighter", long:"Firefighter, a protector", group:"part", tip:"acts fast when pain breaks through: rage, numbing, bingeing, escaping"},
+  {key:"exile", name:"Exile", long:"Exile", group:"part", tip:"a young part carrying old hurt, fear, or shame"},
+  {key:"part", name:"Part, not sure which", long:"Part", group:"part", tip:"a part you have noticed, before you know its job"},
+  {key:"person", name:"Person", long:"Person", group:"life"},{key:"place", name:"Place", long:"Place", group:"life"},
+  {key:"thing", name:"Thing", long:"Thing", group:"life"},{key:"env", name:"Environment", long:"Environment", group:"life"},
+  {key:"sit", name:"Situation", long:"Situation", group:"life"}
 ];
-let MAP={on:false, title:"", items:[], draft:null, edit:null, force:false}, mapSeq=1;
-// a small shape for each type, so the map reads at a glance: circle, diamond, triangle, square, hexagon, star
-function shapeD(type,x,y,s){
-  const poly=pts=>"M"+pts.map(([a,b])=>f(x+a*s)+" "+f(y+b*s)).join(" L")+"Z";
-  const ring=(n,r0,r1,rot)=>{ const a=[]; for(let i=0;i<n*(r1?2:1);i++){ const r=r1&&i%2?r1:r0, t=rot+i*Math.PI/(r1?n:n/2); a.push([r*Math.cos(t),r*Math.sin(t)]); } return a; };
-  if(type==="part") return `M${f(x-s)} ${f(y)} a${f(s)} ${f(s)} 0 1 0 ${f(2*s)} 0 a${f(s)} ${f(s)} 0 1 0 ${f(-2*s)} 0Z`;
-  if(type==="person") return poly([[0,-1.25],[1.1,0],[0,1.25],[-1.1,0]]);
-  if(type==="place") return poly([[0,-1.2],[1.15,0.85],[-1.15,0.85]]);
-  if(type==="thing") return poly([[-0.9,-0.9],[0.9,-0.9],[0.9,0.9],[-0.9,0.9]]);
-  if(type==="env") return poly(ring(6,1.05,0,-Math.PI/2));
-  return poly(ring(5,1.3,0.55,-Math.PI/2));
+// how it tends to affect you: a glimmer brings you toward the window, a trigger takes you out of it
+const EFFECTS=[{key:"glimmer", name:"Glimmer", long:"brings me toward the window"},{key:"trigger", name:"Trigger", long:"takes me out of the window"},{key:"both", name:"Both, or neither", long:""}];
+const EFFECT_COLOR={glimmer:"#C08A1E", trigger:"#B4503A", both:"#6F6578"};
+// icons, drawn white on the marker's disc, in a box of about thirteen units
+const ICON={
+  manager:"M0 -6 L5 -4 L5 0 C5 3.5 2.5 5.5 0 6.5 C-2.5 5.5 -5 3.5 -5 0 L-5 -4 Z",
+  firefighter:"M0 -6.5 C2 -3 5 -1.5 4.5 2 C4 5 2 6.5 0 6.5 C-2.5 6.5 -4.5 4.5 -4.5 2 C-4.5 -0.5 -2.5 -1 -2 -3 C-1 -1.5 0 -1 0 -2.5 C0 -4 -0.5 -5 0 -6.5 Z",
+  exile:"M0 5.5 C-6 1.5 -6 -3.5 -3 -4.5 C-1.5 -5 -0.5 -4 0 -3 C0.5 -4 1.5 -5 3 -4.5 C6 -3.5 6 1.5 0 5.5 Z",
+  part:"M0 -5 A5 5 0 1 0 0.01 -5 Z M0 -2.4 A2.4 2.4 0 1 1 -0.01 -2.4 Z",
+  person:"M0 -6.3 A2.8 2.8 0 1 0 0.01 -6.3 Z M-5.2 6 C-5.2 1.6 -2.8 -0.2 0 -0.2 C2.8 -0.2 5.2 1.6 5.2 6 Z",
+  place:"M0 6.5 C0 6.5 -5 1.8 -5 -1.5 C-5 -4.3 -2.8 -6.5 0 -6.5 C2.8 -6.5 5 -4.3 5 -1.5 C5 1.8 0 6.5 0 6.5 Z M0 -3.6 A2 2 0 1 0 0.01 -3.6 Z",
+  thing:"M-5 -2.5 L0 -5.5 L5 -2.5 L5 3.5 L0 6.5 L-5 3.5 Z M-3.6 -1.7 L0 0.4 L0 4.6 L-3.6 2.6 Z",
+  env:"M-5.5 5.5 C-6 -1 -1 -6 6 -6 C6.5 1 1.5 6 -5.5 5.5 Z",
+  sit:"M0 -6 A6 6 0 1 0 0.01 -6 Z M0 -4.4 A4.4 4.4 0 1 1 -0.01 -4.4 Z M-0.7 -3.6 L0.7 -3.6 L0.7 -0.3 L3 1.2 L2.3 2.4 L-0.7 0.5 Z"
+};
+const BADGE={glimmer:"M0 -5 C0.6 -1.4 1.4 -0.6 5 0 C1.4 0.6 0.6 1.4 0 5 C-0.6 1.4 -1.4 0.6 -5 0 C-1.4 -0.6 -0.6 -1.4 0 -5 Z", trigger:"M1.5 -6 L-3.5 1 L-0.5 1 L-1.5 6 L3.5 -1 L0.5 -1 Z"};
+const effectOf=it=>it.effect||(["self","win"].includes(regionOf(it.a,it.d).L)?"glimmer":"trigger");
+// one marker as SVG markup: a colored disc for its effect, a white icon for what it is, and a small glimmer or trigger badge
+function markerMarkup(type,effect,x,y,r){
+  const c=EFFECT_COLOR[effect]||EFFECT_COLOR.both, k=r/9.5, bx=x+r*0.82, by=y-r*0.82, br=r*0.55;
+  return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${c}" stroke="#fff" stroke-width="${f(r*0.18)}"/>`+
+    `<path d="${ICON[type]||ICON.part}" transform="translate(${f(x)} ${f(y)}) scale(${f(k)})" fill="#fff" fill-rule="evenodd"/>`+
+    (BADGE[effect]?`<circle cx="${f(bx)}" cy="${f(by)}" r="${f(br)}" fill="#fff" stroke="${c}" stroke-width="${f(r*0.12)}"/><path d="${BADGE[effect]}" transform="translate(${f(bx)} ${f(by)}) scale(${f(br/6.2)})" fill="${c}"/>`:"");
 }
-const symSVG=t=>`<svg class="sym" viewBox="-12 -12 24 24" aria-hidden="true"><path d="${shapeD(t,0,0,8)}"/></svg>`;
+const symSVG=(t,e)=>`<svg class="sym" viewBox="-13 -13 26 26" aria-hidden="true">${markerMarkup(t,e||"both",0,1,10)}</svg>`;
+const badgeSVG=e=>`<svg class="sym" viewBox="-7 -7 14 14" aria-hidden="true"><path d="${BADGE[e]}" fill="${EFFECT_COLOR[e]}"/></svg>`;
+let MAP={on:false, title:"", items:[], draft:null, edit:null, force:false}, mapSeq=1;
 function rToDepth(r){
   const wm=(R.win[0]+R.win[1])/2, em=(R.edge[0]+R.edge[1])/2, om=(R.out[0]+R.out[1])/2;
   const T=[[0,R.core*0.35],[0.2,CR.L1],[0.35,wm],[0.5,R.win[1]],[0.56,em],[0.62,R.edge[1]],[0.8,om],[1,R.out[1]-8]];
@@ -1435,10 +1461,14 @@ function regionName(key){
 }
 const REGIONS=["self",...["win","edge","out"].flatMap(L=>DIRS.map((d,k)=>L+":"+k))];
 function regionPoint(key){
-  // off to one side of the ring's own name, alternating sides, so markers and labels do not sit on each other
-  const n=MAP.items.length+(MAP.draft?1:0), side=n%2?1:-1, jit=((n*7)%9)-4;
-  if(key==="self") return {a:n*67, d:0.1};
-  const [L,k]=key.split(":"); return {a:DIRS[+k].angle+side*(30+jit), d:{win:.4,edge:.56,out:.86}[L]};
+  // try spots off to either side of the ring's own name, at a few depths, and take the first clear of other markers
+  const taken=[...MAP.items,...(MAP.draft?[MAP.draft]:[])].filter(it=>it!==MAP.draft&&it!==MAP.edit).map(it=>P(depthR(it.d),it.a));
+  const free=c=>{ const [x,y]=P(depthR(c.d),c.a); return taken.every(([u,v])=>Math.hypot(x-u,y-v)>46); };
+  let C;
+  if(key==="self") C=[0,90,180,270,45,135,225,315].map(a=>({a,d:0.03}));
+  else { const [L,k]=key.split(":"), base=DIRS[+k].angle, d0={win:.4,edge:.56,out:.86}[L];
+    C=[30,-30,18,-18,40,-40,8,-8].flatMap(o=>[{a:base+o,d:d0},{a:base+o,d:L==="out"?d0-.1:L==="win"?d0-.12:d0}]); }
+  return C.find(free)||C[taken.length%C.length];
 }
 // a long name wraps onto lines of about eighteen characters, so it is shown in full
 function wrapName(name){
@@ -1448,19 +1478,22 @@ function wrapName(name){
 }
 function drawMap(){
   const g=document.getElementById("mapG"); if(!g) return; g.innerHTML="";
-  if(!(MAP.on||view==="map"||MAP.force)) return;
+  const show=MAP.on||view==="map"||MAP.force;
+  // while mapping, and on the printout, the rings' smaller lines of text step aside to make room for names
+  svg.classList.toggle("mapview",show);
+  if(!show) return;
   const all=[...MAP.items, ...(MAP.draft?[MAP.draft]:[])];
   // first the markers, then each name, placed where it clears the ring names, the petals' words, the arrows, the other markers,
   // and the names already placed
   const pos=all.map(it=>{
     const [x,y]=P(depthR(it.d),it.a), draft=it===MAP.draft||(MAP.edit&&MAP.edit.id===it.id);
-    if(draft) el("circle",{cx:f(x),cy:f(y),r:15,class:"map-ring"},g);
-    const m=el("path",{d:shapeD(it.type||"part",x,y,8.5),class:"map-mark"+(it===MAP.draft?" draft":"")},g); m.dataset.mid=it.id;
+    if(draft) el("circle",{cx:f(x),cy:f(y),r:19,class:"map-ring"},g);
+    const m=el("g",{class:"map-mark"+(it===MAP.draft?" draft":"")},g); m.innerHTML=markerMarkup(it.type||"part",effectOf(it),x,y,12); m.dataset.mid=it.id;
     return [x,y];
   });
   const pad=(b,p)=>({x:b.x-p,y:b.y-p,w:b.width+2*p,h:b.height+2*p});
-  const boxes=[...svg.querySelectorAll("#ringLabels text, #core text, .mv")].map(t=>{ try{ return pad(t.getBBox(),2); }catch(e){ return null; } }).filter(Boolean);
-  pos.forEach(([x,y])=>boxes.push({x:x-11,y:y-11,w:22,h:22}));
+  const boxes=[...svg.querySelectorAll("#ringLabels text, #core text, .mv")].filter(t=>getComputedStyle(t).display!=="none").map(t=>{ try{ return pad(t.getBBox(),2); }catch(e){ return null; } }).filter(b=>b&&b.w>4);
+  pos.forEach(([x,y])=>boxes.push({x:x-14,y:y-19,w:30,h:33}));
   const over=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
   const LH=20, RIM=R.out[1]+6;
   all.forEach((it,i)=>{
@@ -1469,8 +1502,8 @@ function drawMap(){
     const t=el("text",{class:"lbl t-map"},g);
     lines.forEach((l,k)=>{ const ts=el("tspan",{dy:k?LH:0},t); ts.textContent=l; });
     // candidate spots: beside the marker (inward side first), above, below, and on the diagonals
-    const C=[[inward*14,6-(n-1)*LH/2,inward<0?"end":"start"],[0,-16-(n-1)*LH,"middle"],[0,30,"middle"],[-inward*14,6-(n-1)*LH/2,inward<0?"start":"end"],
-      [inward*12,-12-(n-1)*LH,inward<0?"end":"start"],[inward*12,26,inward<0?"end":"start"],[-inward*12,-12-(n-1)*LH,inward<0?"start":"end"],[-inward*12,26,inward<0?"start":"end"]];
+    const C=[[inward*18,6-(n-1)*LH/2,inward<0?"end":"start"],[0,-22-(n-1)*LH,"middle"],[0,34,"middle"],[-inward*18,6-(n-1)*LH/2,inward<0?"start":"end"],
+      [inward*15,-16-(n-1)*LH,inward<0?"end":"start"],[inward*15,30,inward<0?"end":"start"],[-inward*15,-16-(n-1)*LH,inward<0?"start":"end"],[-inward*15,30,inward<0?"start":"end"]];
     let best=null;
     for(const [dx,dy,anc] of C){
       t.setAttribute("x",f(x+dx)); t.setAttribute("y",f(y+dy)); t.setAttribute("text-anchor",anc);
@@ -1515,18 +1548,23 @@ function mapGroups(){
     ...DIRS.map((d,k)=>[`Outside the window: what takes you into ${d.name.toLowerCase()}`,["out:"+k]])];
   return groups.map(([title,keys])=>({title,items:MAP.items.filter(it=>keys.includes(regionOf(it.a,it.d).key))})).filter(g=>g.items.length);
 }
-const typeName=t=>(MAPTYPES.find(m=>m.key===t)||MAPTYPES[0]).name;
+const typeName=t=>(MAPTYPES.find(m=>m.key===t)||MAPTYPES[3]).long;
+const effectName=e=>e==="both"?"":(EFFECTS.find(x=>x.key===e)||{}).name;
+const whatLine=it=>[typeName(it.type), effectName(effectOf(it))].filter(Boolean).join(", ").toLowerCase().replace(/^./,c=>c.toUpperCase());
+function keyHTML(){ return `<div class="mapkey">${MAPTYPES.map(t=>`<span>${symSVG(t.key,"both")}${t.name}</span>`).join("")}<span>${badgeSVG("glimmer")}Glimmer: brings me toward the window</span><span>${badgeSVG("trigger")}Trigger: takes me out of it</span></div>`; }
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function legendHTML(withEdit){
   const G=mapGroups(); if(!G.length) return `<p class="hint">Nothing on your map yet.</p>`;
-  return `<div class="legend-map">${G.map(g=>`<div><h4>${g.title}</h4><ul>${g.items.map(it=>`<li>${symSVG(it.type)}<div><b>${esc(it.name)}</b> <span class="what">${typeName(it.type).toLowerCase()}, ${esc(regionName(regionOf(it.a,it.d).key).replace(/^[^:]*: /,"").replace(/^With the Self, at the center$/,"with the Self"))}</span>${it.note?`<span class="note">${esc(it.note)}</span>`:""}</div>${withEdit?` <button type="button" class="linkbtn" data-medit="${it.id}">Edit</button>`:""}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  return `<div class="legend-map">${G.map(g=>`<div><h4>${g.title}</h4><ul>${g.items.map(it=>`<li>${symSVG(it.type,effectOf(it))}<div><b>${esc(it.name)}</b> <span class="what">${whatLine(it).toLowerCase()}; ${esc(regionName(regionOf(it.a,it.d).key).replace(/^[^:]*: /,"").replace(/^With the Self, at the center$/,"with the Self"))}</span>${it.note?`<span class="mnote">${esc(it.note)}</span>`:""}</div>${withEdit?` <button type="button" class="linkbtn" data-medit="${it.id}">Edit</button>`:""}</li>`).join("")}</ul></div>`).join("")}</div>`;
 }
 function showMap(user, focusForm){
   setView("map");
   const it=MAP.edit||MAP.draft, editing=!!MAP.edit;
   const form=it?`<div class="ring" id="mapform"><h3>${editing?"Edit this marker":"Add to your map"}</h3>
       <div class="mf">
-        <div><span class="about">What is it?</span><div class="fopts" role="group" aria-label="Type">${MAPTYPES.map(t=>`<button type="button" data-mt="${t.key}" aria-pressed="${it.type===t.key}">${symSVG(t.key)} ${t.name}</button>`).join("")}</div></div>
+        <div><span class="about">A part of me</span><div class="fopts" role="group" aria-label="A part of me">${MAPTYPES.filter(t=>t.group==="part").map(t=>`<button type="button" data-mt="${t.key}" aria-pressed="${it.type===t.key}" title="${t.tip}">${symSVG(t.key,"both")} ${t.name}</button>`).join("")}</div></div>
+        <div><span class="about">In my life</span><div class="fopts" role="group" aria-label="In my life">${MAPTYPES.filter(t=>t.group==="life").map(t=>`<button type="button" data-mt="${t.key}" aria-pressed="${it.type===t.key}">${symSVG(t.key,"both")} ${t.name}</button>`).join("")}</div></div>
+        <div><span class="about">How does it tend to affect you?</span><div class="fopts" role="group" aria-label="Glimmer or trigger">${EFFECTS.map(e=>`<button type="button" data-me="${e.key}" aria-pressed="${effectOf(it)===e.key}">${BADGE[e.key]?badgeSVG(e.key):""} ${e.name}${e.long?`: ${e.long}`:""}</button>`).join("")}</div></div>
         <label>Name<input id="mf-name" maxlength="40" value="${esc(it.name)}" placeholder="A word or two"></label>
         <label>Note (optional)<textarea id="mf-note" rows="2" maxlength="200" placeholder="What happens in you around it?">${esc(it.note)}</textarea></label>
         <label>Where it tends to take you<select id="mf-pos">${REGIONS.map(k=>`<option value="${k}"${regionOf(it.a,it.d).key===k?" selected":""}>${regionName(k)}</option>`).join("")}</select></label>
@@ -1541,8 +1579,10 @@ function showMap(user, focusForm){
     <div class="ring"><h3>On your map</h3><label class="mf" style="margin-bottom:6px"><span class="about">Title for your map</span><input id="mp-title" maxlength="60" value="${esc(MAP.title)}" placeholder="My Window Mandala"></label>
       ${legendHTML(true)}
       ${MAP.items.length?`<p><button type="button" class="btn" id="mp-print">Print my wheel</button> <button type="button" class="btn" id="mp-dl">Download my wheel</button> <button type="button" class="linkbtn" id="mp-clear">Clear my map</button></p><p class="about" id="mp-status"></p>`:""}</div>
-    <div class="ring"><h3>Reading your map</h3><p>Inside the window are your resources: what steadies you and brings the Self forward. Deb Dana calls the small ones glimmers. At the edge are the early signals, and outside are your triggers, the things that take you into each defense. Seeing them all together often shows a pattern: where you go most, and what helps you come back.</p>
-      <div class="chips">${MAPTYPES.map(t=>`<span class="chip">${symSVG(t.key)} ${t.name}</span>`).join(" ")}</div></div>
+    <div class="ring"><h3>Reading your map</h3>${keyHTML()}
+      <p><b>The icon</b> is what it is. Parts come in three kinds, from Internal Family Systems: <b>managers</b>, protectors that plan, control, please, or criticize to keep pain away; <b>firefighters</b>, protectors that act fast when pain breaks through; and <b>exiles</b>, young parts carrying old hurt. Choose "not sure" until you know.</p>
+      <p><b>The color and badge</b> show how it tends to affect you. A gold marker with a spark is a <b>glimmer</b>, Deb Dana's word for the small moments that bring you toward the window. A red marker with a bolt is a <b>trigger</b>, something that takes you out. Each starts out matching where you place it, inside the window or outside, and you can change it: a person can be a glimmer you meet at the edge, or a trigger inside an otherwise good day.</p>
+      <p>Seeing them together often shows a pattern: where you go most, which parts take you there, and what helps you come back.</p></div>
     <p class="src">Dana (2018); Schwartz (2021)</p>`;
   const $=id=>document.getElementById(id);
   $("mp-mode").addEventListener("click",()=>setMapMode(!MAP.on));
@@ -1551,12 +1591,13 @@ function showMap(user, focusForm){
   panel.querySelectorAll("[data-medit]").forEach(b=>b.addEventListener("click",()=>{ MAP.draft=null; MAP.edit=MAP.items.find(i=>String(i.id)===b.dataset.medit); drawMap(); showMap(true,true); }));
   if(it){
     panel.querySelectorAll("[data-mt]").forEach(b=>b.addEventListener("click",()=>{ it.type=b.dataset.mt; panel.querySelectorAll("[data-mt]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); $("mf-err").textContent=""; drawMap(); }));
+    panel.querySelectorAll("[data-me]").forEach(b=>b.addEventListener("click",()=>{ it.effect=b.dataset.me; panel.querySelectorAll("[data-me]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); drawMap(); }));
     $("mf-name").addEventListener("input",e=>{ it.name=e.target.value; $("mf-err").textContent=""; drawMap(); });
     $("mf-note").addEventListener("input",e=>{ it.note=e.target.value; });
-    $("mf-pos").addEventListener("change",e=>{ Object.assign(it,regionPoint(e.target.value)); drawMap(); });
+    $("mf-pos").addEventListener("change",e=>{ Object.assign(it,regionPoint(e.target.value)); if(!it.effect) panel.querySelectorAll("[data-me]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.me===effectOf(it)?"true":"false")); drawMap(); });
     $("mf-save").addEventListener("click",()=>{
       it.name=$("mf-name").value.trim();
-      if(!it.type){ $("mf-err").textContent="Choose what it is: a part, person, place, thing, environment, or situation."; return; }
+      if(!it.type){ $("mf-err").textContent="Choose what it is: a kind of part, or a person, place, thing, environment, or situation."; return; }
       if(!it.name){ $("mf-err").textContent="Give it a name, even a word."; $("mf-name").focus(); return; }
       if(!editing){ it.id="m"+(mapSeq++); MAP.items.push(it); }
       MAP.draft=null; MAP.edit=null; drawMap(); showMap(false);
@@ -1590,12 +1631,19 @@ function printMap(){
   asLight(undo=>{
     const ps=document.getElementById("printsheet");
     ps.innerHTML=`<h1>${esc(mapTitle())}</h1><p class="ps-date">${today()}</p><div class="ps-wheel"></div>
-      <div class="ps-legend"><h2>${esc(mapTitle())}</h2>${legendHTML(false)}<p class="ps-foot">Made with The Window Mandala, erinsarita.github.io/window-mandala. A model for reflection, not diagnosis or therapy.</p></div>`;
+      <div class="ps-legend"><h2>${esc(mapTitle())}</h2>${keyHTML()}<div style="height:12px"></div>${legendHTML(false)}<p class="ps-foot">Made with The Window Mandala, erinsarita.github.io/window-mandala. A model for reflection, not diagnosis or therapy.</p></div>`;
     ps.querySelector(".ps-wheel").appendChild(svg.cloneNode(true));
     const done=()=>{ window.removeEventListener("afterprint",done); ps.innerHTML=""; undo(); };
     window.addEventListener("afterprint",done);
     window.print();
   });
+}
+function drawMarkerCanvas(x,type,effect,cx,cy,r){
+  const c=EFFECT_COLOR[effect]||EFFECT_COLOR.both;
+  x.save(); x.beginPath(); x.arc(cx,cy,r,0,Math.PI*2); x.fillStyle=c; x.fill(); x.lineWidth=r*0.18; x.strokeStyle="#fff"; x.stroke();
+  x.translate(cx,cy); x.scale(r/9.5,r/9.5); x.fillStyle="#fff"; x.fill(new Path2D(ICON[type]||ICON.part),"evenodd"); x.restore();
+  if(BADGE[effect]){ const bx=cx+r*0.82, by=cy-r*0.82, br=r*0.55; x.save(); x.beginPath(); x.arc(bx,by,br,0,Math.PI*2); x.fillStyle="#fff"; x.fill(); x.lineWidth=r*0.12; x.strokeStyle=c; x.stroke();
+    x.translate(bx,by); x.scale(br/6.2,br/6.2); x.fillStyle=c; x.fill(new Path2D(BADGE[effect])); x.restore(); }
 }
 // the download: one tall page image, the wheel above and the legend below, drawn on a canvas at print resolution
 let fontCSS=null;
@@ -1639,20 +1687,27 @@ async function downloadMap(){
       let acc=0, split=blocks.length; for(let i=0;i<blocks.length;i++){ if(acc>0&&acc+bh[i]/2>total/2){ split=i; break; } acc+=bh[i]; }
       const colH=Math.max(acc,total-acc)+40;
       blocks.forEach((L,i)=>{ if(i===split) lines.push({t:"col"}); L.forEach(l=>lines.push(l)); });
-      const H=Math.max(3300, M+150+WH+80+colH+140);
+      const KEYH=190, H=Math.max(3300, M+150+WH+80+KEYH+colH+140);
       const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const x=cv.getContext("2d");
       x.fillStyle="#FFFDF8"; x.fillRect(0,0,W,H);
       x.fillStyle="#2C2433"; x.textAlign="center"; x.font="500 92px 'Cormorant Garamond', Georgia, serif"; x.fillText(mapTitle(),W/2,M+60);
       x.fillStyle="#6F6578"; x.font="400 34px Mulish, sans-serif"; x.fillText(today(),W/2,M+120);
       x.drawImage(img,(W-WH)/2,M+150,WH,WH);
+      // the key, across the page: what each icon is, and the glimmer and trigger badges
+      { const ky=M+150+WH+60, keys=[...MAPTYPES.map(t=>[t.key,"both",t.name]),["part","glimmer","Glimmer"],["part","trigger","Trigger"]], per=6, cw=(W-2*M)/per;
+        x.textAlign="left"; x.font="400 30px Mulish, sans-serif";
+        keys.forEach(([t,e,name],i)=>{ const kx=M+(i%per)*cw, kyy=ky+Math.floor(i/per)*72;
+          if(name==="Glimmer"||name==="Trigger"){ x.save(); x.translate(kx+22,kyy+22); x.scale(3.4,3.4); x.fillStyle=EFFECT_COLOR[e]; x.fill(new Path2D(BADGE[e])); x.restore(); }
+          else drawMarkerCanvas(x,t,"both",kx+22,kyy+22,20);
+          x.fillStyle="#2C2433"; x.fillText(name.replace(", not sure which",", not sure"),kx+56,kyy+32); }); }
       // the legend, in two columns, breaking between lines
-      let col=0, y0=M+150+WH+90, y=y0; x.textAlign="left";
+      let col=0, y0=M+150+WH+90+KEYH, y=y0; x.textAlign="left";
       lines.forEach(l=>{
         if(l.t==="col"){ col=1; y=y0; return; }
         const cx=M+col*(colW+80);
         if(l.t==="head"){ x.fillStyle="#2C2433"; x.font=HF; x.fillText(l.s,cx,y+46); }
-        if(l.t==="item"){ x.fillStyle="#2C2433"; x.fill(new Path2D(shapeD(l.it.type,cx+16,y+22,13))); x.font=NF; x.fillText(l.it.name,cx+48,y+34);
-          const w=x.measureText(l.it.name).width; x.font=SF; x.fillStyle="#6F6578"; x.fillText("  "+typeName(l.it.type).toLowerCase(),cx+48+w,y+34); }
+        if(l.t==="item"){ drawMarkerCanvas(x,l.it.type,effectOf(l.it),cx+18,y+22,17); x.fillStyle="#2C2433"; x.font=NF; x.fillText(l.it.name,cx+52,y+34);
+          const w=x.measureText(l.it.name).width; x.font=SF; x.fillStyle="#6F6578"; x.fillText("  "+whatLine(l.it).toLowerCase(),cx+52+w,y+34); }
         if(l.t==="note"){ x.fillStyle="#6F6578"; x.font=SF; x.fillText(l.s,cx+48,y+30); }
         y+=l.h;
       });
