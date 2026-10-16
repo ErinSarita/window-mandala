@@ -86,7 +86,7 @@ svg.selffocus .self-focus{opacity:1}
 .self-glow{fill:none;stroke:#FFE38A;stroke-width:4;stroke-opacity:.9;filter:drop-shadow(0 0 8px #FFD866)}
 svg.selffocus #core{filter:brightness(1.06) drop-shadow(0 0 10px rgba(255,220,120,.6))}
 .self-hit{fill:transparent;cursor:pointer;outline:none}
-.self-bg{fill:#FFF6DA;fill-opacity:.95;pointer-events:none}
+.self-bg{fill:#FFF6DA;fill-opacity:.95;cursor:pointer}
 .is-dark .self-bg{fill-opacity:.6}
 .t-selfring{fill:var(--sunink);font-style:italic;font-weight:700;letter-spacing:.06em} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--display);font-style:italic;font-weight:500}
@@ -1235,7 +1235,7 @@ function draw(){
   // the Self: one ring of eight lotus petals, each carrying a quality, round the Flower of Life
   const sunG=el("g",{id:"core"});
   // the Self's own ground: the lightest gold on the wheel, inside the ring that circles the petals
-  el("circle",{cx:0,cy:0,r:f(L1+3),class:"self-bg"},sunG);
+  const selfBg=el("circle",{cx:0,cy:0,r:f(L1+3),class:"self-bg",role:"presentation"},sunG);
   const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
   const lotus=(r0,r1,m,hw,hb)=>{ const h=r1-r0;
     return `M${q(r0,m-hb)} C${q(r0+h*0.24,m-hw*1.02)} ${q(r0+h*0.5,m-hw*1.07)} ${q(r0+h*0.66,m-hw*0.84)}`+
@@ -1258,8 +1258,10 @@ function draw(){
     el("circle",{cx:0,cy:0,r:f(sr0),class:"self-ring"},sunG);
     const sh=el("path",{d:ringP(sr1)+" "+ringP(L1-2)+"Z","fill-rule":"evenodd",class:"self-hit",tabindex:"0",role:"button","aria-label":"The Self: everything inside this ring"},sunG);
     hookTip(sh,()=>{ const [x,y]=P(sm,45); return {x,y,html:`<span class="ringtag">The center</span><b>The Self</b><span class="tl">Everything inside this ring is the Self: the witness at the very center, the Flower of Life, and the eight petals of its qualities. Around it, your window of capacity.</span><span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true));
-    ["mouseenter","focus"].forEach(ev=>sh.addEventListener(ev,()=>svg.classList.add("selffocus")));
-    ["mouseleave","blur"].forEach(ev=>sh.addEventListener(ev,()=>svg.classList.remove("selffocus"))); }
+    // the cream ground between the petals is part of the Self too: it lights the center the same way
+    [sh,selfBg].forEach(n=>{ ["mouseenter","focus"].forEach(ev=>n.addEventListener(ev,()=>svg.classList.add("selffocus")));
+      ["mouseleave","blur"].forEach(ev=>n.addEventListener(ev,()=>svg.classList.remove("selffocus"))); });
+    selfBg.addEventListener("click",e=>{ e.stopPropagation(); showSelf(true); }); }
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
