@@ -66,14 +66,6 @@ svg#m{width:100%;height:100%;display:block;overflow:visible}
 .cell.qp{stroke:var(--goldline);stroke-width:1.1;stroke-opacity:.7;transition:filter .25s ease} .cell.qp:hover{filter:brightness(1.05) drop-shadow(0 0 4px var(--sun3))}
 .cell.qp:focus-visible{stroke:var(--ink);stroke-width:2.5;stroke-opacity:1}
 .qb{stroke:var(--goldline);stroke-width:.9;stroke-opacity:.45;pointer-events:none}
-svg.glass .shade{filter:saturate(1.35)}
-.lead-line{fill:none;stroke:#2E2630;stroke-width:3.4;stroke-opacity:.82;stroke-linecap:round}
-.lead-thin{fill:none;stroke:#2E2630;stroke-width:2.2;stroke-opacity:.6;stroke-linecap:round}
-.lead-vein{fill:none;stroke:#3B2A14;stroke-width:2.2;stroke-opacity:.75;stroke-linecap:round;pointer-events:none}
-.glass-glint{fill:none;stroke:#fff;stroke-width:3;stroke-opacity:.55;stroke-linecap:round;pointer-events:none}
-.glass-light{pointer-events:none;mix-blend-mode:screen}
-svg.glass .cell.qp{stroke:#3B2A14;stroke-width:2.6;stroke-opacity:.85}
-svg.glass .seed-lead circle,svg.glass .seed-lead path{stroke-opacity:.9}
 .vein{fill:none;stroke:var(--goldline);stroke-width:.9;stroke-opacity:.5;stroke-linecap:round;pointer-events:none}
 /* hovering lights only the section under the pointer, and softens the rest */
 .veil{fill:var(--bg);opacity:0;transition:opacity .25s ease,fill .25s ease}
@@ -330,7 +322,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="glassswitch" aria-pressed="true">Stained glass</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
+        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
         <p>Drag to see the window widen, as awareness widens: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
       </div>
       <div class="legendkey" id="legendkey"></div>
@@ -804,7 +796,7 @@ function radii(t){
   const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
   return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
-let GLASS=true, LOOPON=true, LOOPGEO=true, CAP=0.5, R=radii(CAP);
+let LOOPON=true, LOOPGEO=true, CAP=0.5, R=radii(CAP);
 const NS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById("m");
 const rad = d => (d-90)*Math.PI/180;
@@ -904,8 +896,7 @@ function drawLoop(){
     el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#FFF6DA",class:"loop-ring"},g);
     el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F8E4AE",class:"loop-ring"},g);
     [[H[0],"#C9962E"],[H[1],"#C9962E"],[S[1],"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
-    quarterLines(H[0],S[1],GLASS?"#2E2630":"#B98428");
-    if(GLASS) [H[0],H[1],S[1],R.edge[0],R.edge[1],K[0],B[0],B[1]].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"lead-line"},g));
+    quarterLines(H[0],S[1],"#B98428");
     const fs=w=>Math.min(14,w*0.62);
     [45,225].forEach(a=>arcText((H[0]+H[1])/2,a-30,a+30,"heart · heart rate variability","lbl t-ring",fs(H[1]-H[0]),0.3,g));
     [135,315].forEach(a=>arcText((S[0]+S[1])/2,a-30,a+30,"brainstem · the vagal centers","lbl t-ring",fs(S[1]-S[0]),0.3,g));
@@ -921,7 +912,7 @@ function drawLoop(){
     el("path",{d:band(K[0],K[1]),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring"},g);
     el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},g);
     [[K[0],"#B98428",1],[B[0],"#A9781F",1],[B[1],"#A9781F",1]].forEach(([r,c,w])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":w,"pointer-events":"none"},g));
-    quarterLines(K[0],K[1],GLASS?"#2E2630":"#8A6417");
+    quarterLines(K[0],K[1],"#8A6417");
     [135,315].forEach(a=>arcText((K[0]+K[1])/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(12.5,(K[1]-K[0])*0.72),0.4,g));
     [0,45,135,225,315].forEach(a=>arcText((B[0]+B[1])/2,a-20,a+20,"window of capacity","lbl t-ring t-rim",Math.min(13,(B[1]-B[0])*0.78),0.8,g));
     // beyond the border: the loop broken, in the defenses; each defense keeps its own card
@@ -1043,26 +1034,6 @@ function colorAt(theta, layer){
 }
 // One continuous ring: thin wedges, each colored by where it sits round the circle, so the defenses melt into
 // one another with no border between them. The outer ring also gets a soft sheen, light inside and deeper at the rim.
-// Stained glass: dark lead lines between the panes, as in a rose window. Rings are leaded at their edges, and the
-// outer rings are cut into panes; the leads stay clear of the middle of each direction, where its name sits.
-function drawLead(){
-  const g=el("g",{class:"lead","pointer-events":"none"});
-  const rings=[R.win[1],R.edge[0],R.edge[1],R.out[0],R.out[1]];
-  rings.forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"lead-line"},g));
-  const ray=(r0,r1,a,cls)=>{ const [x0,y0]=P(r0,a),[x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),class:cls},g); };
-  const om=(R.out[0]+R.out[1])/2;
-  for(let a=0;a<360;a+=15){
-    const off=((a%90)+90)%90, quarter=off===45;
-    if(quarter){ ray(R.win[0],R.out[1],a,"lead-line"); continue; }
-    if(off>=30&&off<=60){ ray(R.out[0],R.out[1],a,"lead-thin"); ray(R.edge[0],R.edge[1],a,"lead-thin"); }
-    // near a direction's name, the lead stops short of the words and picks up again beyond them
-    else { ray(R.out[0],om-24,a,"lead-thin"); ray(om+26,R.out[1],a,"lead-thin"); }
-  }
-  // light through the glass: a soft brightness from the upper left, as if the sun were behind the window
-  const lg=el("radialGradient",{id:"glasslight",gradientUnits:"userSpaceOnUse",cx:-170,cy:-210,r:640},document.getElementById("wdefs"));
-  [[0,"#fff",.34],[.45,"#fff",.12],[1,"#fff",0]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},lg));
-  el("circle",{cx:0,cy:0,r:f(R.out[1]),fill:"url(#glasslight)",class:"glass-light"},g);
-}
 function ringShade(layer,r0,r1){
   const g=el("g",{class:"shade","pointer-events":"none"});
   for(let a=0;a<360;a+=1.5) el("path",{d:sector(r0,r1,a-0.25,a+1.85,1,0),fill:colorAt(a+0.8,layer)},g);
@@ -1150,7 +1121,6 @@ function draw(){
   // the six-petaled flower in the central circle is the brightest place of all
   grad("heart",{...U,r:sr},[[0,"#fff",1],[1,"#fff",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
-  grad("petalglass",{...U,r:L1},[[R.core/L1,"#FFE9A8"],[0.6,"#F2C24E"],[0.85,"#E2A52C"],[1,"#C98A1E"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
   const mk=el("marker",{id:"trace-arrow",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse",markerUnits:"strokeWidth"},wdefs);
   el("path",{d:"M1 1 L9 5 L1 9 Z",class:"trace-head"},mk);
@@ -1176,7 +1146,6 @@ function draw(){
   grad("outglow",{...U,r:oR},[[R.out[0]/oR,"var(--sun2)",isDark()?0.1:0.16],[1,"var(--sun2)",0]]);
   el("circle",{cx:0,cy:0,r:f((R.edge[0]+R.edge[1])/2),fill:"none",stroke:"url(#edgeglow)","stroke-width":f(et),"pointer-events":"none"});
   el("circle",{cx:0,cy:0,r:f(R.out[0]+8),fill:"none",stroke:"url(#outglow)","stroke-width":16,"pointer-events":"none"});
-  if(GLASS) drawLead();
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
     ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
@@ -1241,13 +1210,10 @@ function draw(){
   const hF=L1-L0, rt=L0+hF*0.56;
   SELF.cs.forEach(([n,t],i)=>{
     const m=i*45;
-    const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:GLASS?"url(#petalglass)":"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
+    const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
     c.dataset.slice="c"+i;
     hookTip(c,()=>{ const [x,y]=P(rt,m); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
-    if(GLASS){ el("path",{d:`M${q(L0+hF*0.2,m)} L${q(L1-hF*0.04,m)}`,class:"lead-vein"},sunG);
-      // a highlight down one side of each petal, as light catches the glass
-      el("path",{d:`M${q(L0+hF*0.3,m-9)} L${q(L0+hF*0.62,m-13)}`,class:"glass-glint"},sunG); }
-    else el("path",{d:`M${q(L0+hF*0.74,m)} L${q(L1-hF*0.09,m)}`,class:"vein"},sunG);
+    el("path",{d:`M${q(L0+hF*0.74,m)} L${q(L1-hF*0.09,m)}`,class:"vein"},sunG);
     const avail=2*25*0.84*Math.PI/180*rt, size=Math.min(17,avail/(CS_SHORT[i].length*0.5));
     arcText(rt,m-22,m+22,CS_SHORT[i],"lbl t-cq",f(size),0.2,sunG).setAttribute("pointer-events","none");
   });
@@ -1257,7 +1223,7 @@ function draw(){
   el("circle",{cx:0,cy:0,r:f(CG),fill:"url(#coreglow)",stroke:"none","pointer-events":"none"},core);
   // a fine double gold outline where the Flower meets the petals
   [R.core-0.5,R.core-3.4].forEach(rr=>el("circle",{cx:0,cy:0,r:f(rr),fill:"none",stroke:"var(--goldline)","stroke-width":0.75,"stroke-opacity":.85,"pointer-events":"none"},core));
-  const sg=el("g",{fill:"none",stroke:GLASS?"#6B4E1E":"var(--goldline)","pointer-events":"none",class:GLASS?"seed-lead":""},core);
+  const sg=el("g",{fill:"none",stroke:"var(--goldline)","pointer-events":"none"},core);
   el("circle",{cx:0,cy:0,r:f(sr),fill:"url(#heart)",stroke:"none"},sg);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
     el("path",{d:`M0 0 A${f(sr)} ${f(sr)} 0 0 1 ${x} ${y} A${f(sr)} ${f(sr)} 0 0 1 0 0Z`,fill:"#fff","fill-opacity":.6,stroke:"var(--goldline)","stroke-width":0.9,"stroke-opacity":.8},sg); }
@@ -2019,11 +1985,6 @@ function setLoop(on){
   moonTip(null); draw();
 }
 loopswitch.addEventListener("click",()=>setLoop(!LOOPON));
-// stained glass: lead lines between the panes, richer glass, and light coming through; the switch shows the soft look
-const glassswitch=document.getElementById("glassswitch");
-function setGlass(on){ GLASS=on; svg.classList.toggle("glass",on); glassswitch.setAttribute("aria-pressed",on?"true":"false"); draw(); }
-glassswitch.addEventListener("click",()=>setGlass(!GLASS));
-svg.classList.add("glass");
 svg.classList.add("loopview");
 setCap(0.5,false);
 draw();
