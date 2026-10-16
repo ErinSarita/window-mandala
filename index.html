@@ -106,6 +106,20 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 @keyframes lpulse{0%,100%{fill-opacity:.1}50%{fill-opacity:.42}}
 .lhl{fill:#fff;fill-opacity:.28;pointer-events:none}
 .lhl-line{fill:none;stroke:var(--goldline);stroke-width:2.4;pointer-events:none;filter:drop-shadow(0 0 4px var(--sun3))}
+.trace-under{fill:none;stroke:var(--surface);stroke-width:7;stroke-opacity:.75;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.trace-line{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.trace-head{fill:var(--ink)}
+.trace-start{fill:var(--ink);stroke:var(--surface);stroke-width:2.5;pointer-events:none}
+.part-line{stroke:var(--ink);stroke-width:1.6;stroke-dasharray:5 5;stroke-opacity:.75;pointer-events:none}
+.part-dot{fill:var(--ink);stroke:var(--surface);stroke-width:2.5;pointer-events:none}
+.t-part{fill:var(--ink);font-size:20px;font-style:italic;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.pat.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.mapgrid{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));gap:6px;align-items:center;font-size:13px}
+.mapgrid .rowlab{color:var(--muted);font-weight:700;font-size:12px}
+.mapgrid button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:6px 4px;cursor:pointer;border-top:3px solid var(--mc)}
+.mapgrid button:hover,.mapgrid button:focus-visible{border-color:var(--ink);outline:none}
+.mapseq{font-size:14px;min-height:1.4em}
+@media (max-width:520px){.mapgrid{grid-template-columns:repeat(4,minmax(0,1fr))}.mapgrid .rowlab{grid-column:1/-1}.mapgrid .colhead{display:none}}
 .witness-hit{fill:transparent;cursor:pointer;outline:none}
 .layers{display:grid;gap:12px}
 .layers>div{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px;border-radius:0}
@@ -528,13 +542,21 @@ const SELF = {
 const PATTERNS = {
   intro:"Most of us have favorite routes around the wheel: a state we go to first, a path we tend to travel, and places we rarely or never visit. These grow from what kept us safe, often early on. Knowing your route is not a diagnosis; it is a map of what your body learned.",
   list:[
-    {name:"Fight and fawn", text:"Anger and appeasing take turns: keeping the peace, then resentment, then guilt, then keeping the peace again. Often learned where anger was dangerous but swallowing it was costly too.", q:"What happens to my anger after I smooth things over?"},
-    {name:"Flight and freeze", text:"Staying busy and then stopping dead: overworking, planning, moving, until the body suddenly won't. Often learned where slowing down felt unsafe.", q:"What would I feel if I stopped moving?"},
-    {name:"Freeze and collapse", text:"Going quiet, then far away. A tendency to disappear under pressure, to go blank, to sleep it off. Often learned where there was no way out and no one to turn to.", q:"When I go far away, what am I leaving?"},
-    {name:"Fawn and collapse", text:"Caretaking until empty: giving and giving, then crashing. Often learned where a child had to tend a parent's feelings.", q:"Who takes care of me when I'm depleted?"},
-    {name:"Straight to fight", text:"A short fuse: going from calm to anger fast, with few early signals. The window may be narrow at the top.", q:"What is the first, small sign before the anger?"},
-    {name:"A room never visited", text:"Some states are rarely felt at all, often because they were not allowed: people who never get angry, or never rest, or never let themselves need anyone. The missing state is often the one that carries what was not permitted.", q:"Which state do I never let myself feel? Who taught me it wasn't safe?"}
+    {name:"Fight and fawn", trace:[[285,.55],[272,.84],[300,.8],[348,.84],[12,.82],[330,.7],[276,.88],[292,.74],[0,.86]], text:"Anger and appeasing take turns: keeping the peace, then resentment, then guilt, then keeping the peace again. Often learned where anger was dangerous but swallowing it was costly too.", q:"What happens to my anger after I smooth things over?"},
+    {name:"Flight and freeze", trace:[[10,.84],[40,.86],[84,.88],[96,.9],[62,.8],[16,.86],[52,.82],[94,.9],[100,.88]], text:"Staying busy and then stopping dead: overworking, planning, moving, until the body suddenly won't. Often learned where slowing down felt unsafe.", q:"What would I feel if I stopped moving?"},
+    {name:"Freeze and collapse", trace:[[70,.5],[85,.68],[95,.84],[115,.86],[135,.88],[155,.9],[175,.92],[186,.88],[178,.84],[190,.9]], text:"Going quiet, then far away. A tendency to disappear under pressure, to go blank, to sleep it off. Often learned where there was no way out and no one to turn to.", q:"When I go far away, what am I leaving?"},
+    {name:"Fawn and collapse", trace:[[285,.5],[278,.76],[262,.88],[232,.9],[202,.9],[186,.8],[204,.7],[238,.66],[266,.72],[284,.84],[268,.92],[236,.92],[206,.86]], text:"Caretaking until empty: giving and giving, then crashing. Often learned where a child had to tend a parent's feelings.", q:"Who takes care of me when I'm depleted?"},
+    {name:"Straight to fight", sharp:true, trace:[[340,.28],[350,.45],[356,.9],[8,.86],[352,.88]], text:"A short fuse: going from calm to anger fast, with few early signals. The window may be narrow at the top.", q:"What is the first, small sign before the anger?"},
+    {name:"A room never visited", trace:[[70,.66],[100,.8],[150,.76],[200,.82],[250,.76],[292,.68],[252,.64],[202,.76],[142,.7],[92,.74],[66,.7]], text:"Some states are rarely felt at all, often because they were not allowed: people who never get angry, or never rest, or never let themselves need anyone. The missing state is often the one that carries what was not permitted.", q:"Which state do I never let myself feel? Who taught me it wasn't safe?"}
   ],
+  more:[
+    {name:"Rapid swings", sharp:true, xy:[[-.63,-.74],[-.1,.92],[.66,-.72],[.2,.92],[-.46,-.82]], text:"Up into fight or flight, then down into collapse, and up again, crossing the window quickly without resting there. Energy surges, then crashes. Fast swings can come with exhaustion, overwhelm, or a nervous system that has learned to stay on alert; when they are strong or long-lasting, they are worth exploring with a professional.", q:"What happens in me just before the crash?"},
+    {name:"Hovering at the threshold", wave:true, text:"Rolling in toward the window and back out again, like a wave: close enough to touch its edge, but rarely settling inside. Life can feel like constant low-level bracing, sinking, or managing, never quite at rest.", q:"What would it take to stay a little longer, the next time I come close?"},
+    {name:"Coming home, with practice", spiral:true, text:"The same routes, with smaller swings and more frequent returns. With practice you notice the edge sooner, the way back gets shorter, and you spend longer near the center. The outer states are still there, because you are human; what changes is how easily you find your way home.", q:"Where have I come back faster than I used to?"}
+  ],
+  // parts in their home states: angle, depth, and which side of the dot the name sits
+  parts:[["An angry protector",30,.8],["A critic who pushes",330,.8],["One who holds still",112,.86],["One who goes far away",212,.8],["A pleaser",246,.86]],
+  partsText:"In Internal Family Systems terms, many patterns are parts doing their jobs, and a part tends to take you to its own home state: a pleaser to fawn, a part that goes far away to collapse, an angry protector to fight. Knowing your parts' home states helps you recognize who is here when you leave the window. The dashed lines are unblending: the way from each part back to the Self. Linking parts with nervous-system states this way is this mandala's synthesis.",
   prompts:["Under stress, where do I go first?","Which route do I travel most often around the wheel?","Which state do I rarely visit, and what might it carry?","How do I usually come back, and how long does it take?","Which part of me is running the show when I'm there? What is it protecting?","What is it afraid would happen if it stopped? (a question from IFS)"],
   rights:"If you have walked The Return Mandala, notice the links. Fawn often grows where the Right to Freedom or the Right to Have Support was not safe. Collapse can have roots in the earliest Right to Exist. Fight and flight often guard the Right to Need."
 };
@@ -646,6 +668,58 @@ function petal(r0,r1,a0,a1,bulgeIn){
 }
 // text path along an arc that reads upright
 let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null;
+/* ---------- Patterns on the wheel ----------
+   A route is a list of [angle, depth] points: the angle is the direction (0 fight or flight at the top, 90 freeze,
+   180 collapse, 270 fawn), and the depth runs from the Self (0) through the window (about .35), the edge (about .56),
+   and out to the far rim of the defenses (1). Depth maps onto the rings as they are drawn, so a route keeps its place
+   as the window widens or narrows. */
+let TRACE=null;   // {make, sharp} for a route (make() gives its points on the wheel as drawn now), {parts:true} for the parts map, or null
+function depthR(d){
+  const wm=(R.win[0]+R.win[1])/2, em=(R.edge[0]+R.edge[1])/2, om=(R.out[0]+R.out[1])/2;
+  const T=[[0,R.core*0.35],[0.2,CR.L1],[0.35,wm],[0.5,R.win[1]],[0.56,em],[0.62,R.edge[1]],[0.8,om],[1,R.out[1]-8]];
+  for(let i=1;i<T.length;i++) if(d<=T[i][0]){ const [d0,r0]=T[i-1],[d1,r1]=T[i], u=(d-d0)/(d1-d0); return r0+(r1-r0)*u; }
+  return T[T.length-1][1];
+}
+function routePts(p){
+  if(p.xy){ const om=(R.out[0]+R.out[1])/2; return p.xy.map(([x,y])=>[x*om,y*om]); }
+  if(p.wave){ const a=[]; for(let i=0;i<=56;i++){ const t=i/56; a.push(P(depthR(.6+.17*Math.sin(t*Math.PI*8)),55+t*200)); } return a; }
+  if(p.spiral){ const a=[]; for(let i=0;i<=72;i++){ const t=i/72; a.push(P(depthR(Math.max(0,.9*Math.pow(1-t,1.1)+.07*Math.sin(t*Math.PI*10)*(1-t))),-10+t*760)); } return a; }
+  return p.trace.map(([a,d])=>P(depthR(d),a));
+}
+function smoothPath(pts, sharp){
+  if(sharp) return "M"+pts.map(q=>f(q[0])+" "+f(q[1])).join(" L");
+  let d=`M${f(pts[0][0])} ${f(pts[0][1])}`;
+  for(let i=0;i<pts.length-1;i++){ const p0=pts[i-1]||pts[i], p1=pts[i], p2=pts[i+1], p3=pts[i+2]||p2;
+    d+=` C${f(p1[0]+(p2[0]-p0[0])/6)} ${f(p1[1]+(p2[1]-p0[1])/6)} ${f(p2[0]-(p3[0]-p1[0])/6)} ${f(p2[1]-(p3[1]-p1[1])/6)} ${f(p2[0])} ${f(p2[1])}`; }
+  return d;
+}
+function drawTrace(animate){
+  const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(TRACE.parts){
+    PATTERNS.parts.forEach(([name,a,d])=>{
+      const [x,y]=P(depthR(d),a), [sx,sy]=P(R.core+4,a), right=x>=0;
+      el("line",{x1:f(x),y1:f(y),x2:f(sx),y2:f(sy),class:"part-line"},g);
+      el("circle",{cx:f(x),cy:f(y),r:7,class:"part-dot"},g);
+      // at the top and bottom the name sits just outside the dot; at the sides, on its inward side, so it stays on the wheel
+      const vert=Math.abs(y)>Math.abs(x);
+      const t=el("text",vert?{x:f(x),y:f(y<0?y-14:y+28),"text-anchor":"middle",class:"lbl t-part"}:{x:f(x+(right?-12:12)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-part"},g); t.textContent=name;
+    });
+    return;
+  }
+  const pts=TRACE.make(); if(!pts.length) return;
+  if(pts.length===1){ el("circle",{cx:f(pts[0][0]),cy:f(pts[0][1]),r:6,class:"trace-start"},g); return; }
+  const d=smoothPath(pts,TRACE.sharp);
+  const under=el("path",{d,class:"trace-under"},g), line=el("path",{d,class:"trace-line","marker-end":"url(#trace-arrow)"},g);
+  el("circle",{cx:f(pts[0][0]),cy:f(pts[0][1]),r:6,class:"trace-start"},g);
+  if(animate && !reduce){ const L=line.getTotalLength();
+    [under,line].forEach(pth=>{ pth.style.strokeDasharray=L; pth.style.strokeDashoffset=L; pth.getBoundingClientRect(); pth.style.transition="stroke-dashoffset 2.8s ease-in-out"; pth.style.strokeDashoffset=0; });
+    line.setAttribute("marker-end",""); setTimeout(()=>{ if(line.isConnected) line.setAttribute("marker-end","url(#trace-arrow)"); },2800); }
+}
+function showTrace(t, animate){
+  TRACE=t; drawTrace(animate!==false);
+  if(t && isNarrow()) document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
+}
 // light one layer of the wheel: the witness at the center, the Flower, the petals, the window, the edge, or the outer ring
 function setLayerHL(key){
   layerKey=key; const g=document.getElementById("layerHL"); if(!g) return; g.innerHTML=""; if(!key) return;
@@ -792,6 +866,8 @@ function draw(){
   grad("heart",{...U,r:sr},[[0,"#fff",1],[1,"#fff",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
+  const mk=el("marker",{id:"trace-arrow",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse",markerUnits:"strokeWidth"},wdefs);
+  el("path",{d:"M1 1 L9 5 L1 9 Z",class:"trace-head"},mk);
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
   el("circle",{cx:0,cy:0,r:VB,fill:"url(#aura)","pointer-events":"none"});
@@ -900,9 +976,10 @@ function draw(){
   const tip=document.getElementById("coretip");
   ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
   ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
+  el("g",{id:"traceG"});
   el("g",{id:"layerHL"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey);
+  applySel(); setLayerHL(layerKey); drawTrace(false);
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -971,7 +1048,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ view=v; sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; drawTrace(false); } view=v; sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1226,11 +1303,22 @@ function showHome(user){
   wire(); if(user) bringPanel();
 }
 
+let MYMAP=[];   // the states someone taps in "Map your own pattern"; kept in memory only, never saved
 function showPatterns(user){
   setView("patterns");
-  const Pt=PATTERNS;
-  panel.innerHTML=`<div class="phasehead"><h2>Patterns</h2><div class="meta">The routes your nervous system tends to take</div><p>${Pt.intro}</p></div>
-    ${Pt.list.map(p=>`<div class="ring"><h3>${p.name}</h3><p>${p.text}</p><p class="voice">${p.q}</p></div>`).join("")}
+  const Pt=PATTERNS, all=[...Pt.list,...Pt.more];
+  const card=(p,i)=>`<div class="ring pat" id="pat-${i}"><h3>${p.name}</h3><p>${p.text}</p><p class="voice">${p.q}</p><button type="button" class="btn" data-trace="${i}" style="justify-self:start">Show on the wheel</button></div>`;
+  const cells=[["Inside the window","win"],["At the edge","edge"],["Outside","out"]];
+  panel.innerHTML=`<div class="phasehead"><h2>Patterns</h2><div class="meta">The routes your nervous system tends to take</div><p>${Pt.intro}</p>
+      <p class="about">Choose "Show on the wheel" to watch a route draw itself across the mandala.</p></div>
+    ${all.map(card).join("")}
+    <div class="ring pat" id="pat-parts"><h3>Parts and their home states</h3><p>${Pt.partsText}</p><button type="button" class="btn" data-parts style="justify-self:start">Show the parts map</button></div>
+    <div class="ring" id="mymap"><h3>Map your own pattern</h3><p>Think of a hard day or week. Tap the states you moved through, in order, and watch your route appear on the wheel. Nothing is saved; it disappears when you leave the page.</p>
+      <div class="mapgrid"><span class="rowlab colhead"></span>${DIRS.map(d=>`<span class="rowlab colhead">${d.name}</span>`).join("")}
+        ${cells.map(([lab,L])=>`<span class="rowlab">${lab}</span>${DIRS.map((d,k)=>`<button type="button" data-map="${L}:${k}" style="--mc:var(${L==="win"?"--win":L==="edge"?"--e-"+KEYS[k]:d.color})">${L==="out"?d.name:d[L].name}</button>`).join("")}`).join("")}</div>
+      <p><button type="button" class="btn" data-map="self">Back at the center</button></p>
+      <p class="mapseq" id="mapseq"></p>
+      <p><button type="button" class="linkbtn" data-mapundo>Undo</button> · <button type="button" class="linkbtn" data-mapplay>Draw it again</button> · <button type="button" class="linkbtn" data-mapclear>Clear</button></p></div>
     <div class="ring"><h3>Moving between</h3><p>The defenses are not separate rooms: the body moves between them, often in the same order. Each arrow on the wheel is one of these movements.</p>
       <div class="chips">${MOVES.map((m,j)=>`<button type="button" data-move="${j}">${m.title.replace(/^From /,"")}</button>`).join("")}</div><button type="button" class="linkbtn" data-moves>All the movements, and the crossings</button></div>
     <div class="ring"><h3>What a trigger is</h3><p>${REG.neuro}</p></div>
@@ -1238,6 +1326,20 @@ function showPatterns(user){
     <div class="ring"><h3>Finding your route</h3>${ul(Pt.prompts)}<p class="about">Answer in writing, over a week or two. Patterns show themselves slowly.</p></div>
     <div class="ring"><h3>Where patterns come from</h3><p>${Pt.rights} <a href="https://erinsarita.github.io/return-mandala/">Open The Return Mandala</a>.</p></div>
     <p class="src">Walker (2013); Schwartz (2021)</p>`;
+  const mark=id=>panel.querySelectorAll(".pat").forEach(c=>c.classList.toggle("on",c.id===id));
+  panel.querySelectorAll("[data-trace]").forEach(b=>b.addEventListener("click",()=>{ const p=all[+b.dataset.trace]; mark("pat-"+b.dataset.trace); showTrace({make:()=>routePts(p),sharp:!!p.sharp}); }));
+  panel.querySelector("[data-parts]").addEventListener("click",()=>{ mark("pat-parts"); showTrace({parts:true}); });
+  // map your own: each tap adds a point in that state, spread a little so repeat visits don't sit on top of each other
+  const seq=document.getElementById("mapseq");
+  const mapName=m=>{ if(m==="self") return "the center"; const [L,k]=m.split(":"); return L==="out"?DIRS[k].name:DIRS[k][L].name; };
+  const mapPts=()=>MYMAP.map((m,i)=>{ if(m==="self") return P(depthR(0.04),0); const [L,k]=m.split(":"), dep={win:.36,edge:.56,out:.83}[L];
+    return P(depthR(dep+((i%3)-1)*0.03), DIRS[+k].angle+((i*17)%25)-12); });
+  const showMine=anim=>{ mark(null); seq.textContent=MYMAP.length?MYMAP.map(mapName).join(" → "):""; showTrace(MYMAP.length?{make:mapPts}:null,anim); };
+  panel.querySelectorAll("[data-map]").forEach(b=>b.addEventListener("click",()=>{ MYMAP.push(b.dataset.map); showMine(false); }));
+  panel.querySelector("[data-mapundo]").addEventListener("click",()=>{ MYMAP.pop(); showMine(false); });
+  panel.querySelector("[data-mapplay]").addEventListener("click",()=>showMine(true));
+  panel.querySelector("[data-mapclear]").addEventListener("click",()=>{ MYMAP=[]; showMine(false); });
+  if(MYMAP.length) seq.textContent=MYMAP.map(mapName).join(" → ");
   wire(); if(user) bringPanel();
 }
 
