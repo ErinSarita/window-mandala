@@ -749,7 +749,7 @@ function radii(t){
     // the loop view: the Self and the window keep their shape, a little smaller, and the loop's rings sit around them:
     // heart and brainstem, then the alarm at the edge, the brake, and the border of the window of capacity
     const self=(112+60*t)*0.85, core=self*0.44, w0=self+6, w1=w0+(80+46*t)*0.78;
-    const heart=[w1,w1+25], stem=[w1+25,w1+48], e0=w1+50, e1=e0+46, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
+    const heart=[w1,w1+25], stem=[w1+25,w1+48], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
   }
   const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
@@ -861,7 +861,7 @@ function drawTrace(animate){
     arcText((S[0]+S[1])/2,152,208,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
     // the alarm: the edge keeps its own gradient, with the brainstem's gold carried across it
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(E[1])},g);
-      [[E[0]/E[1],"#F8E4AE",.9],[(E[0]+(E[1]-E[0])*0.5)/E[1],"#F5DC9C",.4],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
+      [[E[0]/E[1],"#F8E4AE",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#F5DC9C",.15],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       const base=el("g",{id:"loopbase","pointer-events":"none"}), lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(base,lab);
       el("path",{d:band(E[0],E[1]),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
     [45,225].forEach(a=>arcText((E[0]+E[1])/2,a-24,a+24,"the alarm · amygdala","lbl t-ring t-alarm",14,0.3,g));
@@ -870,12 +870,8 @@ function drawTrace(animate){
     el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},g);
     [[K[0],"#B98428",1],[B[0],"#A9781F",1],[B[1],"#A9781F",1]].forEach(([r,c,w])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":w,"pointer-events":"none"},g));
     quarterLines(K[0],K[1],"#8A6417");
-    [90,270].forEach(a=>arcText((K[0]+K[1])/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(12.5,(K[1]-K[0])*0.72),0.4,g));
+    [135,315].forEach(a=>arcText((K[0]+K[1])/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(12.5,(K[1]-K[0])*0.72),0.4,g));
     [0,45,135,225,315].forEach(a=>arcText((B[0]+B[1])/2,a-20,a+20,"window of capacity","lbl t-ring t-rim",Math.min(13,(B[1]-B[0])*0.78),0.8,g));
-    if(!reduce){
-      el("circle",{cx:0,cy:0,r:f(H[0]+2),class:"pulse-up",style:`--to:${f(B[1]/(H[0]+2))}`},g);
-      el("circle",{cx:0,cy:0,r:f(B[1]),class:"pulse-down",style:`--to:${f((H[0]+2)/B[1])}`},g);
-    }
     // beyond the border: the loop broken, in the defenses; each defense keeps its own card
     const ro=R.out[0]+10, rot=R.out[0]+26;
     const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
@@ -1116,10 +1112,10 @@ function draw(){
     twoLine(om,b0+3,b1-3,d.name.toUpperCase(),ot>70?d.out.words:"","lbl t-out t-caps","lbl t-out t-sub",ot>100?21:18,16,ot>100?32:26,labels);
     // the edge's name, and at a wider edge its early signals
     const eTexts=[];
-    if(et>=30){ const flip=d.angle>95&&d.angle<265, up=flip?-11:11;
+    if(et>=30&&!LOOPGEO){ const flip=d.angle>95&&d.angle<265, up=flip?-11:11;
       eTexts.push(arcText(em+up,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",17,0.3,labels));
       if(et>48) eTexts.push(arcText(em-up,b0+3,b1-3,d.edge.words,"lbl t-edge t-sub",14.5,0.2,labels)); }
-    else eTexts.push(arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",Math.max(11,et*0.62),0.2,labels));
+    else eTexts.push(arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",Math.max(11,Math.min(17,et*0.62)),0.2,labels));
     twoLine(wm,b0+3,b1-3,d.win.name,(wt>88||(LOOPGEO&&wt>56))?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
   });
   // the window's edge, marked by a soft band of light, with four doorways where orienting brings you back in
