@@ -8,8 +8,8 @@ A companion to [The Return Mandala](https://erinsarita.github.io/return-mandala/
 
 A synthesis of earlier models, described in our own words: the window of tolerance (Siegel), the ladder of states (Porges, Dana), the defense cascade (Schauer and Elbert), fawn (Walker), tend and befriend (Taylor and colleagues), the thaw and orienting (Levine), the Self and its parts (Schwartz, Internal Family Systems), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective.
 
-- **The center:** the Self as a lotus: the Flower of Life drawn in gold at its heart, its central circle (the one holding the six-petaled flower) emphasized, and two layers of lotus petals around it, eight front petals for the qualities of Self and eight paler ones between them, with a soft yellow glow and a ring of golden beads.
-- **Inside the window:** four healthy states in soft yellow, one per direction: energized, still, settled, connected. Its edge is a line of golden beads, with four gold doorways for orienting.
+- **The center:** the Self as a lotus: the Flower of Life drawn in gold at its heart, its central circle (the one holding the six-petaled flower) emphasized in light, and two layers of lotus petals around it, eight front petals for the qualities of Self and eight paler ones between them, with a soft yellow glow and a ring of golden beads.
+- **Inside the window:** one continuous soft-yellow ring that blends between four healthy states, one per direction: energized, still, settled, connected. Each is the regulated, safety-held form of the defense beyond it (Deb Dana's blended states). The window is framed in gold, with four gold doorways for orienting.
 - **At the edge:** the early signals: revving, bracing, sinking, over-tuning.
 - **Outside the window:** fight or flight (top), freeze (right), collapse (bottom), fawn (left), as one continuous ring: the colors flow into one another round the circle with no border between them.
 - **The movements:** at each junction between two defenses, two slender tapered arrows, one in each direction (eight in all). The braid is a three-strand plait: one gold strand for the Self and the safe and connected state, and two that carry the four defense colors as they flow round, so the whole nervous system is woven in.
@@ -21,3 +21,10 @@ Tabs: How to read, Where am I? (a three-question finder and an eight-question wi
 ## The file
 
 The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers is saved; only the light or dark choice is kept, under the `wm-` key.
+
+## Guided practices
+
+The two buttons under the wheel start guided sessions of about two minutes, shown in a card beneath the wheel, with gentle sound (on by default) and an optional spoken voice (the browser's own speech).
+
+- **Breathe with the Self:** a short settling-in, then ten breaths of five seconds in and five out, with on-screen cues, a breath counter, soft rising and falling tones, and the Self swelling and softening in time.
+- **Rings of kindness:** the loving-kindness phrases through five circles (yourself, someone you love, someone you barely know, someone difficult, all beings), with a bell at each circle and rings of light that reach further each time: the window, its edge, the defenses, the braid.
