@@ -130,6 +130,10 @@ svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-held
 svg.loopview .t-edge.t-sub{display:inline}
 .t-alarm{fill:var(--etext);stroke:none}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
+.rim-focus{opacity:0;transition:opacity .3s ease}
+svg.rimfocus .rim-focus{opacity:1}
+.rim-shade{fill:#1E1726;fill-opacity:.5}
+.rim-glow{fill:none;stroke:#FFE38A;stroke-opacity:.9;filter:drop-shadow(0 0 8px #FFD866)}
 .brake-ring{fill-opacity:.9;pointer-events:none}
 .window-rim{fill-opacity:1;pointer-events:none}
 .t-rim{fill:#3A2604;font-style:normal;font-weight:700;letter-spacing:.1em;stroke:none}
@@ -790,7 +794,7 @@ function radii(t){
     // the loop view: the Self and the window keep their shape, a little smaller, and the loop's rings sit around them:
     // heart and brainstem, then the alarm at the edge, the brake, and the border of the window of capacity
     const self=(112+60*t)*0.85, core=self*0.44, w0=self+6, w1=w0+(80+46*t)*0.78;
-    const heart=[w1,w1+25], stem=[w1+25,w1+48], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
+    const heart=[w1,w1+25], stem=[w1+25,w1+50], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
   }
   const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
@@ -925,8 +929,14 @@ function drawLoop(){
     quarterHits(S,{key:"stem",name:"brainstem",role:"the vagal centers",tip:"Where brain and heart talk through the vagus nerve, both ways."},"Inside the window");
     quarterHits(E,{key:"alarm",name:"the alarm",role:"amygdala, at the edge",tip:"Still inside your window of capacity, at its outer reaches. Caught here, the loop closes again."},"At the edge, still inside the window");
     quarterHits(K,{key:"brake",name:"the brake",role:"prefrontal cortex",tip:"While the brake holds, you are inside your window. Awareness strengthens it: noticing, naming, seeing another way."},"The rim of the window");
+    // when the border is selected, everything outside the window of capacity dims, and the window inside it glows
+    const focus=el("g",{class:"rim-focus","pointer-events":"none"},g);
+    el("path",{d:band(B[1],R.braid[1]+6),"fill-rule":"evenodd",class:"rim-shade"},focus);
+    el("circle",{cx:0,cy:0,r:f(B[1]+3),class:"rim-glow","stroke-width":5},focus);
     const bh=el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",class:"loop-hit",tabindex:"0",role:"button","aria-label":"The border of your window of capacity"},g);
-    hookTip(bh,()=>{ const [x,y]=P((B[0]+B[1])/2,0); return {x,y,html:`<span class="ringtag">${LOOP.rim.tag}</span><b>${LOOP.rim.name}</b><i>${LOOP.rim.role}</i><span class="tl">${LOOP.rim.tip}</span><span>Tap to read more.</span>`}; },go);
+    hookTip(bh,()=>{ const [x,y]=P((B[0]+B[1])/2,0); return {x,y,html:`<span class="ringtag">${LOOP.rim.tag}</span><b>${LOOP.rim.name}</b><i>${LOOP.rim.role}</i><span class="tl">${LOOP.rim.tip}</span><span>Tap to read more.</span>`}; },()=>{ svg.classList.add("rimfocus"); go(); });
+    ["mouseenter","focus"].forEach(ev=>bh.addEventListener(ev,()=>svg.classList.add("rimfocus")));
+    ["mouseleave","blur"].forEach(ev=>bh.addEventListener(ev,()=>svg.classList.remove("rimfocus")));
 }
 function drawTrace(animate){
   const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
@@ -1282,7 +1292,7 @@ function moonTip(mk, info, hoverOnly){
   mtip.style.left=left+"px"; mtip.style.top=(above>=0 ? above : py+22*scale+6)+"px";
   mtip.classList.add("on");
 }
-document.addEventListener("click",()=>{ if(openMoon) moonTip(null); });
+document.addEventListener("click",e=>{ if(openMoon) moonTip(null); if(!(e.target.closest&&e.target.closest('[aria-label="The border of your window of capacity"]'))) svg.classList.remove("rimfocus"); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && openMoon) moonTip(null); });
 window.addEventListener("resize",()=>moonTip(null));
 
