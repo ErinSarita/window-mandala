@@ -911,7 +911,7 @@ function draw(){
     const hit=el("path",{d:ring,class:"awarehit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The field of awareness. Read about awareness"});
     hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>The field of awareness</b><span class="tl">Peripheral awareness: the soft, wide knowing that holds every state, the window and the defenses alike.</span><span>Tap to read more.</span>`}),()=>showAware(true)); }
   drawBraid();
-  const labels=el("g",{"pointer-events":"none"});
+  const labels=el("g",{id:"ringLabels","pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
   ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.core*0.5,R.win[1]);   // the window's color runs in under the petals, so no dark ring shows behind them
@@ -1440,18 +1440,49 @@ function regionPoint(key){
   if(key==="self") return {a:n*67, d:0.1};
   const [L,k]=key.split(":"); return {a:DIRS[+k].angle+side*(30+jit), d:{win:.4,edge:.56,out:.86}[L]};
 }
+// a long name wraps onto lines of about eighteen characters, so it is shown in full
+function wrapName(name){
+  const words=name.trim().split(/\s+/), lines=[]; let line="";
+  words.forEach(w=>{ const t=line?line+" "+w:w; if(t.length>18&&line){ lines.push(line); line=w; } else line=t; });
+  if(line) lines.push(line); return lines;
+}
 function drawMap(){
   const g=document.getElementById("mapG"); if(!g) return; g.innerHTML="";
   if(!(MAP.on||view==="map"||MAP.force)) return;
   const all=[...MAP.items, ...(MAP.draft?[MAP.draft]:[])];
-  all.forEach(it=>{
+  // first the markers, then each name, placed where it clears the ring names, the petals' words, the arrows, the other markers,
+  // and the names already placed
+  const pos=all.map(it=>{
     const [x,y]=P(depthR(it.d),it.a), draft=it===MAP.draft||(MAP.edit&&MAP.edit.id===it.id);
     if(draft) el("circle",{cx:f(x),cy:f(y),r:15,class:"map-ring"},g);
     const m=el("path",{d:shapeD(it.type||"part",x,y,8.5),class:"map-mark"+(it===MAP.draft?" draft":"")},g); m.dataset.mid=it.id;
-    // the name sits above or below a marker near the top or bottom, and on its inward side at the left or right
-    if(it.name){ const right=x>=0, vert=Math.abs(y)>Math.abs(x)*1.2;
-      const t=el("text",vert?{x:f(x),y:f(y<0?y-15:y+30),"text-anchor":"middle",class:"lbl t-map"}:{x:f(x+(right?-14:14)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-map"},g);
-      t.textContent=it.name.length>24?it.name.slice(0,23)+"…":it.name; }
+    return [x,y];
+  });
+  const pad=(b,p)=>({x:b.x-p,y:b.y-p,w:b.width+2*p,h:b.height+2*p});
+  const boxes=[...svg.querySelectorAll("#ringLabels text, #core text, .mv")].map(t=>{ try{ return pad(t.getBBox(),2); }catch(e){ return null; } }).filter(Boolean);
+  pos.forEach(([x,y])=>boxes.push({x:x-11,y:y-11,w:22,h:22}));
+  const over=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
+  const LH=20, RIM=R.out[1]+6;
+  all.forEach((it,i)=>{
+    if(!it.name) return;
+    const [x,y]=pos[i], lines=wrapName(it.name), n=lines.length, inward=x>=0?-1:1;
+    const t=el("text",{class:"lbl t-map"},g);
+    lines.forEach((l,k)=>{ const ts=el("tspan",{dy:k?LH:0},t); ts.textContent=l; });
+    // candidate spots: beside the marker (inward side first), above, below, and on the diagonals
+    const C=[[inward*14,6-(n-1)*LH/2,inward<0?"end":"start"],[0,-16-(n-1)*LH,"middle"],[0,30,"middle"],[-inward*14,6-(n-1)*LH/2,inward<0?"start":"end"],
+      [inward*12,-12-(n-1)*LH,inward<0?"end":"start"],[inward*12,26,inward<0?"end":"start"],[-inward*12,-12-(n-1)*LH,inward<0?"start":"end"],[-inward*12,26,inward<0?"start":"end"]];
+    let best=null;
+    for(const [dx,dy,anc] of C){
+      t.setAttribute("x",f(x+dx)); t.setAttribute("y",f(y+dy)); t.setAttribute("text-anchor",anc);
+      t.querySelectorAll("tspan").forEach(ts=>ts.setAttribute("x",f(x+dx)));
+      const b=pad(t.getBBox(),2), out=Math.max(Math.hypot(b.x,b.y),Math.hypot(b.x+b.w,b.y),Math.hypot(b.x,b.y+b.h),Math.hypot(b.x+b.w,b.y+b.h))>RIM?1e6:0;
+      const cost=boxes.reduce((a,o)=>a+over(b,o),0)+out;
+      if(!best||cost<best.cost) best={cost,dx,dy,anc,b};
+      if(cost===0) break;
+    }
+    t.setAttribute("x",f(x+best.dx)); t.setAttribute("y",f(y+best.dy)); t.setAttribute("text-anchor",best.anc);
+    t.querySelectorAll("tspan").forEach(ts=>ts.setAttribute("x",f(x+best.dx)));
+    boxes.push(best.b);
   });
 }
 const mapbtn=document.getElementById("mapbtn"), maphint=document.getElementById("maphint"), svgbox=document.querySelector(".svgbox");
