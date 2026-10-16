@@ -126,7 +126,17 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
-svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub{display:none}
+svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door{display:none}
+.loop-under{fill:none;stroke:var(--surface);stroke-width:9;stroke-opacity:.6;pointer-events:none}
+.loop-line{fill:none;stroke:#C9962E;stroke-width:3.5;stroke-dasharray:14 7;pointer-events:none}
+@media (prefers-reduced-motion: no-preference){ .loop-line.flowing{animation:loopflow 2.4s linear infinite} }
+@keyframes loopflow{to{stroke-dashoffset:-42}}
+.loop-node{fill:#C9962E;stroke:var(--surface);stroke-width:3;pointer-events:none}
+.loop-node.heart{fill:#B5658D}
+.loop-chev{fill:none;stroke:#8A6417;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.t-loop{fill:var(--sunink);font-style:italic;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:3.5px;stroke-linejoin:round}
+.loop-broken{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-dasharray:3 10;stroke-linecap:round;opacity:.55;pointer-events:none}
+.t-loopbroken{fill:var(--ink);font-style:italic;font-weight:600;opacity:.8;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
 .held-line{fill:none;stroke-width:4.5;stroke-linecap:round;pointer-events:none}
 .held-dot{fill:var(--ink);stroke:var(--surface);stroke-width:2.5;pointer-events:none}
 .held-dot.held{fill:#C9962E}
@@ -313,10 +323,12 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <p>Reading this map can itself move you toward an edge. Notice, and come home whenever you need to: the button at the top is always there. If you find yourself outside your window often, or for long, or if what surfaces is trauma, a trauma-informed therapist can help widen your window in a way a map cannot. If you are in crisis, contact your local emergency number, or in the United States call or text 988.</p>
     <h3>References</h3>
     <ol class="refs">
+      <li>Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. <i>Nature Reviews Neuroscience, 10</i>(6), 410–422.</li>
       <li>Balban, M. Y., Neri, E., Kogon, M. M., Weed, L., Nouriani, B., Jo, B., Holl, G., Zeitzer, J. M., Spiegel, D., &amp; Huberman, A. D. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. <i>Cell Reports Medicine, 4</i>(1), 100895.</li>
       <li>Dana, D. (2018). <i>The Polyvagal Theory in Therapy</i>. Norton.</li>
       <li>Fredrickson, B. L., Cohn, M. A., Coffey, K. A., Pek, J., &amp; Finkel, S. M. (2008). Open hearts build lives: Positive emotions, induced through loving-kindness meditation, build consequential personal resources. <i>Journal of Personality and Social Psychology, 95</i>(5), 1045–1062.</li>
       <li>Grossman, P. (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. <i>Biological Psychology, 180</i>, 108589.</li>
+      <li>Goessl, V. C., Curtiss, J. E., &amp; Hofmann, S. G. (2017). The effect of heart rate variability biofeedback training on stress and anxiety: A meta-analysis. <i>Psychological Medicine, 47</i>(15), 2578–2586.</li>
       <li>Hodgdon, H. B., Anderson, F. G., Southwell, E., Hrubec, W., &amp; Schwartz, R. (2022). Internal Family Systems (IFS) therapy for posttraumatic stress disorder (PTSD) among survivors of multiple childhood trauma: A pilot effectiveness study. <i>Journal of Aggression, Maltreatment &amp; Trauma, 31</i>(1), 22–43.</li>
       <li>Hofmann, S. G., Grossman, P., &amp; Hinton, D. E. (2011). Loving-kindness and compassion meditation: Potential for psychological interventions. <i>Clinical Psychology Review, 31</i>(7), 1126–1132.</li>
       <li>Jung, C. G. (1959). <i>Aion: Researches into the Phenomenology of the Self</i>. Princeton University Press.</li>
@@ -334,6 +346,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
       <li>Tang, Y.-Y., Hölzel, B. K., &amp; Posner, M. I. (2015). The neuroscience of mindfulness meditation. <i>Nature Reviews Neuroscience, 16</i>(4), 213–225.</li>
       <li>Taylor, S. E., Klein, L. C., Lewis, B. P., Gruenewald, T. L., Gurung, R. A. R., &amp; Updegraff, J. A. (2000). Biobehavioral responses to stress in females: Tend-and-befriend, not fight-or-flight. <i>Psychological Review, 107</i>(3), 411–429.</li>
+      <li>Thayer, J. F., &amp; Lane, R. D. (2000). A model of neurovisceral integration in emotion regulation and dysregulation. <i>Journal of Affective Disorders, 61</i>(3), 201–216.</li>
       <li>Treleaven, D. A. (2018). <i>Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing</i>. Norton.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
@@ -502,6 +515,13 @@ const WAYS = {
 };
 WAYS.edge.traits=DIRS.map(d=>`<b>${d.edge.name}</b>, toward ${d.name.toLowerCase()}: ${d.edge.words}`);
 const WAY_KEYS=["ff","fr","co","fa","edge","win"];
+// The loop that holds the window: Thayer and Lane's neurovisceral integration model, simplified. The prefrontal cortex
+// brakes the amygdala; through the vagus nerve the same brake steadies the heart; the heart's rhythm feeds back up.
+// Heart rate variability is the loop's readout. Outside the window the brake has given way and the loop is broken.
+const LOOP={
+  nodes:[["prefrontal cortex","the brake",45],["amygdala","the alarm",165],["heart","the rhythm",290]],
+  broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]]
+};
 // One emotion, held or driving: the same feeling in three places along its direction. Inside the window it is felt
 // and held: sympathetic or dorsal energy carried by the safe, connected state (Dana's blended states), a part felt
 // but not blended. At the edge it is rising. Outside, it has taken over and drives the whole system.
@@ -751,6 +771,27 @@ function smoothPath(pts, sharp){
 function drawTrace(animate){
   const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(TRACE.loop){
+    // inside the window: one closed loop through the prefrontal cortex, the amygdala, and the heart, flowing
+    const wm=(R.win[0]+R.win[1])/2, rl=wm+(R.win[1]-wm)*0.62, rt=R.win[1]-6, ro=R.out[0]+10, rot=R.out[0]+28;
+    const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    el("path",{d:ring(rl),class:"loop-under"},g);
+    el("path",{d:ring(rl),class:"loop-line"+(reduce?"":" flowing")},g);
+    LOOP.nodes.forEach(([name,role,a],i)=>{
+      const [x,y]=P(rl,a);
+      el("circle",{cx:f(x),cy:f(y),r:i===2?13:10,class:"loop-node"+(i===2?" heart":"")},g);
+      if(i===2) el("path",{d:"M0 5.5 C-6 1.5 -6 -3.5 -3 -4.5 C-1.5 -5 -0.5 -4 0 -3 C0.5 -4 1.5 -5 3 -4.5 C6 -3.5 6 1.5 0 5.5 Z",transform:`translate(${f(x)} ${f(y)}) scale(1.15)`,fill:"#fff"},g);
+      arcText(rt+3,a-34,a+34,`${name} · ${role}`,"lbl t-loop",17,0.6,g);
+      // small chevrons between the nodes show the way the loop turns
+      const mid=a+60, [cx,cy]=P(rl,mid), t=rad(mid)+Math.PI/2, ux=Math.cos(t), uy=Math.sin(t), nx=-uy, ny=ux;
+      el("path",{d:`M${f(cx-ux*6+nx*6)} ${f(cy-uy*6+ny*6)} L${f(cx+ux*4)} ${f(cy+uy*4)} L${f(cx-ux*6-nx*6)} ${f(cy-uy*6-ny*6)}`,class:"loop-chev"},g);
+    });
+    // outside the window: the same loop, broken, where the brake has given way
+    const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
+    [[12,36],[56,80],[102,126],[146,170],[192,216],[236,260],[282,306],[326,350]].forEach(([a0,a1])=>el("path",{d:seg(ro,a0,a1),class:"loop-broken"},g));
+    LOOP.broken.forEach(([txt,a])=>arcText(rot,a-22,a+22,txt,"lbl t-loopbroken",16,0.5,g));
+    return;
+  }
   if(TRACE.held!=null){
     const k=TRACE.held, H=HELD[k], a=DIRS[k].angle+30, deps=[.38,.56,.84], pts=deps.map(d=>P(depthR(d),a));
     const [x0,y0]=P(depthR(.3),a), [x1,y1]=P(depthR(.92),a), gid="heldgrad";
@@ -792,7 +833,7 @@ function drawTrace(animate){
     line.setAttribute("marker-end",""); setTimeout(()=>{ if(line.isConnected) line.setAttribute("marker-end","url(#trace-arrow)"); },2800); }
 }
 function showTrace(t, animate){
-  TRACE=t; svg.classList.toggle("heldview",!!(t&&t.held!=null)); drawTrace(animate!==false);
+  TRACE=t; svg.classList.toggle("heldview",!!(t&&(t.held!=null||t.loop))); svg.classList.toggle("loopview",!!(t&&t.loop)); drawTrace(animate!==false);
   if(t && isNarrow()) document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
 }
 // light one layer of the wheel: the witness at the center, the Flower, the petals, the window, the edge, or the outer ring
@@ -1132,7 +1173,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview","loopview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1189,8 +1230,16 @@ function showIntro(){
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with the Self at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
     <p><b>Freeze</b> sits on the right, halfway between, because it is both at once: the sympathetic charge still running while the dorsal brake holds the body still. <b>Fawn</b> sits opposite it, on the left: the ventral system's own tools, a soft face and a warm voice, used for defense, with sympathetic fear or dorsal submission underneath. Inside the window, each direction is a blend held by safety: energized is ventral with sympathetic, settled is ventral with dorsal, still holds both, and connected is ventral at its most social.</p>
     <p class="note">The window, top, and bottom follow polyvagal theory. Reading freeze and fawn as blends is this mandala's synthesis; fawn itself comes from Pete Walker's work, not from polyvagal theory.</p>
+    <h2 id="loop">The loop that holds the window</h2>
+    <p>Inside your window, a loop is working. The <b>prefrontal cortex</b>, behind the forehead, acts as a brake on the <b>amygdala</b>, the brain's alarm. Through the vagus nerve, the same brake slows and steadies the <b>heart</b>, and the heart sends its rhythm back up to the brain. When the loop holds, the heart's rhythm stays flexible, quickening a little on each in-breath and slowing on each out-breath. That flexibility is heart rate variability, and the more flexible it is, the more feeling you can carry and still choose what to do.</p>
+    <p>At the edge of your capacity the loop strains, and when there is more energy than it can hold, the brake gives way. The prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is what leaving the window is, in the body.</p>
+    <p>The heart is where the loop can be felt and reached. The brain sets the rhythm, but slow breathing near six breaths a minute strengthens the loop from the body up, which is why coherent breathing is one of the most direct ways back, and, practiced over time, one of the ways the window widens.</p>
+    <p><button type="button" class="btn" id="loopbtn">Show the loop on the wheel</button></p>
+    <p class="note">This is Julian Thayer and Richard Lane's neurovisceral integration model, simplified: the real loop is a wider network. Lower heart rate variability is linked with poorer emotion regulation, and heart rate variability biofeedback has modest evidence for easing stress and anxiety (Goessl and colleagues, 2017). Under strong stress, the prefrontal cortex's control drops quickly (Arnsten, 2009).</p>
     <p><button type="button" class="btn" data-where>Where am I right now?</button></p>
   </div>`;
+  const lb=document.getElementById("loopbtn");
+  lb.addEventListener("click",()=>{ const on=TRACE&&TRACE.loop; showTrace(on?null:{loop:true}); lb.textContent=on?"Show the loop on the wheel":"Hide the loop"; });
   wire();
 }
 
