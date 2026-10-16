@@ -80,6 +80,11 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .t-cq{fill:var(--sunink);font-style:italic;font-weight:600}
 .self-ring{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;pointer-events:none;transition:stroke-width .25s ease,filter .25s ease}
 svg.selffocus .self-ring{stroke-width:3;stroke-opacity:1;filter:drop-shadow(0 0 6px var(--sun3))}
+.self-focus{opacity:0;transition:opacity .3s ease}
+svg.selffocus .self-focus{opacity:1}
+.self-shade{fill:#1E1726;fill-opacity:.45}
+.self-glow{fill:none;stroke:#FFE38A;stroke-width:4;stroke-opacity:.9;filter:drop-shadow(0 0 8px #FFD866)}
+svg.selffocus #core{filter:brightness(1.06) drop-shadow(0 0 10px rgba(255,220,120,.6))}
 .self-hit{fill:transparent;cursor:pointer;outline:none}
 .self-bg{fill:#FFF6DA;fill-opacity:.95;pointer-events:none}
 .is-dark .self-bg{fill-opacity:.6}
@@ -1282,6 +1287,11 @@ function draw(){
   el("g",{id:"traceG"});
   el("g",{id:"mapG"});
   el("g",{id:"layerHL"});
+  // hovering the Self's ring lights the whole center, petals and Seed of Life, and dims everything around it
+  { const sf=el("g",{class:"self-focus","pointer-events":"none"}), r0=CR.L1+3;
+    const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    el("path",{d:ringP(R.braid[1]+6)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"self-shade"},sf);
+    el("circle",{cx:0,cy:0,r:f(r0),class:"self-glow"},sf); }
   el("g",{id:"selOutline"});
   applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap();
 }
