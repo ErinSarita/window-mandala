@@ -784,7 +784,7 @@ function draw(){
   const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=Math.min(R.self+(R.win[1]-R.win[0])*0.32, wmid-26), sr=R.core*0.42, GL=R.self+60;
   CR={sr,L1,dot:Math.max(3.2,sr*0.16)};
   // the center is the brightest part of the Self: white at the heart, pale gold to the rim; the petals carry the deeper gold
-  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.6,"var(--sun1)"],[1,"var(--sun1)"]]);
+  grad("sun",{...U,r:R.core},[[0,"#fff"],[0.45,"var(--sun1)"],[1,"var(--sun2)"]]);
   grad("heart",{...U,r:sr},[[0,"#fff",1],[0.75,"var(--sun1)",1],[1,"var(--sun2)",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
@@ -876,6 +876,8 @@ function draw(){
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
+  // a fine gold outline where the Flower meets the petals
+  el("circle",{cx:0,cy:0,r:f(R.core-0.6),fill:"none",stroke:"var(--goldline)","stroke-width":1.3,"stroke-opacity":.85,"pointer-events":"none"},core);
   const sg=el("g",{fill:"none",stroke:"var(--goldline)","pointer-events":"none"},core);
   el("circle",{cx:0,cy:0,r:f(sr),fill:"url(#heart)",stroke:"none"},sg);
   for(let k=0;k<6;k++){ const t=k*Math.PI/3-Math.PI/2, x=f(sr*Math.cos(t)), y=f(sr*Math.sin(t));
