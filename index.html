@@ -160,6 +160,13 @@ svg.rimfocus .rim-focus{opacity:1}
 @media (prefers-reduced-motion: no-preference){ #lensG{animation:lensin .35s ease} }
 @keyframes lensin{from{opacity:0}to{opacity:1}}
 .lensnav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.fig{margin:2px 0 6px}
+.fig svg{display:block;width:100%;max-width:400px;height:auto;margin:0 auto;overflow:visible}
+.fig text{fill:var(--ink);font-family:var(--body)}
+.fig .fb{font-size:13.5px;font-weight:700}
+.fig .fs{font-size:11.5px;fill:var(--muted)}
+.fig .fi{font-family:var(--display);font-style:italic;font-size:14px}
+.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);text-align:center;margin:6px auto 0;max-width:46ch}
 .brake-ring{fill-opacity:.9;pointer-events:none}
 .window-rim{fill-opacity:1;pointer-events:none}
 .t-rim{fill:#3A2604;font-style:normal;font-weight:700;letter-spacing:.1em;stroke:none}
@@ -1569,13 +1576,12 @@ function showAware(user){
 // says what the model brings and how the wheel reimagines it
 const LENSES=[
   {key:"window", tab:"Polyvagal and the window", icon:`<circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="2.6"/>`,
-   spans:()=>[[CR.L1+4,R.win[1]],R.rim,R.out,R.braid], dim:.5,
+   spans:()=>[[CR.L1+4,R.win[1]],R.rim,R.out], dim:.5,
    title:"Polyvagal theory and the window of capacity", meta:"Stephen Porges and Deb Dana; Dan Siegel",
    intro:"Two maps of the same ground: how much the nervous system can hold, and what it does when there is too much. Together they give the wheel its shape: the window at the center, and the survival states around it.",
    lit:[["The window of capacity","The ring of Energized, Settled, Still, and Connected: the states in which you can feel a great deal and still think, connect, and choose."],
         ["Its border","The deep gold band at the window's edge. Inside it, you can come back on your own. Beyond it, survival takes over."],
-        ["Outside the window","The four survival states: fight or flight, freeze, collapse, and fawn."],
-        ["The braid","Polyvagal theory's three nervous systems, woven round the whole wheel."]],
+        ["Outside the window","The four survival states: fight or flight, freeze, collapse, and fawn."]],
    brings:[`<b>The window of tolerance</b> comes from psychiatrist Dan Siegel (1999): a zone of arousal in which we can take in what is happening and respond. Above it lies hyperarousal, too much charge; below it, hypoarousal, too little. Pat Ogden and colleagues (2006) carried it into body-based trauma therapy. Many now call it the window of capacity, because it can widen.`,
      `<b>Polyvagal theory</b> comes from neuroscientist Stephen Porges (2007, 2011): three states in an evolutionary order. The ventral vagal state is safe and social; the sympathetic mobilizes for fight or flight; the dorsal vagal immobilizes and shuts down. Therapist Deb Dana (2018) turned it into a ladder people can climb, and named its blends: play, mobilization held by safety, and stillness, rest held by safety.`],
    reimagined:[`Siegel's window is a band, with too much above it and too little below. Here the band bends into a circle, so the window sits at the center and every way out leads somewhere: up into fight or flight, down into collapse, and to the sides into freeze and fawn.`,
@@ -1630,7 +1636,48 @@ const LENSES=[
    links:`<button type="button" class="linkbtn" data-pr="rest">Practice: Resting as awareness</button><button type="button" class="linkbtn" data-aware>Read about awareness</button>`,
    src:"Schwartz (2021); Yaden et al. (2017); Tang, Hölzel &amp; Posner (2015)"}
 ];
-const lensbar=document.getElementById("lenses");
+// each source model drawn small, the way it is usually pictured, so the card can show the original before the wheel's version
+const LENSFIGS={
+  window:[
+    {label:"The window of tolerance, drawn as a band", cap:"The window of tolerance as it is usually drawn: a band, with too much charge above it and too little below. The line is arousal moving through a day. After Siegel (1999) and Ogden and colleagues (2006).",
+     svg:`<svg viewBox="0 0 360 186"><rect x="0" y="6" width="360" height="54" rx="8" fill="var(--ff)" fill-opacity=".38"/><rect x="0" y="62" width="360" height="62" rx="8" fill="var(--win)" fill-opacity=".55"/><rect x="0" y="126" width="360" height="54" rx="8" fill="var(--co)" fill-opacity=".38"/>
+      <text x="14" y="30" class="fb">Hyperarousal</text><text x="14" y="47" class="fs">anxious, reactive, flooded</text>
+      <text x="14" y="89" class="fb">Window of tolerance</text><text x="14" y="106" class="fs">can feel, think, and respond</text>
+      <text x="14" y="150" class="fb">Hypoarousal</text><text x="14" y="167" class="fs">numb, shut down, far away</text>
+      <path d="M176 93 C188 76 200 76 212 93 S236 110 248 93 S262 22 276 30 S292 93 304 93 S320 170 334 160 S346 100 352 93" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-opacity=".7"/></svg>`},
+    {label:"The polyvagal ladder: three states stacked", cap:"The polyvagal ladder: three states stacked in evolutionary order. Under threat we move down the ladder; with safety, back up. After Porges (2011) and Dana (2018).",
+     svg:`<svg viewBox="0 0 360 186"><g stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><line x1="20" y1="6" x2="20" y2="180"/><line x1="46" y1="6" x2="46" y2="180"/>${[20,40,60,80,100,120,140,160].map(y=>`<line x1="20" y1="${y}" x2="46" y2="${y}"/>`).join("")}</g>
+      <rect x="62" y="6" width="236" height="54" rx="8" fill="var(--win)" fill-opacity=".55"/><rect x="62" y="66" width="236" height="54" rx="8" fill="var(--ff)" fill-opacity=".38"/><rect x="62" y="126" width="236" height="54" rx="8" fill="var(--co)" fill-opacity=".38"/>
+      <text x="76" y="30" class="fb">Ventral vagal</text><text x="76" y="47" class="fs">safe, social, connected</text>
+      <text x="76" y="90" class="fb">Sympathetic</text><text x="76" y="107" class="fs">mobilized: fight or flight</text>
+      <text x="76" y="150" class="fb">Dorsal vagal</text><text x="76" y="167" class="fs">immobilized: shutdown, collapse</text>
+      <g stroke="var(--ink)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="318" y1="14" x2="318" y2="172"/><path d="M312 22 L318 13 L324 22"/><path d="M312 164 L318 173 L324 164"/></g>
+      <text transform="translate(342 93) rotate(90)" text-anchor="middle" class="fs">down under threat, up with safety</text></svg>`}
+  ],
+  ifs:[
+    {label:"The Self among its parts", cap:"One common way IFS is drawn: the Self at the center, and protectors around it, managers acting ahead of time and firefighters reacting fast, guarding the exiles, who carry the old pain. After Schwartz (2021).",
+     svg:`<svg viewBox="0 0 360 216"><g stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 4">${[[70,38],[290,38],[70,154],[290,154],[180,194]].map(([x,y])=>`<line x1="180" y1="98" x2="${x}" y2="${y}"/>`).join("")}</g>
+      <circle cx="180" cy="98" r="38" fill="var(--sun3)" fill-opacity=".9" stroke="var(--goldline)" stroke-width="1.5"/><text x="180" y="103" text-anchor="middle" class="fb" style="fill:var(--sunink)">Self</text>
+      ${[[70,38,"Manager"],[290,38,"Manager"],[70,154,"Firefighter"],[290,154,"Firefighter"]].map(([x,y,t])=>`<ellipse cx="${x}" cy="${y}" rx="50" ry="21" fill="var(--surface)" stroke="var(--ink)" stroke-opacity=".55" stroke-width="1.3"/><text x="${x}" y="${y+5}" text-anchor="middle" class="fb">${t}</text>`).join("")}
+      <ellipse cx="180" cy="194" rx="40" ry="17" fill="var(--line)" stroke="var(--ink)" stroke-opacity=".35" stroke-width="1.2"/><text x="180" y="199" text-anchor="middle" class="fb">Exiles</text>
+      <text x="70" y="78" text-anchor="middle" class="fs">protectors</text><text x="290" y="78" text-anchor="middle" class="fs">protectors</text></svg>`}
+  ],
+  loop:[
+    {label:"The loop of neurovisceral integration, from brain to heart", cap:"Thayer and Lane's loop, much simplified: the prefrontal cortex calms the amygdala and, through the brainstem and the vagus nerve, steadies the heart. Signals from the heart flow back up. After Thayer and Lane (2000, 2009).",
+     svg:`<svg viewBox="0 0 378 262"><defs><marker id="fa-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="var(--ink)"/></marker></defs>
+      ${[[8,"Prefrontal cortex","the brake"],[78,"Amygdala","the alarm"],[148,"Brainstem","vagal centers"],[214,"Heart","heart rate variability"]].map(([y,a,b])=>`<rect x="100" y="${y}" width="160" height="42" rx="10" fill="var(--sun3)" fill-opacity=".35" stroke="var(--goldline)" stroke-width="1.3"/><text x="180" y="${y+19}" text-anchor="middle" class="fb">${a}</text><text x="180" y="${y+34}" text-anchor="middle" class="fs">${b}</text>`).join("")}
+      <g stroke="var(--ink)" stroke-width="1.8" fill="none"><line x1="180" y1="50" x2="180" y2="75"/><line x1="170" y1="75" x2="190" y2="75" stroke-width="2.4"/><line x1="180" y1="120" x2="180" y2="144" marker-end="url(#fa-loop)"/><line x1="180" y1="190" x2="180" y2="210" marker-end="url(#fa-loop)"/><path d="M100 235 H66 V29 H96" marker-end="url(#fa-loop)"/></g>
+      <text x="268" y="67" class="fs">calms it</text><text x="268" y="137" class="fs">signals danger</text><text x="268" y="204" class="fs">the vagus:</text><text x="268" y="218" class="fs">brake on the heart</text>
+      <text transform="translate(52 132) rotate(-90)" text-anchor="middle" class="fs">signals from the body, back up</text></svg>`}
+  ],
+  witness:[
+    {label:"Awareness as an open space, with the witness at its center", cap:"There is no single diagram for this one. Many contemplative traditions picture awareness as an open space in which thoughts, feelings, and sensations appear and pass, with the witness as the knowing that stays.",
+     svg:`<svg viewBox="0 0 360 200"><circle cx="180" cy="100" r="92" fill="var(--sun3)" fill-opacity=".16" stroke="var(--goldline)" stroke-width="1.4" stroke-dasharray="4 5"/>
+      <circle cx="180" cy="100" r="15" fill="var(--sun3)" fill-opacity=".55"/><circle cx="180" cy="100" r="5" fill="var(--goldline)"/><text x="180" y="132" text-anchor="middle" class="fb">the knowing</text>
+      ${[[124,60,"a thought"],[236,62,"a feeling"],[116,112,"a sound"],[240,118,"a sensation"],[180,170,"a memory"]].map(([x,y,t])=>`<text x="${x}" y="${y}" text-anchor="middle" class="fs fi">${t}</text>`).join("")}</svg>`}
+  ]
+};
+const figHTML=key=>(LENSFIGS[key]||[]).map(F=>`<figure class="fig">${F.svg.replace("<svg ",`<svg role="img" aria-label="${F.label}" `)}<figcaption>${F.cap}</figcaption></figure>`).join("");const lensbar=document.getElementById("lenses");
 LENSES.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.className="lens"; b.dataset.lens=L.key; b.setAttribute("aria-pressed","false");
   b.innerHTML=`<svg viewBox="0 0 16 16" aria-hidden="true">${L.icon}</svg>${L.tab}`;
   b.addEventListener("click",()=>{ if(LENS===L.key) showIntro(); else showLens(L.key,true); }); lensbar.appendChild(b); });
@@ -1657,7 +1704,7 @@ function showLens(key, user){
   const L=LENSES.find(l=>l.key===key), i=LENSES.indexOf(L), next=LENSES[(i+1)%LENSES.length];
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">A model inside the mandala</div><h2>${L.title}</h2><div class="meta">${L.meta}</div><p>${L.intro}</p></div>
     <div class="ring"><h3>Lit on the wheel</h3><ul>${L.lit.map(([n,t])=>`<li><b>${n}.</b> ${t}</li>`).join("")}</ul></div>
-    <div class="ring"><h3>What it brings</h3>${L.brings.map(t=>`<p>${t}</p>`).join("")}</div>
+    <div class="ring"><h3>The original model</h3>${figHTML(key)}${L.brings.map(t=>`<p>${t}</p>`).join("")}</div>
     <div class="ring"><h3>How the mandala reimagines it</h3>${L.reimagined.map(t=>`<p>${t}</p>`).join("")}
       <p class="note">${L.note}</p><div class="lensnav">${L.links}</div></div>
     <div class="lensnav"><button type="button" class="btn" data-lens="${next.key}">Next: ${next.tab}</button><button type="button" class="btn" data-lensoff>See the whole wheel</button></div>
