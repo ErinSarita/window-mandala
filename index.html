@@ -670,10 +670,10 @@ const LOOP={
   broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]],
   brokenArcs:[[12,36],[56,80],[102,126],[146,170],[192,216],[236,260],[282,306],[326,350]],
   // what each phrase means, in the defense it sits in
-  brokenWhy:["The prefrontal brake can no longer hold the alarm. Thinking narrows to the threat, and the body takes over to fight or run.",
-    "The amygdala's alarm sounds unchecked. Accelerator and brake are both on at once, and the body locks still.",
-    "The heart's flexible, breath-linked rhythm is lost as the oldest brake drops the whole body low. HRV falls away.",
-    "Behind the social face the heart is fast and rigid. HRV is low, even while you smile, agree, and please."],
+  brokenWhy:["The brake can no longer hold the alarm, and the body takes over.",
+    "The alarm runs unchecked, and the body locks still.",
+    "The heart's flexible rhythm is lost, and the body drops low.",
+    "Behind a smiling face, the heart is fast and rigid."],
   tips:{
     broken:"Beyond the brake, the loop is broken and survival takes over. In fight or flight the sympathetic system drives the heart fast and rigid; in collapse the dorsal vagus drops it low; freeze holds both at once; fawn keeps a social face over fear. Heart rate variability falls, and in polyvagal terms the ventral vagal brake has withdrawn."
   }
@@ -981,7 +981,7 @@ function drawLoop(){
     LOOP.broken.forEach(([txt,a])=>arcText(rot,a-22,a+22,txt,"lbl t-loopbroken",15,0.5,g));
     // each phrase explains itself on hover, and opens the loop's reading on a tap
     LOOP.broken.forEach(([txt,a],k)=>{ const h=el("path",{d:sector(ro-8,rot+12,a-24,a+24,1,0),class:"loop-hit",tabindex:"0",role:"button","aria-label":`${txt}: the loop broken, beyond the brake`},g);
-      hookTip(h,()=>{ const [x,y]=P(rot,a); return {x,y,html:`<span class="ringtag">Beyond the brake · ${DIRS[k].name}</span><b>${txt.charAt(0).toUpperCase()+txt.slice(1)}</b><i>the loop broken</i><span class="tl">${LOOP.brokenWhy[k]}</span><span class="tl">${LOOP.tips.broken}</span><span>Tap to read more.</span>`,color:DIRS[k].color}; },go); });
+      hookTip(h,()=>{ const [x,y]=P(rot,a); return {x,y,html:`<span class="ringtag">Beyond the brake · ${DIRS[k].name}</span><b>${txt.charAt(0).toUpperCase()+txt.slice(1)}</b><i>the loop broken</i><span class="tl">${LOOP.brokenWhy[k]}</span><span>Tap to read more.</span>`,color:DIRS[k].color}; },go); });
     // hover: each quarter of each ring
     quarterHits(H,{key:"heart",name:"heart",role:"the rhythm: heart rate variability",tip:"At the core of the loop: heart rate variability (HRV), the small, healthy changes in time between beats. Flexible means safe; slow breathing reaches it directly."},"Inside the window");
     quarterHits(S,{key:"stem",name:"brainstem",role:"the vagal centers",tip:"Where brain and heart talk through the vagus nerve, both ways."},"Inside the window");
