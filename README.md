@@ -24,14 +24,13 @@ A synthesis of earlier models, described in our own words: the window of toleran
 - **Outside the window:** fight or flight (top), freeze (right), collapse (bottom), fawn (left), as one continuous ring: the colors flow into one another round the circle with no border between them.
 - **The movements:** at each junction between two defenses, two slender tapered arrows, one in each direction (eight in all). The braid is a three-strand plait of the three nervous systems: gold for ventral (safe and connected), red for sympathetic (fight or flight), and blue for dorsal (collapse).
 - **Look and feel:** a soft pastel palette on warm ivory (a deep plum night in dark mode, where the window stays yellow), Cormorant Garamond for the wheel and headings, and a halo of light round the ring. Hovering lights only the section under the pointer.
-- **The emotions lens:** a States / Emotions switch under the wheel. In Emotions, each ring's second line shows the emotions that tend to arise there (joy, excitement, drive inside the window at the top; irritation, worry, impatience at its edge; anger, rage, fear, panic beyond). Up is more energy and down is less (Russell's circumplex); pleasant feelings gather toward the Self and the most distressing at the outer ring. The rings show tendencies, not rules: any emotion can be held in the window.
 - **Your window:** a slider that widens the Self and the window and thins the rings of threat. The "How wide is mine?" reflection sets it.
 
-Tabs: How to read, Where am I? (a three-question finder and an eight-question window reflection), The Self, Awareness, Emotions (feelings, emotions, and states, including why calm is a quality of Self; the wheel as a map of feeling; the emotions in each direction; how any emotion can be held in the window; naming it), The four directions, Moving between, Patterns, Triggers and regulation, and Practices (breathing with the Self and rings of kindness both animate the wheel).
+Tabs: How to read, Where am I? (a three-question finder and an eight-question window reflection), The Self, Awareness, The four directions, Moving between, Patterns, Triggers and regulation, and Practices (breathing with the Self and rings of kindness both animate the wheel).
 
 ## The file
 
-The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `FEEL` and `EMO` for the emotions, `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers is saved; only the light or dark choice is kept, under the `wm-` key.
+The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `FEEL` for the emotions that tend to arise in each part of each direction (shown in its panel), `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers is saved; only the light or dark choice is kept, under the `wm-` key.
 
 ## Guided practices
 
