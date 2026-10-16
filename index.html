@@ -66,13 +66,13 @@ svg#m{width:100%;height:100%;display:block;overflow:visible}
 .cell.qp{stroke:var(--goldline);stroke-width:1.1;stroke-opacity:.7;transition:filter .25s ease} .cell.qp:hover{filter:brightness(1.05) drop-shadow(0 0 4px var(--sun3))}
 .cell.qp:focus-visible{stroke:var(--ink);stroke-width:2.5;stroke-opacity:1}
 .qb{stroke:var(--goldline);stroke-width:.9;stroke-opacity:.45;pointer-events:none}
-
-.lead-line{fill:none;stroke:#2E2630;stroke-width:2.2;stroke-opacity:.7;stroke-linecap:round}
-.lead-thin{fill:none;stroke:#2E2630;stroke-width:1.4;stroke-opacity:.5;stroke-linecap:round}
-.lead-vein{fill:none;stroke:#3B2A14;stroke-width:1.5;stroke-opacity:.6;stroke-linecap:round;pointer-events:none}
+svg.glass .shade{filter:saturate(1.35)}
+.lead-line{fill:none;stroke:#2E2630;stroke-width:3.4;stroke-opacity:.82;stroke-linecap:round}
+.lead-thin{fill:none;stroke:#2E2630;stroke-width:2.2;stroke-opacity:.6;stroke-linecap:round}
+.lead-vein{fill:none;stroke:#3B2A14;stroke-width:2.2;stroke-opacity:.75;stroke-linecap:round;pointer-events:none}
 .glass-glint{fill:none;stroke:#fff;stroke-width:3;stroke-opacity:.55;stroke-linecap:round;pointer-events:none}
 .glass-light{pointer-events:none;mix-blend-mode:screen}
-svg.glass .cell.qp{stroke:#3B2A14;stroke-width:1.8;stroke-opacity:.75}
+svg.glass .cell.qp{stroke:#3B2A14;stroke-width:2.6;stroke-opacity:.85}
 svg.glass .seed-lead circle,svg.glass .seed-lead path{stroke-opacity:.9}
 .vein{fill:none;stroke:var(--goldline);stroke-width:.9;stroke-opacity:.5;stroke-linecap:round;pointer-events:none}
 /* hovering lights only the section under the pointer, and softens the rest */
@@ -798,7 +798,7 @@ function radii(t){
     // the loop view: the Self and the window keep their shape, a little smaller, and the loop's rings sit around them:
     // heart and brainstem, then the alarm at the edge, the brake, and the border of the window of capacity
     const self=(112+60*t)*0.85, core=self*0.44, w0=self+6, w1=w0+(80+46*t)*0.78;
-    const heart=[w1,w1+25], stem=[w1+25,w1+50], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
+    const heart=[w1,w1+25], stem=[w1+25,w1+48], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
   }
   const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
@@ -901,11 +901,11 @@ function drawLoop(){
     const quarterLines=(r0,r1,c)=>DIRS.forEach((d,k)=>{ const a=d.angle+45, [x0,y0]=P(r0,a), [x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),stroke:c,"stroke-width":1.2,"stroke-opacity":.55,"pointer-events":"none"},g); });
     const H=R.heart, S=R.stem, E=R.edge, K=R.brake, B=R.rim;
     // heart and brainstem: gold, brightest nearest the center
-    el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#FFF6DA",class:"loop-ring",filter:GLASS?"url(#glasstex)":"none"},g);
-    el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F8E4AE",class:"loop-ring",filter:GLASS?"url(#glasstex)":"none"},g);
+    el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#FFF6DA",class:"loop-ring"},g);
+    el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F8E4AE",class:"loop-ring"},g);
     [[H[0],"#C9962E"],[H[1],"#C9962E"],[S[1],"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
     quarterLines(H[0],S[1],GLASS?"#2E2630":"#B98428");
-    if(GLASS) [H[0],H[1],S[1],R.edge[1],B[0],B[1]].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"lead-line"},g));
+    if(GLASS) [H[0],H[1],S[1],R.edge[0],R.edge[1],K[0],B[0],B[1]].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"lead-line"},g));
     const fs=w=>Math.min(14,w*0.62);
     [45,225].forEach(a=>arcText((H[0]+H[1])/2,a-30,a+30,"heart · heart rate variability","lbl t-ring",fs(H[1]-H[0]),0.3,g));
     [135,315].forEach(a=>arcText((S[0]+S[1])/2,a-30,a+30,"brainstem · the vagal centers","lbl t-ring",fs(S[1]-S[0]),0.3,g));
@@ -918,8 +918,8 @@ function drawLoop(){
       el("path",{d:band(E[0],E[1]),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
     [45,225].forEach(a=>arcText((E[0]+E[1])/2,a-24,a+24,"the alarm · amygdala","lbl t-ring t-alarm",14,0.3,g));
     // the brake, and the border of the window of capacity around it
-    el("path",{d:band(K[0],K[1]),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring",filter:GLASS?"url(#glasstex)":"none"},g);
-    el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim",filter:GLASS?"url(#glasstex)":"none"},g);
+    el("path",{d:band(K[0],K[1]),"fill-rule":"evenodd",fill:"#EAC566",class:"brake-ring"},g);
+    el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim"},g);
     [[K[0],"#B98428",1],[B[0],"#A9781F",1],[B[1],"#A9781F",1]].forEach(([r,c,w])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":w,"pointer-events":"none"},g));
     quarterLines(K[0],K[1],GLASS?"#2E2630":"#8A6417");
     [135,315].forEach(a=>arcText((K[0]+K[1])/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(12.5,(K[1]-K[0])*0.72),0.4,g));
@@ -1064,7 +1064,7 @@ function drawLead(){
   el("circle",{cx:0,cy:0,r:f(R.out[1]),fill:"url(#glasslight)",class:"glass-light"},g);
 }
 function ringShade(layer,r0,r1){
-  const g=el("g",{class:"shade","pointer-events":"none"}); if(GLASS) g.setAttribute("filter","url(#glasstex)");
+  const g=el("g",{class:"shade","pointer-events":"none"});
   for(let a=0;a<360;a+=1.5) el("path",{d:sector(r0,r1,a-0.25,a+1.85,1,0),fill:colorAt(a+0.8,layer)},g);
   if(layer==="out") el("circle",{cx:0,cy:0,r:f((r0+r1)/2),fill:"none",stroke:"url(#sheen)","stroke-width":f(r1-r0)},g);
   return g;
@@ -1154,18 +1154,6 @@ function draw(){
   grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
   const mk=el("marker",{id:"trace-arrow",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse",markerUnits:"strokeWidth"},wdefs);
   el("path",{d:"M1 1 L9 5 L1 9 Z",class:"trace-head"},mk);
-  if(GLASS){
-    // hand-made glass: a fine, uneven grain that brightens and darkens the color a little, then a soft bloom of light
-    const gf=el("filter",{id:"glasstex",x:"-3%",y:"-3%",width:"106%",height:"106%","color-interpolation-filters":"sRGB"},wdefs);
-    el("feTurbulence",{type:"fractalNoise",baseFrequency:"0.022 0.05",numOctaves:"3",seed:"11",result:"noise"},gf);
-    el("feColorMatrix",{in:"noise",type:"saturate",values:"0",result:"grain"},gf);
-    el("feColorMatrix",{in:"SourceGraphic",type:"saturate",values:"1.3",result:"rich"},gf);
-    el("feComposite",{in:"rich",in2:"grain",operator:"arithmetic",k1:"0.95",k2:"0.58",k3:"0",k4:"0",result:"tex"},gf);
-    el("feGaussianBlur",{in:"tex",stdDeviation:"4",result:"blur"},gf);
-    const ct=el("feComponentTransfer",{in:"blur",result:"bloom"},gf);
-    ["feFuncR","feFuncG","feFuncB"].forEach(t=>el(t,{type:"linear",slope:"0.42"},ct));
-    el("feBlend",{in:"tex",in2:"bloom",mode:"screen"},gf);
-  }
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
   el("circle",{cx:0,cy:0,r:VB,fill:"url(#aura)","pointer-events":"none"});
@@ -1254,7 +1242,6 @@ function draw(){
   SELF.cs.forEach(([n,t],i)=>{
     const m=i*45;
     const c=el("path",{d:lotus(L0,L1,m,25,7),class:"cell qp",fill:GLASS?"url(#petalglass)":"url(#petal)",tabindex:"0",role:"button","aria-label":`${n}, a quality of Self: ${t}`},sunG);
-    if(GLASS) c.setAttribute("filter","url(#glasstex)");
     c.dataset.slice="c"+i;
     hookTip(c,()=>{ const [x,y]=P(rt,m); return {x,y,html:`<span class="ringtag">A quality of Self</span><b>${n}</b>${t}<span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true,i));
     if(GLASS){ el("path",{d:`M${q(L0+hF*0.2,m)} L${q(L1-hF*0.04,m)}`,class:"lead-vein"},sunG);
