@@ -13,7 +13,7 @@
 :root{
   --bg:#F8F5EF; --surface:#FFFFFF; --ink:#2C2433; --muted:#6F6578; --line:#E8DFD3;
   --self:#C79A35; --seed:#F7ECC7; --gold:#CDA349; --sun1:#FFFDF3; --sun2:#FFF3BD; --sun3:#FFE48A; --sun4:#EBC25C; --goldline:#B98428; --sunink:#7A4D10; --sunline:#B98428;
-  --win:#FAEBB2; --wtext:#2C2433; --arrow:#4E3B68; --arrowglow:#FFFFFF;
+  --win:#FAEBB2; --wtext:#2C2433; --halo:rgba(255,255,255,.72); --arrow:#4E3B68; --arrowglow:#FFFFFF;
   --ff:#E5998F; --fr:#B49AD6; --co:#93B2DD; --fa:#EDA9CA; --otext:#2E2240; --etext:#2C2433;
   --display:"Cormorant Garamond", "Cormorant", Georgia, serif;
   --body:"Mulish", "Avenir Next", "Segoe UI", system-ui, sans-serif;
@@ -21,12 +21,12 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#16131D; --surface:#1F1B28; --ink:#EFE9F3; --muted:#ADA3B8; --line:#352E42;
   --self:#E6C267; --seed:#F3E4B3; --gold:#E8C46C; --sun1:#FFF8DC; --sun2:#FFEAA0; --sun3:#F8D977; --sun4:#E3BA50; --goldline:#C8922C; --sunink:#5E3B08; --sunline:#C8922C;
-  --win:#D9BE6A; --wtext:#2A1F0A; --arrow:#FFFFFF; --arrowglow:#1A1024;
+  --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(22,16,30,.7); --arrow:#FFFFFF; --arrowglow:#1A1024;
   --ff:#B9726B; --fr:#8D76B5; --co:#6D8DC1; --fa:#C181A6; --otext:#FFFFFF; --etext:#EFE9F3; color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#16131D; --surface:#1F1B28; --ink:#EFE9F3; --muted:#ADA3B8; --line:#352E42;
   --self:#E6C267; --seed:#F3E4B3; --gold:#E8C46C; --sun1:#FFF8DC; --sun2:#FFEAA0; --sun3:#F8D977; --sun4:#E3BA50; --goldline:#C8922C; --sunink:#5E3B08; --sunline:#C8922C;
-  --win:#D9BE6A; --wtext:#2A1F0A; --arrow:#FFFFFF; --arrowglow:#1A1024;
+  --win:#D9BE6A; --wtext:#2A1F0A; --halo:rgba(22,16,30,.7); --arrow:#FFFFFF; --arrowglow:#1A1024;
   --ff:#B9726B; --fr:#8D76B5; --co:#6D8DC1; --fa:#C181A6; --otext:#FFFFFF; --etext:#EFE9F3; color-scheme:dark }
 :root[data-theme="light"]{color-scheme:light}
 /* each direction tints the window a little, and its edge more */
@@ -76,6 +76,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .shade{transition:opacity .25s ease}
 #selOutline path{fill:none;stroke:var(--gold);stroke-width:2.5;stroke-linejoin:round;pointer-events:none}
 .lbl{pointer-events:none;font-family:var(--display);font-weight:600}
+.t-edge{paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
 .t-cq{fill:var(--sunink);font-style:italic;font-weight:600} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--display);font-style:italic;font-weight:500}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
@@ -83,15 +84,18 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .mv.on .mv-b,.mv:hover .mv-b{fill:var(--goldline)}
 #lumen feDropShadow{flood-color:var(--arrowglow)}
 .trhit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+.ea{cursor:pointer;filter:url(#lumen)} .ea:focus{outline:none} .ea-b{fill:var(--arrow);opacity:.85;pointer-events:none;transition:opacity .2s}
+.ea.in .ea-b{fill:var(--goldline);opacity:.95} .ea:hover .ea-b,.ea:focus-visible .ea-b{opacity:1}
 .trhit:focus{outline:none}
 .door{cursor:pointer} .door .dh{fill:var(--sun2);opacity:.6} .door .dc{fill:var(--sun4);stroke:var(--surface);stroke-width:1.6}
 .door:hover .dc,.door:focus-visible .dc{stroke:var(--ink)} .door:focus{outline:none}
 .braidhit{fill:transparent;cursor:pointer} .braidhit:focus{outline:none}
-.moontip{position:absolute;left:0;top:0;z-index:2;width:max-content;max-width:min(270px,74%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.4;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .15s ease}
+.moontip{position:absolute;left:0;top:0;z-index:2;width:max-content;max-width:min(300px,80%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.4;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .15s ease}
 .moontip.on{opacity:1}
 .moontip.ringed{border-top:5px solid var(--tipc);background:color-mix(in srgb, var(--tipc) 12%, var(--surface))}
 .moontip b{font-family:var(--display);font-weight:600;font-size:19px;display:block}
 .moontip span{color:var(--muted);font-size:12.5px;display:block}
+.moontip .tl{color:var(--ink);font-size:13.5px;margin-top:4px;line-height:1.4} .moontip em{font-style:normal;font-weight:700} .moontip i{display:block;font-family:var(--display);font-size:16px}
 .moontip .ringtag{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .coretip{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-100% - 12%));width:min(250px,70%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--sun3);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.45;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .2s ease}
 .coretip.on{opacity:1}
@@ -328,6 +332,29 @@ const DIRS = [
      parts:"Often manager parts that keep everyone happy and keep you out of trouble, protecting younger parts that learned love had to be earned.",
      back:["Pause before you answer: \"Let me think about that.\"","Ask, \"What do I feel? What do I want?\" and wait for the answer.","Find your feet and your own breath; feel your back against the chair.","Practice a small no, somewhere safe.","Let the anger that comes up be information about your limits."],
      questions:["Whose feelings am I tracking right now?","What do I actually want here?","What am I afraid will happen if I say no?","Is this person safe to disagree with?"]}}
+];
+
+// Where each part of the wheel sits in the three nervous-system states of polyvagal theory (Porges, Dana), and how
+// each edge works both ways: the signs that you are leaving the window, and the signs that you are coming back in.
+// The window is ventral throughout; the top is sympathetic and the bottom dorsal. Freeze and fawn are read here as
+// blends: that reading is this mandala's synthesis, and fawn itself comes from Walker, not from polyvagal theory.
+const NERVE = [
+  {state:"Sympathetic", stateLong:"sympathetic: the accelerator", feel:"Heart pounding, heat, the urge to push or run.", way:"Breathe out longer than you breathe in.",
+   blend:"Ventral and sympathetic together: energy that stays connected.",
+   back:["A deeper breath, or a sigh","Shoulders dropping, the jaw unclenching","The urge to act softening into energy you can use","Seeing more of the room again"],
+   step:"Breathe out slowly and feel your feet on the floor."},
+  {state:"Sympathetic and dorsal at once", stateLong:"sympathetic and dorsal at once: accelerator and brake together", feel:"A racing heart in a body that cannot move.", way:"Start with a tiny movement, then let it grow.",
+   blend:"Ventral holding stillness and alertness together: quiet, open presence.",
+   back:["A breath you did not know you were holding","Your eyes moving freely again","A stretch, a yawn, small movements returning","Being able to choose again"],
+   step:"Move something small, and look slowly around the room."},
+  {state:"Dorsal", stateLong:"dorsal: the oldest brake", feel:"Numb, heavy, far away; nothing seems to matter.", way:"Warmth first, then gentle rhythm.",
+   blend:"Ventral and dorsal together: stillness that feels safe.",
+   back:["Warmth returning to your hands and face","Colors and sounds growing clearer","A little energy to move or speak","Caring again about something small"],
+   step:"Something warm, and a gentle rhythm: rocking, swaying, humming."},
+  {state:"The social system, used for defense", stateLong:"the ventral system's face and voice, recruited for defense, with sympathetic fear (or dorsal submission) underneath", feel:"Smiling and agreeing while your own self disappears.", way:"Pause before you answer, and ask what you want.",
+   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.",
+   back:["Noticing what you feel and what you want","A pause before you answer","Feeling your own back and feet","A small, honest yes or no"],
+   step:"Ask yourself, \"What do I want here?\" and wait for the answer."}
 ];
 
 // Moving around the circle: each neighbor pair, both ways, and the two crossings
@@ -570,10 +597,10 @@ function ringShade(layer,r0,r1){
 const cells=[];
 const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the window"};
 function cellTip(layer,k){
-  const d=DIRS[k], tag=`<span class="ringtag">${LAYER_TAG[layer]}</span>`, more="<span>Tap to read more.</span>";
-  if(layer==="win") return `${tag}<b>${d.win.name}</b>${d.win.words}${more}`;
-  if(layer==="edge") return `${tag}<b>${d.edge.name}</b>${d.edge.words}<span>The early signals of ${d.name.toLowerCase()}</span>${more}`;
-  return `${tag}<b>${d.name}</b>${d.out.words}${more}`;
+  const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
+  if(layer==="win") return `<span class="ringtag">Inside the window · ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
+  if(layer==="edge") return `<span class="ringtag">At the edge · a threshold</span><b>${d.edge.name}</b><span class="tl"><em>Moving out:</em> ${d.edge.words}.</span><span class="tl"><em>Coming back in:</em> ${n.back[0].toLowerCase()}, ${n.back[1].toLowerCase()}.</span>${more}`;
+  return `<span class="ringtag">Outside the window · ${n.state.toLowerCase()}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
 }
 function hookTip(node, info, go){
   node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(null); go(); });
@@ -649,6 +676,12 @@ function draw(){
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
   ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.win[0],R.win[1]);
+  // the window's light radiates out through the edge and fades into the defenses, so the edge reads as a passage
+  const eR=R.edge[1], oR=R.out[0]+26;
+  grad("edgeglow",{...U,r:eR},[[R.edge[0]/eR,"var(--sun2)",0.92],[(R.edge[0]+et*0.6)/eR,"var(--sun2)",0.32],[1,"var(--sun2)",0.06]]);
+  grad("outglow",{...U,r:oR},[[R.out[0]/oR,"var(--sun2)",0.42],[1,"var(--sun2)",0]]);
+  el("circle",{cx:0,cy:0,r:f((R.edge[0]+R.edge[1])/2),fill:"none",stroke:"url(#edgeglow)","stroke-width":f(et),"pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:f(R.out[0]+13),fill:"none",stroke:"url(#outglow)","stroke-width":26,"pointer-events":"none"});
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
     ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
@@ -660,6 +693,19 @@ function draw(){
     if(et>=30) twoLine(em,b0+3,b1-3,d.edge.name,et>48?d.edge.words:"","lbl t-edge t-ital","lbl t-edge t-sub",17,14.5,22,labels);
     else arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",Math.max(11,et*0.62),0.2,labels);
     twoLine(wm,b0+3,b1-3,d.win.name,wt>88?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
+    // at the edge, two small arrows: one leaving the window, one coming back in
+    if(et>=24) [[d.angle-25,1],[d.angle+25,-1]].forEach(([a,dir])=>{
+      const r0=R.edge[0]-5, r1=R.edge[1]+5, S=P(dir>0?r0:r1,a), E=P(dir>0?r1:r0,a), L=Math.hypot(E[0]-S[0],E[1]-S[1]);
+      const u=[(E[0]-S[0])/L,(E[1]-S[1])/L], nn=[-u[1],u[0]], pt=(c,su,sn)=>`${f(c[0]+u[0]*su+nn[0]*sn)} ${f(c[1]+u[1]*su+nn[1]*sn)}`;
+      const g=el("g",{class:"ea"+(dir<0?" in":""),tabindex:"0",role:"button","aria-label":dir>0?`Leaving the window toward ${d.name.toLowerCase()}`:`Coming back into the window from ${d.name.toLowerCase()}`},labels.parentNode);
+      el("path",{d:`M${pt(S,0,0.7)} L${pt(E,-7,2.1)} L${pt(E,-7,-2.1)} L${pt(S,0,-0.7)}Z`,class:"ea-b"},g);
+      el("path",{d:`M${pt(E,0,0)} Q${pt(E,-3,2.2)} ${pt(E,-9.5,6.4)} L${pt(E,-6.6,0)} L${pt(E,-9.5,-6.4)} Q${pt(E,-3,-2.2)} ${pt(E,0,0)}Z`,class:"ea-b"},g);
+      el("path",{d:`M${pt(S,0,0)} L${pt(E,0,0)}`,class:"trhit"},g);
+      const mid=P((R.edge[0]+R.edge[1])/2,a), n=NERVE[k];
+      hookTip(g,()=>({x:mid[0],y:mid[1],color:d.color,html: dir>0
+        ? `<span class="ringtag">Moving out of the window</span><b>Toward ${d.name.toLowerCase()}</b><span class="tl">${d.edge.signs.slice(0,2).join(". ")}.</span><span>Tap to read more.</span>`
+        : `<span class="ringtag">Coming back into the window</span><b>From ${d.name.toLowerCase()}</b><span class="tl">${n.back.slice(0,2).join(". ")}.</span><span class="tl"><em>What helps:</em> ${n.step}</span><span>Tap to read more.</span>`}),()=>showDir(k,"edge",true));
+    });
   });
   // the window's edge: a line of golden beads, with four doorways where orienting brings you back in
   // the edge of the window, drawn as a clear frame: a soft band of light, a gold line, and a fine inner line
@@ -966,6 +1012,12 @@ function showIntro(){
       <li>${sw("--gold")}<div><b>Doorways and movements</b>The gold doorways on the window's edge are orienting, the way back in. The two small arrows at each junction in the outer ring are the movements between neighboring defenses, one in each direction.</div></li>
     </ul>
     <p>Read out from the center along any direction: the healthy state, its early signals, and the defense it can become. Read around the outside for how one defense can turn into another. Read inward for the way home.</p>
+    <h2>The three nervous systems on the wheel</h2>
+    <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with the Self at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
+    <p><b>Freeze</b> sits on the right, halfway between, because it is both at once: the sympathetic charge still running while the dorsal brake holds the body still. <b>Fawn</b> sits opposite it, on the left: the ventral system's own tools, a soft face and a warm voice, used for defense, with sympathetic fear or dorsal submission underneath. Inside the window, each direction is a blend held by safety: energized is ventral with sympathetic, settled is ventral with dorsal, still holds both, and connected is ventral at its most social.</p>
+    <p class="note">The window, top, and bottom follow polyvagal theory. Reading freeze and fawn as blends is this mandala's synthesis; fawn itself comes from Pete Walker's work, not from polyvagal theory.</p>
+    <h2>The edge works both ways</h2>
+    <p>At each edge, a small dark arrow points out of the window and a gold one points back in. Hover either to see the signs of leaving, or the signs of coming home, and what helps right at the threshold.</p>
     <p class="note">This is a model: a map drawn from earlier maps, theory-based and offered from an evolutionary perspective. See About this mandala, below the wheel.</p>
     <p><button type="button" class="btn" data-where>Where am I right now?</button></p>
   </div>`;
@@ -1043,9 +1095,12 @@ function showDir(k, layer, user){
   const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">${d.move}</div><h2>${d.name}</h2>
       <p>${o.text}</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p>${d.win.text}</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals. Catching them here makes the way back short.</p>${ul(d.edge.signs)}</div>
-    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The edge is a threshold you can cross both ways. Catching the signs here makes the way back short.</p>
+      <h4>Moving out of the window</h4>${ul(d.edge.signs)}
+      <h4>Coming back in</h4>${ul(NERVE[k].back)}
+      <p class="note"><b>What helps, right here:</b> ${NERVE[k].step}</p></div>
+    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p>
       <h4>How it can feel</h4>${ul(o.feels)}
       <p class="voice">${o.voice}</p>
       <h4>What it protects</h4><p>${o.protects}</p>
