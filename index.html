@@ -126,7 +126,12 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
-svg.mapview .t-sub,svg.mapview .t-aware{display:none}
+svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub{display:none}
+.held-line{fill:none;stroke-width:4.5;stroke-linecap:round;pointer-events:none}
+.held-dot{fill:var(--ink);stroke:var(--surface);stroke-width:2.5;pointer-events:none}
+.held-dot.held{fill:#C9962E}
+.t-held{fill:var(--ink);font-size:25px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.t-held-sub{font-style:italic;font-weight:500;font-size:20px}
 .mf .fopts button .sym{width:20px;height:20px;vertical-align:-5px}
 .mapkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
 .mapkey span{display:inline-flex;align-items:center;gap:5px}
@@ -495,6 +500,16 @@ const WAYS = {
 };
 WAYS.edge.traits=DIRS.map(d=>`<b>${d.edge.name}</b>, toward ${d.name.toLowerCase()}: ${d.edge.words}`);
 const WAY_KEYS=["ff","fr","co","fa","edge","win"];
+// One emotion, held or driving: the same feeling in three places along its direction. Inside the window it is felt
+// and held: sympathetic or dorsal energy carried by the safe, connected state (Dana's blended states), a part felt
+// but not blended. At the edge it is rising. Outside, it has taken over and drives the whole system.
+const HELD=[
+  {emotion:"Anger", pts:[["Anger, held","a clear, strong no"],["Irritation","rising"],["Rage","driving"]]},
+  {emotion:"Fear", pts:[["Fear, held","alert, ready to choose"],["Alarm","rising"],["Terror","frozen"]]},
+  {emotion:"Sadness", pts:[["Sadness, held","grief that moves"],["Heaviness","sinking"],["Despair","gone numb"]]},
+  {emotion:"Longing", pts:[["Longing, held","care, with you in it"],["Anxious tuning","rising"],["Self-erasing","pleasing"]]}
+];
+const KEEPS_HELD=["You can feel it in your body: the heat, the weight, the ache.","Your breath and your feet stay with you.","You can still listen, or pause before you act.","You can say \"a part of me is angry,\" rather than \"I am anger.\"","You can choose what to do with it."];
 const wayName=k=>k==="edge"?"At the edge":k==="win"?"Inside the window":DIRS[["ff","fr","co","fa"].indexOf(k)].name;
 const wayColor=k=>k==="edge"?"--e-ff":k==="win"?"--win":DIRS[["ff","fr","co","fa"].indexOf(k)].color;
 
@@ -734,6 +749,26 @@ function smoothPath(pts, sharp){
 function drawTrace(animate){
   const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(TRACE.held!=null){
+    const k=TRACE.held, H=HELD[k], a=DIRS[k].angle+30, deps=[.38,.56,.84], pts=deps.map(d=>P(depthR(d),a));
+    const [x0,y0]=P(depthR(.3),a), [x1,y1]=P(depthR(.92),a), gid="heldgrad";
+    const lg=el("linearGradient",{id:gid,gradientUnits:"userSpaceOnUse",x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1)},g);
+    [[0,"#C9962E"],[0.45,"#C9962E"],[1,TYPE_COLOR[["manager","exile","place","person"][k]]]].forEach(([o,c])=>el("stop",{offset:o,"stop-color":c},lg));
+    const d=`M${f(x0)} ${f(y0)} L${f(x1)} ${f(y1)}`;
+    el("path",{d,class:"trace-under"},g);
+    const line=el("path",{d,class:"held-line",stroke:`url(#${gid})`,"marker-end":"url(#trace-arrow)"},g);
+    if(animate&&!reduce){ const L=line.getTotalLength(); line.style.strokeDasharray=L; line.style.strokeDashoffset=L; line.getBoundingClientRect(); line.style.transition="stroke-dashoffset 1.6s ease-in-out"; line.style.strokeDashoffset=0; }
+    // labels sit on the clockwise side of the line, away from the ring's own name
+    const side=a+90, ox=Math.cos(rad(side)), oy=Math.sin(rad(side));
+    pts.forEach(([x,y],i)=>{
+      el("circle",{cx:f(x),cy:f(y),r:i===0?10:8,class:"held-dot"+(i===0?" held":"")},g);
+      const tx=x+ox*20, ty=y+oy*20, anc=ox>0.3?"start":ox<-0.3?"end":"middle";
+      const t=el("text",{x:f(tx),y:f(ty-2),"text-anchor":anc,class:"lbl t-held"},g);
+      const t1=el("tspan",{x:f(tx)},t); t1.textContent=H.pts[i][0];
+      const t2=el("tspan",{x:f(tx),dy:24,class:"t-held-sub"},t); t2.textContent=H.pts[i][1];
+    });
+    return;
+  }
   if(TRACE.parts){
     PATTERNS.parts.forEach(([name,a,d])=>{
       const [x,y]=P(depthR(d),a), [sx,sy]=P(R.core+4,a), right=x>=0;
@@ -755,7 +790,7 @@ function drawTrace(animate){
     line.setAttribute("marker-end",""); setTimeout(()=>{ if(line.isConnected) line.setAttribute("marker-end","url(#trace-arrow)"); },2800); }
 }
 function showTrace(t, animate){
-  TRACE=t; drawTrace(animate!==false);
+  TRACE=t; svg.classList.toggle("heldview",!!(t&&t.held!=null)); drawTrace(animate!==false);
   if(t && isNarrow()) document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
 }
 // light one layer of the wheel: the witness at the center, the Flower, the petals, the window, the edge, or the outer ring
@@ -1087,7 +1122,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1295,13 +1330,17 @@ function showDir(k, layer, user){
       <p class="voice">${o.voice}</p>
       <h4>What it protects</h4><p>${o.protects}</p>
       <h4>Parts</h4><p>${o.parts}</p></div>
-    <div class="ring"><h3>The same emotion, in and out of the window</h3><p>${FEEL[k].held}</p><p class="about">The same emotion can show up in more than one place. What tells you where you are is the body: how much energy there is, and whether you feel held.</p></div>
+    <div class="ring" id="L-held"><h3>${HELD[k].emotion}, held or driving</h3><p>${FEEL[k].held}</p>
+      <p><button type="button" class="btn" data-held="${k}" style="justify-self:start">See it on the wheel</button></p>
+      <h4>What keeps it held</h4>${ul(KEEPS_HELD.map(t=>k===0?t:t.replace("a part of me is angry","a part of me is "+["angry","afraid","sad","longing"][k]).replace("I am anger","I am "+["anger","fear","sadness","longing"][k])))}
+      <p class="about">Inside the window, a strong emotion is felt and held, not driving: the safe, connected state carries the extra energy, and the part that feels it is not blended. What tells you where you are is the body: how much energy there is, and whether you feel held.</p></div>
     <div class="ring"><h3>Coming back from ${d.name.toLowerCase()}</h3><p>${WAYS[KEYS[k]].needs}</p><p>${WAYS[KEYS[k]].practices.map(p=>p.name).join(" · ")}</p>
       <p class="about"><b>Not yet.</b> ${WAYS[KEYS[k]].notyet}</p>
       <p><button type="button" class="linkbtn" data-way="${KEYS[k]}">How to do each, and why it helps</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p></div>
     <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
     <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
     <p class="src">Siegel (1999); Dana (2018); Schauer &amp; Elbert (2010); ${k===3?"Walker (2013); Taylor et al. (2000); ":""}Levine (2010); Schwartz (2021)</p>`;
+  const hb=panel.querySelector("[data-held]"); if(hb) hb.addEventListener("click",()=>{ const on=TRACE&&TRACE.held===k; showTrace(on?null:{held:k}); hb.textContent=on?"See it on the wheel":"Hide it from the wheel"; });
   wire();
   if(user) bringPanel(layer?document.getElementById("L-"+layer):null);
 }
