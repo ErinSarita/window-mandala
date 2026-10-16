@@ -130,6 +130,11 @@ svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-held
 svg.loopview .t-edge.t-sub{display:inline}
 .t-alarm{fill:var(--etext);stroke:none}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
+.q-dim,.q-hi{pointer-events:none;opacity:0;transition:opacity .25s ease}
+.q-dim{fill:#1E1726;fill-opacity:.42}
+.q-hi{fill:none;stroke:#FFE38A;stroke-width:3;filter:drop-shadow(0 0 6px #FFD866)}
+svg.qfocus .q-dim,svg.qfocus .q-hi{opacity:1}
+.is-dark svg.loopview .t-edge{fill:#2E2338;stroke:none}
 .rim-focus{opacity:0;transition:opacity .3s ease}
 svg.rimfocus .rim-focus{opacity:1}
 .rim-shade{fill:#1E1726;fill-opacity:.5}
@@ -893,6 +898,11 @@ function drawLoop(){
     const openFor=(ring,k)=>()=>showDir(k,{heart:"heart",stem:"stem",alarm:"edge",brake:"brake"}[ring.key],true);
     const quarterHits=(span,ring,tag)=>DIRS.forEach((d,k)=>{ const [a0,a1]=dA(k);
       const h=el("path",{d:sector(span[0],span[1],a0,a1,1,0),class:"loop-hit",tabindex:"0",role:"button","aria-label":`${ring.name}, toward ${d.name.toLowerCase()}`},g);
+      // hovering a quarter lights it and dims the rest of the wheel
+      const on=()=>{ const dm=document.getElementById("qdim"), hi=document.getElementById("qhi"); if(!dm||!hi) return;
+        dm.setAttribute("d",band(0.01,R.braid[1]+6)+" "+sector(span[0],span[1],a0,a1,1,0)); hi.setAttribute("d",sector(span[0],span[1],a0,a1,1,0)); svg.classList.add("qfocus"); };
+      const off=()=>svg.classList.remove("qfocus");
+      ["mouseenter","focus"].forEach(ev=>h.addEventListener(ev,on)); ["mouseleave","blur"].forEach(ev=>h.addEventListener(ev,off));
       hookTip(h,()=>{ const [x,y]=P((span[0]+span[1])/2,d.angle); return {x,y,html:`<span class="ringtag">${tag} · ${d.name}</span><b>${cap(ring.name)}</b><i>${ring.role}</i><span class="tl">${LOOPQ[k][ring.key]}</span><span class="tl">${ring.tip}</span><span>Tap to read more.</span>`,color:d.color}; },openFor(ring,k)); });
     const quarterLines=(r0,r1,c)=>DIRS.forEach((d,k)=>{ const a=d.angle+45, [x0,y0]=P(r0,a), [x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),stroke:c,"stroke-width":1.2,"stroke-opacity":.55,"pointer-events":"none"},g); });
     const H=R.heart, S=R.stem, E=R.edge, K=R.brake, B=R.rim;
@@ -908,7 +918,7 @@ function drawLoop(){
     arcText((S[0]+S[1])/2,140,220,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
     // the alarm: the edge keeps its own gradient, with the brainstem's gold carried across it
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(E[1])},g);
-      [[E[0]/E[1],"#F8E4AE",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#F5DC9C",.15],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
+      (isDark()?[[E[0]/E[1],"#F8E4AE",.62],[(E[0]+(E[1]-E[0])*0.5)/E[1],"#F2DCA8",.42],[1,"#EAD3B8",.28]]:[[E[0]/E[1],"#F8E4AE",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#F5DC9C",.15],[1,"#F3D891",0]]).forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
       const base=el("g",{id:"loopbase","pointer-events":"none"}), lab=document.getElementById("ringLabels"); if(lab) svg.insertBefore(base,lab);
       el("path",{d:band(E[0],E[1]),"fill-rule":"evenodd",fill:"url(#alarmglow)"},base); }
     [45,225].forEach(a=>arcText((E[0]+E[1])/2,a-24,a+24,"the alarm · amygdala","lbl t-ring t-alarm",14,0.3,g));
@@ -937,6 +947,8 @@ function drawLoop(){
     hookTip(bh,()=>{ const [x,y]=P((B[0]+B[1])/2,0); return {x,y,html:`<span class="ringtag">${LOOP.rim.tag}</span><b>${LOOP.rim.name}</b><i>${LOOP.rim.role}</i><span class="tl">${LOOP.rim.tip}</span><span>Tap to read more.</span>`}; },()=>{ svg.classList.add("rimfocus"); go(); });
     ["mouseenter","focus"].forEach(ev=>bh.addEventListener(ev,()=>svg.classList.add("rimfocus")));
     ["mouseleave","blur"].forEach(ev=>bh.addEventListener(ev,()=>svg.classList.remove("rimfocus")));
+    el("path",{id:"qdim","fill-rule":"evenodd",class:"q-dim"},g);
+    el("path",{id:"qhi",class:"q-hi"},g);
 }
 function drawTrace(animate){
   const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
