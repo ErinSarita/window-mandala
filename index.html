@@ -126,14 +126,14 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
-svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door,svg.loopview .t-win,svg.loopview .t-out.t-sub{display:none}
+svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door,svg.loopview .winborder,svg.loopview .t-win,svg.loopview .t-out.t-sub{display:none}
 svg.loopview .t-edge.t-sub{display:inline}
 .t-alarm{fill:var(--etext);stroke:var(--halo)}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
-.brake-ring{fill-opacity:.85;pointer-events:none}
+.brake-ring{fill-opacity:.9;pointer-events:none}
 .window-line{fill:#FFF8E1;fill-opacity:1;pointer-events:none}
 .t-window{fill:#7A5410;font-style:normal;font-weight:700;letter-spacing:.08em;stroke:none}
-.loop-ring{fill-opacity:.55;pointer-events:none}
+.loop-ring{fill-opacity:.8;pointer-events:none}
 .t-ring{fill:#4A2F0B;font-style:italic;font-weight:700;paint-order:stroke;stroke:rgba(255,255,255,.55);stroke-width:2.5px;stroke-linejoin:round}
 .t-door{fill:#4A2F0B;font-style:italic;font-weight:600;opacity:.85}
 .pulse-up,.pulse-down{fill:none;stroke-width:2.2;pointer-events:none;transform-box:fill-box;transform-origin:center;opacity:0}
@@ -548,13 +548,11 @@ const LOOP={
   heart:{name:"Heart", role:"the rhythm: heart rate variability", tag:"Inside the window: the loop, whole",
     tip:"At the core of the loop is the heart's rhythm, measured as heart rate variability (HRV): the small, healthy changes in time between one beat and the next. A high, flexible HRV, quickening a little on each in-breath and slowing on each out-breath, tells the brain you are safe, and goes with a whole loop and a wider window. Breath reaches it directly: this is the door from the body up."},
   stem:{name:"Brainstem", role:"the vagal centers", tag:"Inside the window: the loop, whole",
-    tip:"Where brain and heart talk. Through the vagus nerve, signals run both ways: most of its fibers carry news from the body up to the brain, and the rest carry the brake down to the heart. Inside the window, in polyvagal terms the ventral vagal brake is on, and this is the safe, connected state."},
-  window:{name:"Your window of capacity", role:"where the loop is whole", tag:"The line of your window",
-    tip:"Inside this line is your window of capacity: the heart's rhythm is flexible and the brainstem keeps the vagal brake on, polyvagal theory's ventral state, safe and connected. You can feel a great deal here and still be yourself. Just outside it, at the edge, the alarm sounds and the loop strains. Beyond the brake, the loop breaks."},
-  alarm:{name:"The alarm", role:"amygdala, at the edge", tag:"At the edge: the loop, straining",
-    tip:"The edge of your window is where the alarm sounds. The amygdala has picked up danger, and the early signals begin: revving, bracing, sinking, over-tuning. The brake still holds, but it strains: the heart speeds up and heart rate variability begins to fall, and in polyvagal terms the vagal brake starts to withdraw. Caught here, the loop closes again; this is the easiest place to come back from."},
-  brake:{name:"The brake", role:"prefrontal cortex, the rim of the loop", tag:"The rim of your capacity",
-    tip:"The prefrontal cortex holds the alarm in check and keeps the vagal brake on the heart. It is the rim of the loop: while it holds, the loop holds, even at the edge, and the way back into your window is short. When there is more energy than it can hold, it gives way, the loop breaks, and the survival states outside take over. Awareness strengthens it: noticing, naming, seeing another way. This is the door from awareness down."},
+    tip:"Where brain and heart talk. Through the vagus nerve, signals run both ways: most of its fibers carry news from the body up to the brain, and the rest carry the brake down to the heart. Here, in the heart of your window, the ventral vagal brake is on: polyvagal theory's safe, connected state."},
+  alarm:{name:"The alarm", role:"amygdala, at the edge", tag:"Inside your window, at its edge: the loop, straining",
+    tip:"You are still inside your window of capacity, at its outer reaches, where the alarm sounds. The amygdala has picked up danger, and the early signals begin: revving, bracing, sinking, over-tuning. The brake still holds, but it strains: the heart speeds up and heart rate variability begins to fall, and in polyvagal terms the vagal brake starts to withdraw. Caught here, the loop closes again; this is the easiest place to come back from."},
+  brake:{name:"The brake", role:"prefrontal cortex, the rim of your window", tag:"The rim of your window of capacity",
+    tip:"The prefrontal cortex holds the alarm in check and keeps the vagal brake on the heart. Its outer edge is the edge of your window of capacity: while the brake holds, you are inside your window, even with the alarm sounding. When there is more energy than it can hold, the brake ruptures, the loop breaks, and you are outside your window, where the survival states take over. Awareness strengthens it: noticing, naming, seeing another way. This is the door from awareness down."},
   broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]],
   tips:{
     broken:"Beyond the brake, the loop is broken and survival takes over. In fight or flight the sympathetic system drives the heart fast and rigid; in collapse the dorsal vagus drops it low; freeze holds both at once; fawn keeps a social face over fear. Heart rate variability falls, and in polyvagal terms the ventral vagal brake has withdrawn."
@@ -817,34 +815,32 @@ function drawTrace(animate){
       hookTip(h,()=>{ const [x,y]=P((r0+r1)/2,0); return {x,y,html:`<span class="ringtag">${info.tag}</span><b>${info.name}</b><i>${info.role}</i><span class="tl">${info.tip}</span><span>Tap to read more.</span>`}; },go); };
     // inside the window: the heart at the core, the brainstem around it
     const r0=CR.L1+3, rw=R.win[1], hs=r0+(rw-r0)/2;
-    el("path",{d:band(r0,hs),"fill-rule":"evenodd",fill:"#EFC461",class:"loop-ring"},g);
-    el("path",{d:band(hs,rw),"fill-rule":"evenodd",fill:"#F6DFA3",class:"loop-ring"},g);
+    el("path",{d:band(r0,hs),"fill-rule":"evenodd",fill:"#FBF0CF",class:"loop-ring"},g);
+    el("path",{d:band(hs,rw),"fill-rule":"evenodd",fill:"#F5DE9C",class:"loop-ring"},g);
     [[hs,"#9C6E17"],[rw,"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":1,"stroke-opacity":.7,"pointer-events":"none"},g));
     const fs=w=>Math.min(15,w*0.42);
     arcText((r0+hs)/2,-44,44,"heart · rhythm · heart rate variability","lbl t-ring",fs(hs-r0),0.3,g);
     arcText((hs+rw)/2,-40,40,"brainstem · the vagal centers","lbl t-ring",fs(rw-hs),0.3,g);
     arcText((r0+hs)/2,160,240,"from the body up: breath","lbl t-door",fs(hs-r0)*0.95,0.3,g);
     arcText((hs+rw)/2,158,242,"from awareness down: noticing, naming","lbl t-door",fs(rw-hs)*0.95,0.3,g);
-    // the window of capacity: a bright line between the brainstem and the alarm, named and with its own card
-    const w0=rw-11, w1=R.edge[0]+4;
-    el("path",{d:band(w0,w1),"fill-rule":"evenodd",class:"window-line"},g);
-    [w0,w1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:"#B98428","stroke-width":1,"pointer-events":"none"},g));
-    [135,315].forEach(a=>arcText((w0+w1)/2,a-34,a+34,"your window of capacity","lbl t-ring t-window",Math.min(15,(w1-w0)*0.7),0.6,g));
     // the edge is the alarm: its own gradient stays, with a border and a name
-    const e0=R.edge[0]+4, e1=R.edge[1];
+    const e0=rw, e1=R.edge[1];
     el("circle",{cx:0,cy:0,r:f(e0),fill:"none",stroke:"#C0704F","stroke-width":1.2,"stroke-opacity":.8,"pointer-events":"none"},g);
     [45,225].forEach(a=>arcText((e0+e1)/2,a-26,a+26,"the alarm · amygdala","lbl t-ring t-alarm",15,0.3,g));
     // the brake: a strong rim around the alarm, at the outer edge of the edge
     const k0=e1-2, k1=R.out[0]+14;
-    el("path",{d:band(k0,k1),"fill-rule":"evenodd",fill:"#E7BE5A",class:"brake-ring"},g);
-    [k0,k1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:"#8A6417","stroke-width":1.6,"pointer-events":"none"},g));
+    el("path",{d:band(k0,k1),"fill-rule":"evenodd",fill:"#EDCB72",class:"brake-ring"},g);
+    // the rim of the window of capacity: the darkest gold, a strong line at the brake's outer edge
+    el("circle",{cx:0,cy:0,r:f(k0),fill:"none",stroke:"#B98428","stroke-width":1,"pointer-events":"none"},g);
+    el("circle",{cx:0,cy:0,r:f(k1+2),fill:"none",stroke:"#8A6417","stroke-width":5,"pointer-events":"none"},g);
     [0,180].forEach(a=>arcText((k0+k1)/2,a-30,a+30,"the brake · prefrontal cortex","lbl t-ring t-brake",Math.min(13,(k1-k0)*0.62),0.4,g));
+    [90,270].forEach(a=>arcText((k0+k1)/2,a-34,a+34,"the rim of your window of capacity","lbl t-ring t-brake",Math.min(12,(k1-k0)*0.56),0.3,g));
     if(!reduce){
       el("circle",{cx:0,cy:0,r:f(r0+2),class:"pulse-up",style:`--to:${f(k1/(r0+2))}`},g);
       el("circle",{cx:0,cy:0,r:f(k1),class:"pulse-down",style:`--to:${f((r0+2)/k1)}`},g);
     }
     // beyond the brake: the loop broken, and survival takes over
-    const o0=k1+2, o1=R.out[0]+62, ro=k1+12, rot=k1+30;
+    const o0=k1+5, o1=R.out[0]+62, ro=k1+14, rot=k1+32;
     el("path",{d:band(o0,o1),"fill-rule":"evenodd",class:"broken-band"},g);
     el("circle",{cx:0,cy:0,r:f(o1),class:"broken-border"},g);
     const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
@@ -852,9 +848,8 @@ function drawTrace(animate){
     LOOP.broken.forEach(([txt,a])=>arcText(rot,a-22,a+22,txt,"lbl t-loopbroken",16,0.5,g));
     tipHit(r0,hs,"Heart, the rhythm: heart rate variability",LOOP.heart);
     tipHit(hs,rw,"Brainstem, the vagal centers",LOOP.stem);
-    tipHit(w0,w1,"Your window of capacity",LOOP.window);
     tipHit(e0,e1,"The alarm, at the edge",LOOP.alarm);
-    tipHit(k0,k1,"The brake, the rim of the loop",LOOP.brake);
+    tipHit(k0,k1,"The brake, the rim of your window of capacity",LOOP.brake);
     tipHit(o0,o1,"The loop, broken",{tag:"Outside the window: survival",name:"The loop, broken",role:"the brake has given way",tip:LOOP.tips.broken});
     return;
   }
@@ -1089,7 +1084,7 @@ function draw(){
     twoLine(wm,b0+3,b1-3,d.win.name,wt>88?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
   });
   // the window's edge, marked by a soft band of light, with four doorways where orienting brings you back in
-  el("circle",{cx:0,cy:0,r:f(R.win[1]+3),fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:f(R.win[1]+3),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
   [45,135,225,315].forEach(a=>{
     const [x,y]=P(R.win[1]+3,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
     el("circle",{cx:f(x),cy:f(y),r:11,class:"dh"},g); el("circle",{cx:f(x),cy:f(y),r:5.6,class:"dc"},g);
@@ -1302,11 +1297,10 @@ function showIntro(){
     <ul>
       <li><b>The heart, the rhythm.</b> At the core, inside the window. Its rhythm is measured as heart rate variability (HRV): the small, healthy changes in time between beats. A high, flexible HRV, quickening a little on each in-breath and slowing on each out-breath, tells the brain you are safe.</li>
       <li><b>The brainstem, the vagal centers.</b> Around the heart, inside the window. Where brain and heart talk through the vagus nerve: most of its fibers carry news from the body up, and the rest carry the brake down.</li>
-      <li><b>The line of your window.</b> Inside it, heart and brainstem, the loop is whole: your window of capacity, polyvagal theory's ventral state.</li>
-      <li><b>The alarm, at the edge.</b> The amygdala picks up danger and the early signals begin: revving, bracing, sinking, over-tuning. The loop strains, HRV begins to fall, but it still holds.</li>
-      <li><b>The brake, the rim.</b> The prefrontal cortex holds the alarm in check and keeps the vagal brake on the heart. While it holds, the loop holds, even at the edge, and the way back into your window is short.</li>
+      <li><b>The alarm, at the edge.</b> Still inside your window, at its outer reaches. The amygdala picks up danger and the early signals begin: revving, bracing, sinking, over-tuning. The loop strains and HRV begins to fall, but it still holds.</li>
+      <li><b>The brake, the rim.</b> The rim of your window of capacity. The prefrontal cortex holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding.</li>
     </ul>
-    <p>Beyond the brake, the loop breaks. When there is more energy than the brake can hold, the prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is leaving the window, into survival.</p>
+    <p>When there is more energy than the brake can hold, it ruptures, and that is the moment you leave your window. The prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is leaving the window, into survival.</p>
     <p>The loop runs both ways, so there are two doors in. <b>From the body up:</b> slow breathing, movement, warmth, and safe connection steady the heart's rhythm, and the steadier rhythm helps the brake hold. <b>From awareness down:</b> noticing the alarm early, naming a feeling (Lieberman and colleagues, 2007), and seeing a situation another way (Ochsner and Gross, 2005) strengthen the brake. Both meet at the center, where the Self is. The rings show which part holds which, not where each sits in the body.</p>
     <p><b>Polyvagal theory describes the same loop from the vagus nerve's side.</b> In its terms, the window of capacity is the ventral state, safe and connected, and the unbroken loop is what holds you there. Stephen Porges calls the ventral vagus's steadying of the heart the vagal brake. Inside the window the brake holds; at the edge it begins to withdraw; outside it has withdrawn, and older systems take over: the sympathetic in fight or flight, the dorsal vagus in collapse, both at once in freeze. The two models agree that a flexible, vagally steadied heart sits at the center of regulation. They differ on anatomy, and the polyvagal account of it is disputed by some physiologists.</p>
     <p><button type="button" class="btn" id="loopbtn">Show the loop on the wheel</button></p>
