@@ -14,6 +14,8 @@ Three maps of the inner life, brought into one picture, each answering a questio
 
 Used together: notice where you are, name it, and return, letting the Self lead. Beneath all three is the deeper aim: to cultivate a true sense of Self beyond conditioning, the old programs and imprints from early experience that once protected us and now hold us back. Parts carry the imprints; the Self is not made of them.
 
+Awareness lets you know when you are at the edge and bring yourself back; each return builds on the last, so the way home grows shorter and the window widens. The aim is not to be rid of what lies outside the window, which is part of being human, but to find the way back more easily and more quickly.
+
 All of it moves toward coherence: heart and brain in rhythm, harmony within the nervous system, and the parts working together with the Self leading. The Self tab has a "Coherence: harmony within" section (body, parts, mind), Breathe with the Self is a coherent-breathing practice at six breaths a minute that moves to the heart and to appreciation partway through, and Practices adds "Heart-focused breathing" (adapted from HeartMath).
 
 On the wheel, the soft halo around everything is the field of peripheral awareness; the Awareness tab explains it, and the Practices tab adds "Opening peripheral awareness."
