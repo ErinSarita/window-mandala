@@ -321,7 +321,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <div class="maprow"><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
+        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
         <p>Drag to see the window widen, as awareness widens: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
       </div>
       <div class="legendkey" id="legendkey"></div>
@@ -755,7 +755,7 @@ function radii(t){
   const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
   return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
-let LOOPGEO=false, CAP=0.5, R=radii(CAP);
+let LOOPON=true, LOOPGEO=true, CAP=0.5, R=radii(CAP);
 const NS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById("m");
 const rad = d => (d-90)*Math.PI/180;
@@ -834,19 +834,21 @@ function smoothPath(pts, sharp){
     d+=` C${f(p1[0]+(p2[0]-p0[0])/6)} ${f(p1[1]+(p2[1]-p0[1])/6)} ${f(p2[0]-(p3[0]-p1[0])/6)} ${f(p2[1]-(p3[1]-p1[1])/6)} ${f(p2[0])} ${f(p2[1])}`; }
   return d;
 }
-function drawTrace(animate){
-  const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; ["alarmglowpath","loopbase"].forEach(id=>{ const o=document.getElementById(id); if(o) o.remove(); }); if(!TRACE) return;
+// The loop that holds the window, drawn as rings around the Self and the window whenever the loop is on (the default).
+function drawLoop(){
+  const g=document.getElementById("loopG"); if(!g) return; g.innerHTML="";
+  ["alarmglowpath","loopbase"].forEach(id=>{ const o=document.getElementById(id); if(o) o.remove(); });
+  if(!LOOPON||!R.heart) return;
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(TRACE.loop){
-    if(!R.heart) return;
     const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     const band=(r0,r1)=>ring(r1)+" "+ring(r0)+"Z";
-    const go=()=>{ const t=document.getElementById("loop"); if(t) bringPanel(t); };
+    const go=()=>{ if(view!=="intro") showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); };
     const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
     // each ring is cut into the four directions, and each quarter has its own card
+    const openFor=(ring,k)=>()=>{ if(ring.key==="heart"||ring.key==="stem") showDir(k,"win",true); else if(ring.key==="alarm") showDir(k,"edge",true); else { if(view!=="intro") showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); } };
     const quarterHits=(span,ring,tag)=>DIRS.forEach((d,k)=>{ const [a0,a1]=dA(k);
       const h=el("path",{d:sector(span[0],span[1],a0,a1,1,0),class:"loop-hit",tabindex:"0",role:"button","aria-label":`${ring.name}, toward ${d.name.toLowerCase()}`},g);
-      hookTip(h,()=>{ const [x,y]=P((span[0]+span[1])/2,d.angle); return {x,y,html:`<span class="ringtag">${tag} · ${d.name}</span><b>${cap(ring.name)}</b><i>${ring.role}</i><span class="tl">${LOOPQ[k][ring.key]}</span><span class="tl">${ring.tip}</span><span>Tap to read more.</span>`,color:d.color}; },go); });
+      hookTip(h,()=>{ const [x,y]=P((span[0]+span[1])/2,d.angle); return {x,y,html:`<span class="ringtag">${tag} · ${d.name}</span><b>${cap(ring.name)}</b><i>${ring.role}</i><span class="tl">${LOOPQ[k][ring.key]}</span><span class="tl">${ring.tip}</span><span>Tap to read more.</span>`,color:d.color}; },openFor(ring,k)); });
     const quarterLines=(r0,r1,c)=>DIRS.forEach((d,k)=>{ const a=d.angle+45, [x0,y0]=P(r0,a), [x1,y1]=P(r1,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),stroke:c,"stroke-width":1.2,"stroke-opacity":.55,"pointer-events":"none"},g); });
     const H=R.heart, S=R.stem, E=R.edge, K=R.brake, B=R.rim;
     // heart and brainstem: gold, brightest nearest the center
@@ -858,7 +860,7 @@ function drawTrace(animate){
     [45,225].forEach(a=>arcText((H[0]+H[1])/2,a-30,a+30,"heart · heart rate variability","lbl t-ring",fs(H[1]-H[0]),0.3,g));
     [135,315].forEach(a=>arcText((S[0]+S[1])/2,a-30,a+30,"brainstem · the vagal centers","lbl t-ring",fs(S[1]-S[0]),0.3,g));
     arcText((H[0]+H[1])/2,-28,28,"from the body up: breath","lbl t-door",fs(H[1]-H[0])*0.95,0.3,g);
-    arcText((S[0]+S[1])/2,152,208,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
+    arcText((S[0]+S[1])/2,140,220,"from awareness down: noticing, naming","lbl t-door",fs(S[1]-S[0])*0.95,0.3,g);
     // the alarm: the edge keeps its own gradient, with the brainstem's gold carried across it
     { const ag=el("radialGradient",{id:"alarmglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(E[1])},g);
       [[E[0]/E[1],"#F8E4AE",.5],[(E[0]+(E[1]-E[0])*0.4)/E[1],"#F5DC9C",.15],[1,"#F3D891",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ag));
@@ -884,8 +886,10 @@ function drawTrace(animate){
     quarterHits(K,{key:"brake",name:"the brake",role:"prefrontal cortex",tip:"While the brake holds, you are inside your window. Awareness strengthens it: noticing, naming, seeing another way."},"The rim of the window");
     const bh=el("path",{d:band(B[0],B[1]),"fill-rule":"evenodd",class:"loop-hit",tabindex:"0",role:"button","aria-label":"The border of your window of capacity"},g);
     hookTip(bh,()=>{ const [x,y]=P((B[0]+B[1])/2,0); return {x,y,html:`<span class="ringtag">${LOOP.rim.tag}</span><b>${LOOP.rim.name}</b><i>${LOOP.rim.role}</i><span class="tl">${LOOP.rim.tip}</span><span>Tap to read more.</span>`}; },go);
-    return;
-  }
+}
+function drawTrace(animate){
+  const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(TRACE.held!=null){
     const k=TRACE.held, H=HELD[k], a=DIRS[k].angle+30, deps=[.38,.56,.84], pts=deps.map(d=>P(depthR(d),a));
     const [x0,y0]=P(depthR(.3),a), [x1,y1]=P(depthR(.92),a), gid="heldgrad";
@@ -927,8 +931,7 @@ function drawTrace(animate){
     line.setAttribute("marker-end",""); setTimeout(()=>{ if(line.isConnected) line.setAttribute("marker-end","url(#trace-arrow)"); },2800); }
 }
 function showTrace(t, animate){
-  TRACE=t; svg.classList.toggle("heldview",!!(t&&t.held!=null)); svg.classList.toggle("loopview",!!(t&&t.loop));
-  const geo=!!(t&&t.loop); if(geo!==LOOPGEO){ LOOPGEO=geo; draw(); }
+  TRACE=t; svg.classList.toggle("heldview",!!(t&&t.held!=null));
   drawTrace(animate!==false);
   if(t && isNarrow()) document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"center"});
 }
@@ -1196,11 +1199,12 @@ function draw(){
   const tip=document.getElementById("coretip");
   ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
   ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
+  el("g",{id:"loopG"});
   el("g",{id:"traceG"});
   el("g",{id:"mapG"});
   el("g",{id:"layerHL"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawTrace(false); drawMap();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1269,7 +1273,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview","loopview"); if(LOOPGEO){ LOOPGEO=false; draw(); } drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1317,10 +1321,11 @@ function showIntro(){
     <ul class="legend">
       <li>${sw("--sun3")}<div><b>The Self</b>The Flower of Life and its eight petals, the qualities of Self. The small dot of light at the very center is the witness, the one who notices.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction, each the safe root of the defense beyond it.</div></li>
-      <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>The words just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
-      <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals of leaving the window. Catching them here makes the way back short.</div></li>
-      <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much.</div></li>
-      <li>${sw("--gold")}<div><b>Doorways and arrows</b>The gold doorways are orienting, the way back in. The arrows between the defenses show how one can turn into another.</div></li>
+      <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>In the simpler wheel, the words just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
+      <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
+      <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short.</div></li>
+      <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. The deeper gold band around it is the border of your window of capacity: you leave the window only when the brake gives way.</div></li>
+      <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with the Self at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
@@ -1338,12 +1343,12 @@ function showIntro(){
     <p>When there is more energy than the brake can hold, it ruptures, and that is the moment you leave your window. The prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is leaving the window, into survival.</p>
     <p>The loop runs both ways, so there are two doors in. <b>From the body up:</b> slow breathing, movement, warmth, and safe connection steady the heart's rhythm, and the steadier rhythm helps the brake hold. <b>From awareness down:</b> noticing the alarm early, naming a feeling (Lieberman and colleagues, 2007), and seeing a situation another way (Ochsner and Gross, 2005) strengthen the brake. Both meet at the center, where the Self is. The rings show which part holds which, not where each sits in the body.</p>
     <p><b>Polyvagal theory describes the same loop from the vagus nerve's side.</b> In its terms, the window of capacity is the ventral state, safe and connected, and the unbroken loop is what holds you there. Stephen Porges calls the ventral vagus's steadying of the heart the vagal brake. Inside the window the brake holds; at the edge it begins to withdraw; outside it has withdrawn, and older systems take over: the sympathetic in fight or flight, the dorsal vagus in collapse, both at once in freeze. The two models agree that a flexible, vagally steadied heart sits at the center of regulation. They differ on anatomy, and the polyvagal account of it is disputed by some physiologists.</p>
-    <p><button type="button" class="btn" id="loopbtn">Show the loop on the wheel</button></p>
+    <p><button type="button" class="btn" id="loopbtn">Show the simpler wheel</button></p>
     <p class="note">The loop on the wheel is their model simplified: the real network is wider, and includes the cingulate and insular cortex and the brainstem. Lower heart rate variability is linked with poorer emotion regulation, and heart rate variability biofeedback has modest evidence for easing stress and anxiety (Goessl and colleagues, 2017). Under strong stress, the prefrontal cortex's control drops quickly (Arnsten, 2009).</p>
     <p><button type="button" class="btn" data-where>Where am I right now?</button></p>
   </div>`;
-  const lb=document.getElementById("loopbtn");
-  lb.addEventListener("click",()=>{ const on=TRACE&&TRACE.loop; showTrace(on?null:{loop:true}); lb.textContent=on?"Show the loop on the wheel":"Hide the loop"; });
+  const lb=document.getElementById("loopbtn"); lb.textContent=LOOPON?"Show the simpler wheel":"Show the loop on the wheel";
+  lb.addEventListener("click",()=>{ setLoop(!LOOPON); lb.textContent=LOOPON?"Show the simpler wheel":"Show the loop on the wheel"; });
   wire();
 }
 
@@ -1926,6 +1931,16 @@ const lk=document.getElementById("legendkey");
   const b=document.createElement("button"); b.type="button"; b.innerHTML=sw(c)+n; b.addEventListener("click",go); lk.appendChild(b); });
 
 document.getElementById("modelnote").textContent=MODEL_NOTE;
+// the loop's rings are part of the wheel by default; the switch under the wheel shows the simpler wheel instead
+const loopswitch=document.getElementById("loopswitch");
+function setLoop(on){
+  LOOPON=on; LOOPGEO=on; svg.classList.toggle("loopview",on);
+  loopswitch.setAttribute("aria-pressed",on?"false":"true"); loopswitch.textContent=on?"Show the simpler wheel":"Show the loop";
+  const lb=document.getElementById("loopbtn"); if(lb) lb.textContent=on?"Show the simpler wheel":"Show the loop on the wheel";
+  moonTip(null); draw();
+}
+loopswitch.addEventListener("click",()=>setLoop(!LOOPON));
+svg.classList.add("loopview");
 setCap(0.5,false);
 draw();
 showIntro();
