@@ -475,10 +475,10 @@ const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It b
 /* ---------- Geometry ---------- */
 const VB = 490;
 const GAP = 1.2;
-// the rings grow and thin with capacity, t from 0 (narrow) to 1 (wide): the Self and the window widen,
-// the edge and the defenses thin, and the outer edge of the defenses stays where it is
+// the rings change with capacity, t from 0 (narrow) to 1 (wide): the Self and the window widen, the threshold at
+// the edge keeps the same width, and only the defenses thin, their outer edge staying where it is
 function radii(t){
-  const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+60-40*t, o0=e1+6;
+  const self=112+60*t, core=self*0.44, w0=self+6, w1=w0+80+46*t, e0=w1+6, e1=e0+50, o0=e1+6;
   return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
 let CAP=0.5, R=radii(CAP);
