@@ -77,7 +77,11 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 #selOutline path{fill:none;stroke:var(--gold);stroke-width:2.5;stroke-linejoin:round;pointer-events:none}
 .lbl{pointer-events:none;font-family:var(--display);font-weight:600}
 .t-edge{paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
-.t-cq{fill:var(--sunink);font-style:italic;font-weight:600} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
+.t-cq{fill:var(--sunink);font-style:italic;font-weight:600}
+.self-ring{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;pointer-events:none;transition:stroke-width .25s ease,filter .25s ease}
+svg.selffocus .self-ring{stroke-width:3;stroke-opacity:1;filter:drop-shadow(0 0 6px var(--sun3))}
+.self-hit{fill:transparent;cursor:pointer;outline:none}
+.t-selfring{fill:var(--sunink);font-style:italic;font-weight:700;letter-spacing:.06em} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
 .t-sub{font-family:var(--display);font-style:italic;font-weight:500}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
 .mv-b{fill:var(--arrow);pointer-events:none;transition:fill .2s ease}
@@ -1239,6 +1243,15 @@ function draw(){
     const avail=2*25*0.84*Math.PI/180*rt, size=Math.min(17,avail/(CS_SHORT[i].length*0.5));
     arcText(rt,m-22,m+22,CS_SHORT[i],"lbl t-cq",f(size),0.2,sunG).setAttribute("pointer-events","none");
   });
+  // a ring just beyond the petal tips marks everything inside it as the Self: the witness, the Flower, and its qualities
+  { const sr0=L1+3, sr1=L1+17, sm=(sr0+sr1)/2;
+    const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    el("circle",{cx:0,cy:0,r:f(sr0),class:"self-ring"},sunG);
+    [45,135,225,315].forEach(a=>arcText(sm,a-18,a+18,"the Self","lbl t-selfring",14,0.6,sunG).setAttribute("pointer-events","none"));
+    const sh=el("path",{d:ringP(sr1)+" "+ringP(L1-2)+"Z","fill-rule":"evenodd",class:"self-hit",tabindex:"0",role:"button","aria-label":"The Self: everything inside this ring"},sunG);
+    hookTip(sh,()=>{ const [x,y]=P(sm,45); return {x,y,html:`<span class="ringtag">The center</span><b>The Self</b><span class="tl">Everything inside this ring is the Self: the witness at the very center, the Flower of Life, and the eight petals of its qualities. Around it, your window of capacity.</span><span>Tap to read about the Self.</span>`,color:"--sun3"}; },()=>showSelf(true));
+    ["mouseenter","focus"].forEach(ev=>sh.addEventListener(ev,()=>svg.classList.add("selffocus")));
+    ["mouseleave","blur"].forEach(ev=>sh.addEventListener(ev,()=>svg.classList.remove("selffocus"))); }
   // the Flower of Life in gold, with its central circle, the one that holds the six-petaled flower, drawn strongest
   const core=el("g",{class:"cell",tabindex:"0",role:"button","aria-label":"The Self, with a capital S. Read about it"},sunG);
   el("circle",{cx:0,cy:0,r:f(R.core),fill:"url(#sun)",stroke:"none"},core);
