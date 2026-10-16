@@ -32,6 +32,8 @@ A synthesis of earlier models, described in our own words: the window of toleran
 - **Look and feel:** a soft pastel palette on warm ivory (a deep plum night in dark mode, where the window stays yellow), Cormorant Garamond for the wheel and headings, and a halo of light round the ring. Hovering lights only the section under the pointer.
 - **Your window:** a slider that widens the Self and the window and thins the rings of threat. The "How wide is mine?" reflection sets it.
 
+The four directions are named for what the body does, so each name holds the healthy state and the defense: Moving (energized to fight or flight), Pausing (still to freeze), Resting (settled to collapse), and Reaching (connected to fawn). Each direction's panel walks its six layers from the center out (inside the window, the heart, the brainstem, the alarm at the edge, the brake, outside the window), with research for each (`PATHS` and `LAYERS` in the script). Clicking any quarter of a loop ring opens that direction at that layer.
+
 Tabs: How to read, Where am I?, The Self, Awareness, The four directions, Patterns (the routes, moving between, and triggers), and Practices (for inside the window: cultivating the Self and widening the window, plus building resilience).
 
 ## Patterns on the wheel
