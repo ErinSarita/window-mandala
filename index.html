@@ -120,6 +120,38 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .mapgrid button:hover,.mapgrid button:focus-visible{border-color:var(--ink);outline:none}
 .mapseq{font-size:14px;min-height:1.4em}
 @media (max-width:520px){.mapgrid{grid-template-columns:repeat(4,minmax(0,1fr))}.mapgrid .rowlab{grid-column:1/-1}.mapgrid .colhead{display:none}}
+.maprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.maphint{font-size:13.5px;color:var(--ink);font-weight:600}
+.svgbox.mapping svg{cursor:crosshair}
+.svgbox.mapping .moontip,.svgbox.mapping .coretip{display:none}
+.map-mark{fill:var(--ink);stroke:var(--surface);stroke-width:2.2;cursor:grab}
+.map-mark.draft{fill:var(--goldline)}
+.map-ring{fill:none;stroke:var(--goldline);stroke-width:2.5;pointer-events:none}
+.t-map{fill:var(--ink);font-size:19px;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.mf{display:grid;gap:10px}
+.mf label{display:grid;gap:4px;font-size:14px;font-weight:700}
+.mf input,.mf textarea,.mf select{font:inherit;font-weight:400;font-size:15px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);color:var(--ink)}
+.mf-err{color:#B3261E;font-size:13.5px;margin:0;min-height:1em}
+.sym{width:16px;height:16px;vertical-align:-3px;fill:currentColor}
+.legend-map{display:grid;gap:14px}
+.legend-map h4{margin:0}
+.legend-map ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.legend-map li{display:flex;gap:8px;align-items:baseline}
+.legend-map li .what{color:var(--muted);font-size:13px}
+.legend-map li .note{display:block;color:var(--muted);font-size:14px}
+#printsheet{display:none}
+@media print{
+  @page{size:letter;margin:0.5in}
+  body{background:#fff !important}
+  body>*:not(#printsheet){display:none !important}
+  #printsheet{display:block;color:#2C2433;font-family:var(--body);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #printsheet h1{font-family:var(--display);font-weight:500;font-size:30px;margin:0}
+  #printsheet .ps-date{color:#6F6578;margin:2px 0 10px;font-size:13px}
+  #printsheet .ps-wheel svg{width:100%;height:auto;max-height:7.6in}
+  #printsheet .ps-legend{break-before:page}
+  #printsheet .ps-legend h2{font-family:var(--display);font-weight:500;font-size:24px;margin:0 0 10px}
+  #printsheet .ps-foot{font-size:11px;color:#6F6578;margin-top:16px}
+}
 .witness-hit{fill:transparent;cursor:pointer;outline:none}
 .layers{display:grid;gap:12px}
 .layers>div{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px;border-radius:0}
@@ -217,6 +249,7 @@ section.about p{margin:0;max-width:68ch;color:var(--ink);font-size:16px}
 .foot{font-size:13px;color:var(--muted)!important;border-top:1px solid var(--line);padding-top:14px;margin-top:10px}
 @media (prefers-reduced-motion: reduce){.cell{transition:none}}
 </style>
+<div id="printsheet" aria-hidden="true"></div>
 <script>
 try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") document.documentElement.setAttribute("data-theme",t); }catch(e){}
 </script>
@@ -241,6 +274,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
+        <div class="maprow"><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
         <p>Drag to see the window widen, as awareness widens: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
       </div>
       <div class="legendkey" id="legendkey"></div>
@@ -977,9 +1011,10 @@ function draw(){
   ["mouseenter","focus"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.add("on")));
   ["mouseleave","blur","click"].forEach(ev=>core.addEventListener(ev,()=>tip.classList.remove("on")));
   el("g",{id:"traceG"});
+  el("g",{id:"mapG"});
   el("g",{id:"layerHL"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawTrace(false);
+  applySel(); setLayerHL(layerKey); drawTrace(false); drawMap();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1048,7 +1083,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; drawTrace(false); } view=v; sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(v!=="patterns"&&TRACE){ TRACE=null; drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1357,6 +1392,247 @@ function showPractice(user, focus){
   wire(); if(user) bringPanel(focus?document.getElementById("pr-"+focus):null);
 }
 document.getElementById("homebtn").addEventListener("click",()=>showHome(true));
+
+
+/* ---------- My map ----------
+   Map mode lets a visitor place the parts, people, places, things, environments, and situations of their life on the
+   wheel, where each tends to take them, then print or download the result. Items are kept in memory only: nothing is
+   saved, so the map is gone when the page is closed or reloaded. Each item stores an angle and a depth (as routes do),
+   so it keeps its place as the window slider moves. */
+const MAPTYPES=[
+  {key:"part", name:"Part"},{key:"person", name:"Person"},{key:"place", name:"Place"},
+  {key:"thing", name:"Thing"},{key:"env", name:"Environment"},{key:"sit", name:"Situation"}
+];
+let MAP={on:false, title:"", items:[], draft:null, edit:null, force:false}, mapSeq=1;
+// a small shape for each type, so the map reads at a glance: circle, diamond, triangle, square, hexagon, star
+function shapeD(type,x,y,s){
+  const poly=pts=>"M"+pts.map(([a,b])=>f(x+a*s)+" "+f(y+b*s)).join(" L")+"Z";
+  const ring=(n,r0,r1,rot)=>{ const a=[]; for(let i=0;i<n*(r1?2:1);i++){ const r=r1&&i%2?r1:r0, t=rot+i*Math.PI/(r1?n:n/2); a.push([r*Math.cos(t),r*Math.sin(t)]); } return a; };
+  if(type==="part") return `M${f(x-s)} ${f(y)} a${f(s)} ${f(s)} 0 1 0 ${f(2*s)} 0 a${f(s)} ${f(s)} 0 1 0 ${f(-2*s)} 0Z`;
+  if(type==="person") return poly([[0,-1.25],[1.1,0],[0,1.25],[-1.1,0]]);
+  if(type==="place") return poly([[0,-1.2],[1.15,0.85],[-1.15,0.85]]);
+  if(type==="thing") return poly([[-0.9,-0.9],[0.9,-0.9],[0.9,0.9],[-0.9,0.9]]);
+  if(type==="env") return poly(ring(6,1.05,0,-Math.PI/2));
+  return poly(ring(5,1.3,0.55,-Math.PI/2));
+}
+const symSVG=t=>`<svg class="sym" viewBox="-12 -12 24 24" aria-hidden="true"><path d="${shapeD(t,0,0,8)}"/></svg>`;
+function rToDepth(r){
+  const wm=(R.win[0]+R.win[1])/2, em=(R.edge[0]+R.edge[1])/2, om=(R.out[0]+R.out[1])/2;
+  const T=[[0,R.core*0.35],[0.2,CR.L1],[0.35,wm],[0.5,R.win[1]],[0.56,em],[0.62,R.edge[1]],[0.8,om],[1,R.out[1]-8]];
+  if(r<=T[0][1]) return 0;
+  for(let i=1;i<T.length;i++) if(r<=T[i][1]){ const [d0,r0]=T[i-1],[d1,r1]=T[i]; return d0+(d1-d0)*(r-r0)/(r1-r0); }
+  return 1;
+}
+// where a point sits: with the Self, inside the window, at the edge, or outside, and toward which direction
+function regionOf(a,d){
+  const k=Math.round((((a%360)+360)%360)/90)%4, L=d<0.24?"self":d<0.5?"win":d<0.62?"edge":"out";
+  return {L,k,key:L==="self"?"self":L+":"+k};
+}
+function regionName(key){
+  if(key==="self") return "With the Self, at the center";
+  const [L,k]=key.split(":"), d=DIRS[+k];
+  return L==="win"?`Inside the window: ${d.win.name.toLowerCase()}`:L==="edge"?`At the edge: ${d.edge.name.toLowerCase()}, toward ${d.name.toLowerCase()}`:`Outside the window: ${d.name.toLowerCase()}`;
+}
+const REGIONS=["self",...["win","edge","out"].flatMap(L=>DIRS.map((d,k)=>L+":"+k))];
+function regionPoint(key){
+  // off to one side of the ring's own name, alternating sides, so markers and labels do not sit on each other
+  const n=MAP.items.length+(MAP.draft?1:0), side=n%2?1:-1, jit=((n*7)%9)-4;
+  if(key==="self") return {a:n*67, d:0.1};
+  const [L,k]=key.split(":"); return {a:DIRS[+k].angle+side*(30+jit), d:{win:.4,edge:.56,out:.86}[L]};
+}
+function drawMap(){
+  const g=document.getElementById("mapG"); if(!g) return; g.innerHTML="";
+  if(!(MAP.on||view==="map"||MAP.force)) return;
+  const all=[...MAP.items, ...(MAP.draft?[MAP.draft]:[])];
+  all.forEach(it=>{
+    const [x,y]=P(depthR(it.d),it.a), draft=it===MAP.draft||(MAP.edit&&MAP.edit.id===it.id);
+    if(draft) el("circle",{cx:f(x),cy:f(y),r:15,class:"map-ring"},g);
+    const m=el("path",{d:shapeD(it.type||"part",x,y,8.5),class:"map-mark"+(it===MAP.draft?" draft":"")},g); m.dataset.mid=it.id;
+    // the name sits above or below a marker near the top or bottom, and on its inward side at the left or right
+    if(it.name){ const right=x>=0, vert=Math.abs(y)>Math.abs(x)*1.2;
+      const t=el("text",vert?{x:f(x),y:f(y<0?y-15:y+30),"text-anchor":"middle",class:"lbl t-map"}:{x:f(x+(right?-14:14)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-map"},g);
+      t.textContent=it.name.length>24?it.name.slice(0,23)+"…":it.name; }
+  });
+}
+const mapbtn=document.getElementById("mapbtn"), maphint=document.getElementById("maphint"), svgbox=document.querySelector(".svgbox");
+function setMapMode(on){
+  MAP.on=on; mapbtn.setAttribute("aria-pressed",on?"true":"false"); mapbtn.textContent=on?"Done placing":"Make my map";
+  maphint.hidden=!on; svgbox.classList.toggle("mapping",on); moonTip(null); hover(null);
+  if(on&&view!=="map") showMap(false); else drawMap();
+}
+mapbtn.addEventListener("click",()=>setMapMode(!MAP.on));
+function svgPoint(e){ const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+function polarOf(pt){ const r=Math.hypot(pt.x,pt.y); return {a:(Math.atan2(pt.y,pt.x)*180/Math.PI+90+360)%360, d:Math.min(1,rToDepth(Math.min(r,R.out[1]-8)))}; }
+// in map mode a tap places a marker instead of opening a panel; dragging a marker moves it
+let drag=null, dragged=false;
+svg.addEventListener("pointerdown",e=>{ if(!MAP.on) return; const m=e.target.closest&&e.target.closest("[data-mid]"); if(!m) return;
+  const it=[...MAP.items,...(MAP.draft?[MAP.draft]:[])].find(i=>String(i.id)===m.dataset.mid); if(!it) return;
+  drag=it; dragged=false; try{ svg.setPointerCapture(e.pointerId); }catch(err){} e.preventDefault(); },true);
+svg.addEventListener("pointermove",e=>{ if(!drag) return; Object.assign(drag,polarOf(svgPoint(e))); dragged=true; drawMap(); });
+svg.addEventListener("pointerup",()=>{ if(!drag) return; const it=drag; drag=null; if(dragged){ if(view==="map") showMap(false, MAP.edit||MAP.draft?true:false); } });
+svg.addEventListener("click",e=>{
+  if(!MAP.on) return; e.stopPropagation(); e.preventDefault();
+  if(dragged){ dragged=false; return; }
+  const m=e.target.closest&&e.target.closest("[data-mid]");
+  if(m){ const it=MAP.items.find(i=>String(i.id)===m.dataset.mid); if(it){ MAP.draft=null; MAP.edit=it; showMap(true,true); } return; }
+  const pp=polarOf(svgPoint(e)); MAP.edit=null; MAP.draft={id:"d"+(mapSeq++),type:null,name:"",note:"",...pp}; drawMap(); showMap(true,true);
+},true);
+svg.addEventListener("keydown",e=>{ if(MAP.on&&(e.key==="Enter"||e.key===" ")) e.stopPropagation(); },true);
+
+function mapGroups(){
+  const groups=[["With the Self",["self"]],["Inside the window: what steadies you",DIRS.map((d,k)=>"win:"+k)],["At the edge: early signals",DIRS.map((d,k)=>"edge:"+k)],
+    ...DIRS.map((d,k)=>[`Outside the window: what takes you into ${d.name.toLowerCase()}`,["out:"+k]])];
+  return groups.map(([title,keys])=>({title,items:MAP.items.filter(it=>keys.includes(regionOf(it.a,it.d).key))})).filter(g=>g.items.length);
+}
+const typeName=t=>(MAPTYPES.find(m=>m.key===t)||MAPTYPES[0]).name;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function legendHTML(withEdit){
+  const G=mapGroups(); if(!G.length) return `<p class="hint">Nothing on your map yet.</p>`;
+  return `<div class="legend-map">${G.map(g=>`<div><h4>${g.title}</h4><ul>${g.items.map(it=>`<li>${symSVG(it.type)}<div><b>${esc(it.name)}</b> <span class="what">${typeName(it.type).toLowerCase()}, ${esc(regionName(regionOf(it.a,it.d).key).replace(/^[^:]*: /,"").replace(/^With the Self, at the center$/,"with the Self"))}</span>${it.note?`<span class="note">${esc(it.note)}</span>`:""}</div>${withEdit?` <button type="button" class="linkbtn" data-medit="${it.id}">Edit</button>`:""}</li>`).join("")}</ul></div>`).join("")}</div>`;
+}
+function showMap(user, focusForm){
+  setView("map");
+  const it=MAP.edit||MAP.draft, editing=!!MAP.edit;
+  const form=it?`<div class="ring" id="mapform"><h3>${editing?"Edit this marker":"Add to your map"}</h3>
+      <div class="mf">
+        <div><span class="about">What is it?</span><div class="fopts" role="group" aria-label="Type">${MAPTYPES.map(t=>`<button type="button" data-mt="${t.key}" aria-pressed="${it.type===t.key}">${symSVG(t.key)} ${t.name}</button>`).join("")}</div></div>
+        <label>Name<input id="mf-name" maxlength="40" value="${esc(it.name)}" placeholder="A word or two"></label>
+        <label>Note (optional)<textarea id="mf-note" rows="2" maxlength="200" placeholder="What happens in you around it?">${esc(it.note)}</textarea></label>
+        <label>Where it tends to take you<select id="mf-pos">${REGIONS.map(k=>`<option value="${k}"${regionOf(it.a,it.d).key===k?" selected":""}>${regionName(k)}</option>`).join("")}</select></label>
+        <p class="mf-err" id="mf-err" role="alert"></p>
+        <p><button type="button" class="btn" id="mf-save">${editing?"Save changes":"Add to my map"}</button> <button type="button" class="linkbtn" id="mf-cancel">Cancel</button>${editing?` · <button type="button" class="linkbtn" id="mf-del">Remove from my map</button>`:""}</p>
+      </div></div>`:"";
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">Map mode</div><h2>My map</h2><div class="meta">Where the parts, people, places, and situations of your life tend to take you</div>
+      <p>Turn on map mode, then tap the wheel where something tends to take you: a person who brings you into the window, a place that steadies you, a situation that tips you toward the edge, a part that takes you into fight or fawn. Then print it, or download it as an image.</p>
+      <p class="note">Your map is not saved. It disappears when you close or reload the page, so print or download it before you go. Nothing you type leaves this page.</p>
+      <p><button type="button" class="btn" id="mp-mode">${MAP.on?"Done placing":"Turn on map mode"}</button> <button type="button" class="linkbtn" id="mp-add">Add without tapping</button></p></div>
+    ${form}
+    <div class="ring"><h3>On your map</h3><label class="mf" style="margin-bottom:6px"><span class="about">Title for your map</span><input id="mp-title" maxlength="60" value="${esc(MAP.title)}" placeholder="My Window Mandala"></label>
+      ${legendHTML(true)}
+      ${MAP.items.length?`<p><button type="button" class="btn" id="mp-print">Print my wheel</button> <button type="button" class="btn" id="mp-dl">Download my wheel</button> <button type="button" class="linkbtn" id="mp-clear">Clear my map</button></p><p class="about" id="mp-status"></p>`:""}</div>
+    <div class="ring"><h3>Reading your map</h3><p>Inside the window are your resources: what steadies you and brings the Self forward. Deb Dana calls the small ones glimmers. At the edge are the early signals, and outside are your triggers, the things that take you into each defense. Seeing them all together often shows a pattern: where you go most, and what helps you come back.</p>
+      <div class="chips">${MAPTYPES.map(t=>`<span class="chip">${symSVG(t.key)} ${t.name}</span>`).join(" ")}</div></div>
+    <p class="src">Dana (2018); Schwartz (2021)</p>`;
+  const $=id=>document.getElementById(id);
+  $("mp-mode").addEventListener("click",()=>setMapMode(!MAP.on));
+  $("mp-add").addEventListener("click",()=>{ MAP.edit=null; MAP.draft={id:"d"+(mapSeq++),type:null,name:"",note:"",...regionPoint("win:2")}; drawMap(); showMap(true,true); });
+  $("mp-title").addEventListener("input",e=>{ MAP.title=e.target.value; });
+  panel.querySelectorAll("[data-medit]").forEach(b=>b.addEventListener("click",()=>{ MAP.draft=null; MAP.edit=MAP.items.find(i=>String(i.id)===b.dataset.medit); drawMap(); showMap(true,true); }));
+  if(it){
+    panel.querySelectorAll("[data-mt]").forEach(b=>b.addEventListener("click",()=>{ it.type=b.dataset.mt; panel.querySelectorAll("[data-mt]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); $("mf-err").textContent=""; drawMap(); }));
+    $("mf-name").addEventListener("input",e=>{ it.name=e.target.value; $("mf-err").textContent=""; drawMap(); });
+    $("mf-note").addEventListener("input",e=>{ it.note=e.target.value; });
+    $("mf-pos").addEventListener("change",e=>{ Object.assign(it,regionPoint(e.target.value)); drawMap(); });
+    $("mf-save").addEventListener("click",()=>{
+      it.name=$("mf-name").value.trim();
+      if(!it.type){ $("mf-err").textContent="Choose what it is: a part, person, place, thing, environment, or situation."; return; }
+      if(!it.name){ $("mf-err").textContent="Give it a name, even a word."; $("mf-name").focus(); return; }
+      if(!editing){ it.id="m"+(mapSeq++); MAP.items.push(it); }
+      MAP.draft=null; MAP.edit=null; drawMap(); showMap(false);
+      if(isNarrow()) svgbox.scrollIntoView({behavior:"smooth",block:"center"});
+    });
+    $("mf-cancel").addEventListener("click",()=>{ MAP.draft=null; MAP.edit=null; drawMap(); showMap(false); });
+    if(editing) $("mf-del").addEventListener("click",()=>{ MAP.items=MAP.items.filter(x=>x!==it); MAP.edit=null; drawMap(); showMap(false); });
+  }
+  if(MAP.items.length){
+    $("mp-print").addEventListener("click",printMap);
+    $("mp-dl").addEventListener("click",downloadMap);
+    $("mp-clear").addEventListener("click",()=>{ if(confirm("Clear your whole map? This cannot be undone.")){ MAP.items=[]; MAP.draft=null; MAP.edit=null; drawMap(); showMap(false); } });
+  }
+  drawMap(); wire();
+  if(user) bringPanel(focusForm?$("mapform"):null);
+  if(focusForm&&$("mf-name")&&!isNarrow()) $("mf-name").focus({preventScroll:true});
+}
+
+// print and download use the light theme, with the map showing, whatever the screen is set to
+function asLight(fn){
+  const was=root.getAttribute("data-theme"), dark=isDark();
+  MAP.force=true; MAP.draft=null;
+  if(dark){ root.setAttribute("data-theme","light"); syncTheme(); }
+  draw();
+  const undo=()=>{ MAP.force=false; if(dark){ if(was) root.setAttribute("data-theme",was); else root.removeAttribute("data-theme"); syncTheme(); } draw(); };
+  return fn(undo);
+}
+const mapTitle=()=>MAP.title.trim()||"My Window Mandala";
+const today=()=>new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});
+function printMap(){
+  asLight(undo=>{
+    const ps=document.getElementById("printsheet");
+    ps.innerHTML=`<h1>${esc(mapTitle())}</h1><p class="ps-date">${today()}</p><div class="ps-wheel"></div>
+      <div class="ps-legend"><h2>${esc(mapTitle())}</h2>${legendHTML(false)}<p class="ps-foot">Made with The Window Mandala, erinsarita.github.io/window-mandala. A model for reflection, not diagnosis or therapy.</p></div>`;
+    ps.querySelector(".ps-wheel").appendChild(svg.cloneNode(true));
+    const done=()=>{ window.removeEventListener("afterprint",done); ps.innerHTML=""; undo(); };
+    window.addEventListener("afterprint",done);
+    window.print();
+  });
+}
+// the download: one tall page image, the wheel above and the legend below, drawn on a canvas at print resolution
+let fontCSS=null;
+async function embeddedFonts(){
+  if(fontCSS!==null) return fontCSS;
+  try{
+    const css=await (await fetch("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap")).text();
+    const blocks=css.split("/* ").filter(b=>b.startsWith("latin */"));
+    let out="";
+    for(const b of blocks){ const m=b.match(/url\((https:[^)]+)\)/); if(!m) continue;
+      const buf=await (await fetch(m[1])).arrayBuffer(); let bin=""; const u=new Uint8Array(buf); for(let i=0;i<u.length;i++) bin+=String.fromCharCode(u[i]);
+      out+=b.slice(b.indexOf("@font-face")).replace(m[1],"data:font/woff2;base64,"+btoa(bin)); }
+    fontCSS=out;
+  }catch(e){ fontCSS=""; }
+  return fontCSS;
+}
+const INLINE=["fill","fill-opacity","stroke","stroke-width","stroke-opacity","stroke-dasharray","stroke-linecap","stroke-linejoin","opacity","font-family","font-size","font-weight","font-style","letter-spacing","paint-order","display","visibility","stop-color","stop-opacity","text-anchor","filter"];
+function inlineSVG(src){
+  const c=src.cloneNode(true), a=[src,...src.querySelectorAll("*")], b=[c,...c.querySelectorAll("*")];
+  a.forEach((n,i)=>{ const cs=getComputedStyle(n); b[i].setAttribute("style",INLINE.map(p=>`${p}:${cs.getPropertyValue(p)}`).join(";")); });
+  c.setAttribute("xmlns","http://www.w3.org/2000/svg"); c.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
+  return c;
+}
+async function downloadMap(){
+  const st=document.getElementById("mp-status"); if(st) st.textContent="Making your image…";
+  const fonts=await embeddedFonts();
+  await asLight(async undo=>{
+    try{
+      const c=inlineSVG(svg), W=2550, M=170, WH=2210;
+      c.setAttribute("width",WH); c.setAttribute("height",WH);
+      if(fonts){ const sty=document.createElementNS(NS,"style"); sty.textContent=fonts; c.insertBefore(sty,c.firstChild); }
+      const img=new Image(); img.decoding="sync";
+      await new Promise((ok,no)=>{ img.onload=ok; img.onerror=no; img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(c)); });
+      // lay out the legend first, to know how tall the page must be
+      const G=mapGroups(), meas=document.createElement("canvas").getContext("2d"), lines=[], colW=(W-2*M-80)/2;
+      const wrap=(txt,font,w)=>{ meas.font=font; const out=[]; let line=""; txt.split(" ").forEach(word=>{ const t=line?line+" "+word:word; if(meas.measureText(t).width>w&&line){ out.push(line); line=word; } else line=t; }); if(line) out.push(line); return out; };
+      const HF="500 46px 'Cormorant Garamond', Georgia, serif", NF="700 34px Mulish, sans-serif", SF="400 30px Mulish, sans-serif";
+      // each group stays whole; groups fill the left column until about half the legend, then the right
+      const blocks=G.map(g=>{ const L=[{t:"head",s:g.title,h:70}]; g.items.forEach(it=>{ L.push({t:"item",it,h:46}); if(it.note) wrap(it.note,SF,colW-60).forEach(l=>L.push({t:"note",s:l,h:38})); L.push({t:"gap",h:12}); }); L.push({t:"gap",h:20}); return L; });
+      const bh=blocks.map(L=>L.reduce((a,l)=>a+l.h,0)), total=bh.reduce((a,b)=>a+b,0);
+      let acc=0, split=blocks.length; for(let i=0;i<blocks.length;i++){ if(acc>0&&acc+bh[i]/2>total/2){ split=i; break; } acc+=bh[i]; }
+      const colH=Math.max(acc,total-acc)+40;
+      blocks.forEach((L,i)=>{ if(i===split) lines.push({t:"col"}); L.forEach(l=>lines.push(l)); });
+      const H=Math.max(3300, M+150+WH+80+colH+140);
+      const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const x=cv.getContext("2d");
+      x.fillStyle="#FFFDF8"; x.fillRect(0,0,W,H);
+      x.fillStyle="#2C2433"; x.textAlign="center"; x.font="500 92px 'Cormorant Garamond', Georgia, serif"; x.fillText(mapTitle(),W/2,M+60);
+      x.fillStyle="#6F6578"; x.font="400 34px Mulish, sans-serif"; x.fillText(today(),W/2,M+120);
+      x.drawImage(img,(W-WH)/2,M+150,WH,WH);
+      // the legend, in two columns, breaking between lines
+      let col=0, y0=M+150+WH+90, y=y0; x.textAlign="left";
+      lines.forEach(l=>{
+        if(l.t==="col"){ col=1; y=y0; return; }
+        const cx=M+col*(colW+80);
+        if(l.t==="head"){ x.fillStyle="#2C2433"; x.font=HF; x.fillText(l.s,cx,y+46); }
+        if(l.t==="item"){ x.fillStyle="#2C2433"; x.fill(new Path2D(shapeD(l.it.type,cx+16,y+22,13))); x.font=NF; x.fillText(l.it.name,cx+48,y+34);
+          const w=x.measureText(l.it.name).width; x.font=SF; x.fillStyle="#6F6578"; x.fillText("  "+typeName(l.it.type).toLowerCase(),cx+48+w,y+34); }
+        if(l.t==="note"){ x.fillStyle="#6F6578"; x.font=SF; x.fillText(l.s,cx+48,y+30); }
+        y+=l.h;
+      });
+      x.fillStyle="#6F6578"; x.font="400 26px Mulish, sans-serif"; x.textAlign="center";
+      x.fillText("Made with The Window Mandala, erinsarita.github.io/window-mandala. A model for reflection, not diagnosis or therapy.",W/2,H-70);
+      await new Promise(ok=>cv.toBlob(bl=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(bl); a.download=(mapTitle().replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"my-window-mandala")+".png"; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); ok(); },"image/png"));
+      if(st) st.textContent="Downloaded. It prints well on letter or A4 paper.";
+    }catch(e){ if(st) st.textContent="The image could not be made in this browser. Try Print my wheel, and choose Save as PDF."; }
+    undo();
+  });
+}
 
 /* light and dark */
 const root=document.documentElement, tbtn=document.getElementById("themebtn"), sysDark=window.matchMedia("(prefers-color-scheme: dark)");

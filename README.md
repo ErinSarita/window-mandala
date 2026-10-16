@@ -38,9 +38,13 @@ Tabs: How to read, Where am I?, The Self, Awareness, The four directions, Patter
 
 The Patterns tab draws routes across the mandala itself. Each pattern (fight and fawn, flight and freeze, freeze and collapse, fawn and collapse, straight to fight, a room never visited, rapid swings, hovering at the threshold, and coming home with practice) has a "Show on the wheel" button that draws its line, with a start dot and an arrow. A route is a list of [angle, depth] points mapped onto the rings as drawn, so it keeps its place as the window slider moves. "Show the parts map" places five example parts in their home states, with dashed unblending lines back to the Self. "Map your own pattern" lets a visitor tap the states they moved through and see their route; it is kept in memory only. Leaving the Patterns tab clears the wheel.
 
+## My map
+
+"Make my map" (under the slider) turns on map mode. Tapping the wheel places a marker where something tends to take you; a form asks what it is (part, person, place, thing, environment, or situation, each with its own shape), a name, an optional note, and where it sits (a list of regions, which also lets you add without tapping). Markers can be dragged, or tapped to edit or remove. The My map panel lists everything by region: with the Self, inside the window (what steadies you), at the edge (early signals), and outside (what takes you into each defense). "Print my wheel" prints a two-page sheet (the wheel, then the legend) in the light theme; "Download my wheel" makes a letter-proportioned PNG at print resolution with the wheel, the title and date, and a two-column legend, with the display font embedded. The map is not saved: it lives in memory and is gone when the page is closed or reloaded.
+
 ## The file
 
-The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `FEEL` for the emotions that tend to arise in each part of each direction (shown in its panel), `PATTERNS` (with each route's trace, and the parts map), `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers is saved; only the light or dark choice is kept, under the `wm-` key.
+The mandala is the single file `index.html`. The content lives in constants near the top of the script: `DIRS` for the four directions and their three layers, `MOVES` and `CROSSINGS` for the transitions, `FEEL` for the emotions that tend to arise in each part of each direction (shown in its panel), `PATTERNS` (with each route's trace, and the parts map), `HOME`, `SELF`, `PATTERNS`, `REG`, `PRACTICES`, `WIDTH`, `FINDER`, and `MODEL_NOTE`. Nothing a visitor answers or maps is saved; only the light or dark choice is kept, under the `wm-` key.
 
 ## The center, in layers
 
