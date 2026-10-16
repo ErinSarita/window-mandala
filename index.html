@@ -78,7 +78,7 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .lbl{pointer-events:none;font-family:var(--display);font-weight:600}
 .t-edge{paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
 .t-cq{fill:var(--sunink);font-style:italic;font-weight:600} .t-win{fill:var(--wtext)} .t-edge{fill:var(--etext)} .t-out{fill:var(--otext)} .t-self{fill:var(--sunline)}
-.t-sub{font-family:var(--display);font-style:italic;font-weight:500}
+.t-sub{font-family:var(--display);font-style:italic;font-weight:500} .t-sub.t-emo{font-weight:700}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
 .mv-b{fill:var(--arrow);pointer-events:none;transition:fill .2s ease}
 .mv.on .mv-b,.mv:hover .mv-b{fill:var(--goldline)}
@@ -118,6 +118,19 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .capname{font-family:var(--display);font-size:17px;min-width:12ch}
 .capbar p{margin:0;font-size:13.5px;color:var(--muted)}
 .practicebar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lensrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lenslabel{font-size:14px;font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--bg)}
+.seg button{font:inherit;font-size:13.5px;font-weight:600;border:0;background:none;color:var(--ink);border-radius:999px;padding:4px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.capbar p.lenshint{color:var(--ink)}
+.emogrid{display:grid;gap:10px}
+.emorow{display:grid;gap:4px;border-top:1px solid var(--line);padding-top:10px}
+.emorow:first-child{border-top:0;padding-top:0}
+.emorow h4{display:flex;align-items:center;gap:8px}
+.emorow p{margin:0;font-size:14.5px}
+.emorow p b{font-weight:700}
 .guide{max-width:740px;margin:0 auto;width:100%;background:color-mix(in srgb, var(--sun2) 30%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 55%, var(--line));border-radius:16px;padding:14px 18px;display:grid;gap:6px;text-align:center;box-shadow:0 8px 28px color-mix(in srgb, var(--sun3) 22%, transparent)}
 .g-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .g-count{font-size:13px;color:var(--muted)}
@@ -235,6 +248,8 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
         <div class="g-btns"><button type="button" class="btn" id="g-sound" aria-pressed="true">Sound on</button><button type="button" class="btn" id="g-voice" aria-pressed="false">Voice guidance</button><button type="button" class="btn" id="g-stop">End practice</button></div>
       </div>
       <div class="capbar">
+        <div class="lensrow"><span class="lenslabel" id="lenslabel">On the wheel</span><div class="seg" role="group" aria-labelledby="lenslabel"><button type="button" data-lens="states" aria-pressed="true">States</button><button type="button" data-lens="emotions" aria-pressed="false">Emotions</button></div></div>
+        <p class="lenshint" id="lenshint" hidden>The rings now show the emotions that tend to arise in each state. Up is more energy and down is less; pleasant feelings gather toward the Self, the most distressing at the outer ring. <button type="button" class="linkbtn" id="lensread">About emotions on the wheel</button></p>
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
         <p>Drag to see the window widen: the Self grows, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
         <div class="practicebar"><button type="button" class="btn" id="pbreath" aria-pressed="false">Breathe with the Self · 2 min</button><button type="button" class="btn" id="pkind" aria-pressed="false">Rings of kindness · 2 min</button></div>
@@ -272,9 +287,11 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Jung, C. G. (1959). <i>Aion: Researches into the Phenomenology of the Self</i>. Princeton University Press.</li>
       <li>Lehrer, P. M., &amp; Gevirtz, R. (2014). Heart rate variability biofeedback: How and why does it work? <i>Frontiers in Psychology, 5</i>, 756.</li>
       <li>Levine, P. A. (2010). <i>In an Unspoken Voice</i>. North Atlantic Books.</li>
+      <li>Lieberman, M. D., Eisenberger, N. I., Crockett, M. J., Tom, S. M., Pfeifer, J. H., &amp; Way, B. M. (2007). Putting feelings into words: Affect labeling disrupts amygdala activity in response to affective stimuli. <i>Psychological Science, 18</i>(5), 421–428.</li>
       <li>National Scientific Council on the Developing Child. (2015). <i>Supportive Relationships and Active Skill-Building Strengthen the Foundations of Resilience</i> (Working Paper 13). Center on the Developing Child, Harvard University.</li>
       <li>Ogden, P., Minton, K., &amp; Pain, C. (2006). <i>Trauma and the Body</i>. Norton.</li>
       <li>Porges, S. W. (2011). <i>The Polyvagal Theory</i>. Norton.</li>
+      <li>Russell, J. A. (1980). A circumplex model of affect. <i>Journal of Personality and Social Psychology, 39</i>(6), 1161–1178.</li>
       <li>Schauer, M., &amp; Elbert, T. (2010). Dissociation following traumatic stress: Etiology and treatment. <i>Zeitschrift für Psychologie / Journal of Psychology, 218</i>(2), 109–127.</li>
       <li>Schwartz, R. C. (2021). <i>No Bad Parts</i>. Sounds True.</li>
       <li>Schwartz, R. C., &amp; Sweezy, M. (2020). <i>Internal Family Systems Therapy</i> (2nd ed.). Guilford.</li>
@@ -283,6 +300,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Tang, Y.-Y., Hölzel, B. K., &amp; Posner, M. I. (2015). The neuroscience of mindfulness meditation. <i>Nature Reviews Neuroscience, 16</i>(4), 213–225.</li>
       <li>Taylor, S. E., Klein, L. C., Lewis, B. P., Gruenewald, T. L., Gurung, R. A. R., &amp; Updegraff, J. A. (2000). Biobehavioral responses to stress in females: Tend-and-befriend, not fight-or-flight. <i>Psychological Review, 107</i>(3), 411–429.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
+      <li>Willcox, G. (1982). The Feeling Wheel: A tool for expanding awareness of emotions and increasing spontaneity and intimacy. <i>Transactional Analysis Journal, 12</i>(4), 274–276.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
     </ol>
     <p class="foot">Created by Erin Singleton, a student in APPPAH's Prenatal &amp; Perinatal Educator certification, as a companion to The Return Mandala. A model for reflection and education, not diagnosis, therapy, or medical advice.</p>
@@ -357,6 +375,42 @@ const NERVE = [
   {state:"The social system, used for defense", stateLong:"the ventral system's face and voice, recruited for defense, with sympathetic fear (or dorsal submission) underneath", feel:"Smiling and agreeing while your own self disappears.", way:"Pause before you answer, and ask what you want.",
    blend:"Ventral at its most social: warmth toward others, with yourself still in the room.", }
 ];
+
+// Emotions: the feelings that tend to arise in each part of the wheel. Up is more energy and down is less (the arousal
+// axis of Russell's circumplex); pleasant, settled feelings gather toward the Self and the most distressing at the outer
+// ring. These are where emotions tend to cluster, not rules: any emotion can be felt inside the window when it is held.
+const FEEL = [
+  {wheel:{win:"joy, excitement, drive", edge:"irritation, worry, impatience", out:"anger, rage, fear, panic"},
+   win:["Joy","Excitement","Enthusiasm","Playfulness","Determination","Pride"],
+   edge:["Irritation","Frustration","Impatience","Worry","Nervousness","Feeling overwhelmed"],
+   out:["Anger and rage","Hostility","Fear","Panic","Dread"],
+   held:"Anger inside the window is a clear, strong no: energy for protecting what matters, while you can still listen. Outside it, anger becomes rage, and the listening stops. Fear inside the window is caution that helps you act; outside it, fear becomes panic."},
+  {wheel:{win:"awe, wonder, fascination", edge:"alarm, unease, suspicion", out:"terror, horror, shock"},
+   win:["Awe","Wonder","Fascination","Reverence","Absorption","Anticipation"],
+   edge:["Alarm","Unease","Apprehension","Suspicion","Feeling startled"],
+   out:["Terror","Horror","Shock","Helplessness","Feeling trapped"],
+   held:"Fear inside the window can be alert attention: the pause that lets you take in what is happening, and choose. Outside it, the same fear locks the body still. Awe and terror are close neighbors: both stop us in our tracks, and what differs is whether we feel safe."},
+  {wheel:{win:"peace, contentment, relief", edge:"sadness, loneliness, gloom", out:"despair, shame, numbness"},
+   win:["Peace","Contentment","Relief","Serenity","Ease","Satisfaction"],
+   edge:["Sadness","Disappointment","Discouragement","Loneliness","Boredom","Apathy"],
+   out:["Despair","Hopelessness","Shame","Grief gone numb","Emptiness, or no feeling at all"],
+   held:"Sadness inside the window moves: tears come and go, grief is felt and shared, and afterward there is often relief. Outside it, sadness can harden into despair, or go numb altogether. Numbness is less the absence of feeling than feeling the body has put away for now, until it is safe to feel again."},
+  {wheel:{win:"love, warmth, gratitude", edge:"anxiety, guilt, insecurity", out:"fear, shame, hidden anger"},
+   win:["Love","Warmth","Tenderness","Gratitude","Compassion","Belonging"],
+   edge:["Anxiety about others' moods","Guilt","Insecurity","Embarrassment","A longing to be liked"],
+   out:["Fear of rejection or abandonment","Shame","Guilt","Resentment","Anger held under the smile"],
+   held:"Love inside the window includes you: you can care for someone and still know what you feel and want. Outside it, the same longing to be close becomes fear of losing them, and your own anger and needs go underground, where they often turn into resentment."}
+];
+const EMO = {
+  intro:"Every state of the nervous system has its own weather of feeling. The state of the body comes first and shapes which emotions are close at hand: a revved body finds anger and worry easily, a sinking body finds sadness and hopelessness. So naming what you feel is one of the quickest ways to notice where you are on the wheel.",
+  calm:"Is calm an emotion? People use three words loosely that are worth telling apart. A <b>feeling</b> is what you sense in the body: warmth, tightness, heaviness, a flutter. An <b>emotion</b> is a passing response with a meaning: anger at an injustice, joy at a reunion, grief at a loss. A <b>state</b>, or mood, is the background that lasts longer and colors everything. Calm sits mostly in the third group: a settled, pleasant, low-energy state, more the ground that emotions arise in than an emotion of its own.",
+  calmSelf:"In Internal Family Systems, calm is a quality of the Self, which is why it lives in the petals at the center rather than in the rings. The qualities of Self are less emotions that come and go than what is there when parts relax, and any emotion can be felt within them. Joy, anger, or grief, felt with calm, curiosity, and compassion around it, is an emotion held by the Self.",
+  map:"Emotion researchers often map feelings on two axes: how much energy they carry, and how pleasant or unpleasant they are (James Russell's circumplex). This wheel lines up with the first: up toward fight or flight is more energy (excitement, irritation, rage), down toward collapse is less (contentment, sadness, despair). The second runs from the center outward: pleasant, settled feelings gather near the Self, and the most distressing live at the outer ring.",
+  families:"The Feeling Wheel, made by Gloria Willcox, sorts feelings into six families. Three of them, joyful, powerful, and peaceful, tend to live inside the window. The other three, mad, scared, and sad, grow louder toward the edge and beyond: mad and scared toward the top and right, sad toward the bottom, and all three hidden under the smile of fawn.",
+  held:"The rings show where emotions tend to cluster, not where they belong. Anger, fear, and sadness are not outside the window by nature. Felt with enough room around them, they are healthy and useful, and the window is that room. What moves a state outward is less the emotion itself than how much of it there is, how fast it came, and whether you are alone with it.",
+  naming:"Putting a feeling into words, even just \"this is fear,\" is a small act of awareness. Studies of affect labeling find that naming a feeling can quiet the brain's alarm (Lieberman and colleagues, 2007). In Internal Family Systems terms, it is also a way to notice a part: \"a part of me is angry\" leaves room for the Self to be with the anger, rather than becoming it."
+};
+const emoList=a=>a.map((w,i)=>i?w.charAt(0).toLowerCase()+w.slice(1):w).join(", ");
 
 // Moving around the circle: each neighbor pair, both ways, and the two crossings
 const MOVES = [
@@ -597,9 +651,14 @@ function ringShade(layer,r0,r1){
 
 /* ---------- Draw ---------- */
 const cells=[];
+let lens="states";   // what the rings show: the states, or the emotions that tend to arise in them
 const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the window"};
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
+  if(lens==="emotions"){
+    const tag=layer==="win"?"Inside the window":layer==="edge"?"At the edge":"Outside the window", name=layer==="out"?d.name:d[layer].name;
+    return `<span class="ringtag">${tag}</span><span class="nstag">Emotions that tend to arise here</span><b>${name}</b><span class="tl">${emoList(FEEL[k][layer])}.</span>${layer==="win"?"":`<span class="tl"><em>Held in the window:</em> ${FEEL[k].held.split(". ")[0]}.</span>`}${more}`;
+  }
   if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">Ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
   if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${more}`;
   return `<span class="ringtag">Outside the window</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
@@ -682,7 +741,7 @@ function draw(){
   const labels=el("g",{"pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
-  ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.win[0],R.win[1]);
+  ringShade("out",R.out[0],R.out[1]); ringShade("edge",R.edge[0],R.edge[1]); ringShade("win",R.core*0.5,R.win[1]);   // the window's color runs in under the petals, so no dark ring shows behind them
   // the window's light radiates out through the edge and fades into the defenses, so the edge reads as a passage
   const eR=R.edge[1], oR=R.out[0]+16;
   // in dark mode the edge takes its defense's color and the window's light only touches its inner rim
@@ -699,14 +758,15 @@ function draw(){
     addCell(sector(R.edge[0],R.edge[1],a0,a1,1,0),"edge",k,null).classList.add("hit");
     addCell(sector(R.win[0],R.win[1],a0,a1,1,0),"win",k,null).classList.add("hit");
     const om=(R.out[0]+R.out[1])/2, em=(R.edge[0]+R.edge[1])/2, wm=(R.win[0]+R.win[1])/2;
-    twoLine(om,b0+3,b1-3,d.name.toUpperCase(),ot>70?d.out.words:"","lbl t-out t-caps","lbl t-out t-sub",ot>100?21:18,16,ot>100?32:26,labels);
+    const emo=lens==="emotions", fw=FEEL[k].wheel;
+    twoLine(om,b0+3,b1-3,d.name.toUpperCase(),ot>70?(emo?fw.out:d.out.words):"","lbl t-out t-caps","lbl t-out t-sub"+(emo?" t-emo":""),ot>100?21:18,16,ot>100?32:26,labels);
     // the edge's name, and at a wider edge its early signals
     const eTexts=[];
     if(et>=30){ const flip=d.angle>95&&d.angle<265, up=flip?-11:11;
       eTexts.push(arcText(em+up,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",17,0.3,labels));
-      if(et>48) eTexts.push(arcText(em-up,b0+3,b1-3,d.edge.words,"lbl t-edge t-sub",14.5,0.2,labels)); }
+      if(et>48) eTexts.push(arcText(em-up,b0+3,b1-3,emo?fw.edge:d.edge.words,"lbl t-edge t-sub"+(emo?" t-emo":""),14.5,0.2,labels)); }
     else eTexts.push(arcText(em,b0+3,b1-3,d.edge.name,"lbl t-edge t-ital",Math.max(11,et*0.62),0.2,labels));
-    twoLine(wm,b0+3,b1-3,d.win.name,wt>88?d.win.words:"","lbl t-win","lbl t-win t-sub",24,16,27,labels);
+    twoLine(wm,b0+3,b1-3,d.win.name,wt>88?(emo?fw.win:d.win.words):"","lbl t-win","lbl t-win t-sub"+(emo?" t-emo":""),24,16,27,labels);
   });
   // the window's edge, marked by a soft band of light, with four doorways where orienting brings you back in
   el("circle",{cx:0,cy:0,r:f(R.win[1]+3),fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
@@ -958,6 +1018,7 @@ addTab("How to read","intro",()=>showIntro());
 addTab("Where am I?","where",()=>showWhere(true));
 addTab("The Self","self",()=>showSelf(true));
 addTab("Awareness","aware",()=>showAware(true));
+addTab("Emotions","feel",()=>showFeel(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
 addTab("Moving between","moves",()=>showMoves(null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
@@ -983,6 +1044,8 @@ function wire(){
   panel.querySelectorAll("[data-practice]").forEach(b=>b.addEventListener("click",()=>showPractice(true)));
   panel.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>showReg(true)));
   panel.querySelectorAll("[data-aware]").forEach(b=>b.addEventListener("click",()=>showAware(true)));
+  panel.querySelectorAll("[data-feel]").forEach(b=>b.addEventListener("click",()=>showFeel(true)));
+  panel.querySelectorAll("[data-lens]").forEach(b=>b.addEventListener("click",()=>setLens(b.dataset.lens)));
   panel.querySelectorAll("[data-patterns]").forEach(b=>b.addEventListener("click",()=>showPatterns(true)));
 }
 function applySel(){
@@ -1022,6 +1085,7 @@ function showIntro(){
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction: energized, still, settled, and connected. The dashed line is the window's edge.</div></li>
       <li>${sw("--e-ff")}<div><b>At the edge</b>The early signals that you are leaving the window: revving, bracing, sinking, over-tuning. Catching them here makes the way back short.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses: fight or flight at the top, freeze to the right, collapse below, fawn to the left.</div></li>
+      <li>${sw("--fa")}<div><b>The emotions lens</b>Switch the wheel from States to Emotions, under the wheel, to see the emotions that tend to arise in each state. The Emotions tab explains how they map, and how any emotion can be held in the window.</div></li>
       <li>${sw("--gold")}<div><b>Doorways and movements</b>The gold doorways on the window's edge are orienting, the way back in. The two small arrows at each junction in the outer ring are the movements between neighboring defenses, one in each direction.</div></li>
     </ul>
     <p>Read out from the center along any direction: the healthy state, its early signals, and the defense it can become. Read around the outside for how one defense can turn into another. Read inward for the way home.</p>
@@ -1108,6 +1172,23 @@ function showAware(user){
   wire(); if(user) bringPanel();
 }
 
+// Emotions: which feelings tend to arise in each part of the wheel, and how any emotion can be held in the window
+function showFeel(user){
+  setView("feel");
+  const layers=[["win","Inside the window"],["edge","At the edge"],["out","Outside the window"]];
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">What you feel</div><h2>Emotions on the wheel</h2><div class="meta">Which emotions tend to arise in each state, and how any of them can be held</div>
+      <p>${EMO.intro}</p>
+      <p><button type="button" class="btn" data-lens="${lens==="emotions"?"states":"emotions"}">${lens==="emotions"?"Show the states on the wheel":"Show the emotions on the wheel"}</button></p></div>
+    <div class="ring"><h3>Feelings, emotions, and states</h3><p>${EMO.calm}</p><p>${EMO.calmSelf}</p><button type="button" class="linkbtn" data-self>The qualities of Self</button></div>
+    <div class="ring"><h3>The wheel as a map of feeling</h3><p>${EMO.map}</p><p>${EMO.families}</p></div>
+    <div class="ring"><h3>In each direction</h3><div class="emogrid">${DIRS.map((d,k)=>`<div class="emorow"><h4>${sw(d.color)}<button type="button" class="linkbtn" data-dir="${k}">${d.name}</button></h4>${layers.map(([L,t])=>`<p><b>${t}, ${(L==="out"?d.name:d[L].name).toLowerCase()}:</b> ${emoList(FEEL[k][L]).toLowerCase()}.</p>`).join("")}</div>`).join("")}</div></div>
+    <div class="ring"><h3>Any emotion can be held in the window</h3><p>${EMO.held}</p>${ul(DIRS.map((d,k)=>`<b>${d.name}.</b> ${FEEL[k].held}`))}</div>
+    <div class="ring"><h3>Naming it</h3><p>${EMO.naming}</p><button type="button" class="linkbtn" data-where>Where am I right now?</button></div>
+    <p class="note">These are tendencies drawn from emotion research and clinical models, not a test: people feel differently, and the same emotion can show up in more than one place.</p>
+    <p class="src">Russell (1980); Willcox (1982); Lieberman et al. (2007); Dana (2018); Schwartz (2021)</p>`;
+  wire(); if(user) bringPanel();
+}
+
 function showSelf(user, ci){
   setView("self");
   const S=SELF;
@@ -1132,13 +1213,15 @@ function showDir(k, layer, user){
   const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">${d.move}</div><h2>${d.name}</h2>
       <p>${o.text}</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals that you are leaving the window toward ${d.name.toLowerCase()}. Catching them here makes the way back short, whenever you choose to take it.</p>${ul(d.edge.signs)}</div>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}Inside the window: ${d.win.name}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}At the edge: ${d.edge.name}</h3><p class="about">The early signals that you are leaving the window toward ${d.name.toLowerCase()}. Catching them here makes the way back short, whenever you choose to take it.</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p></div>
     <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}Outside the window: ${d.name}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p>
       <h4>How it can feel</h4>${ul(o.feels)}
+      <h4>Emotions that tend to arise here</h4><p>${emoList(FEEL[k].out)}.</p>
       <p class="voice">${o.voice}</p>
       <h4>What it protects</h4><p>${o.protects}</p>
       <h4>Parts</h4><p>${o.parts}</p></div>
+    <div class="ring"><h3>The same emotion, in and out of the window</h3><p>${FEEL[k].held}</p><button type="button" class="linkbtn" data-feel>Emotions on the wheel</button></div>
     <div class="ring"><h3>The way back toward the Self</h3>${ul(o.back)}<button type="button" class="linkbtn" data-home>Orienting, and coming home</button></div>
     <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
     <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
@@ -1214,6 +1297,16 @@ function isDark(){ const t=root.getAttribute("data-theme"); return t?t==="dark":
 function syncTheme(){ const d=isDark(); root.classList.toggle("is-dark",d); tbtn.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode"); tbtn.title=d?"Light mode":"Dark mode"; }
 tbtn.addEventListener("click",()=>{ const n=isDark()?"light":"dark"; root.setAttribute("data-theme",n); try{ localStorage.setItem("wm-theme",n); }catch(e){} syncTheme(); draw(); });
 sysDark.addEventListener("change",()=>{ syncTheme(); draw(); }); syncTheme();
+
+/* the emotions lens */
+const lensBtns=[...document.querySelectorAll(".capbar [data-lens]")], lenshint=document.getElementById("lenshint");
+function setLens(v){
+  lens=v; lensBtns.forEach(b=>b.setAttribute("aria-pressed",b.dataset.lens===v?"true":"false"));
+  lenshint.hidden=v!=="emotions"; moonTip(null); draw();
+  if(view==="feel") showFeel(false);
+}
+lensBtns.forEach(b=>b.addEventListener("click",()=>setLens(b.dataset.lens)));
+document.getElementById("lensread").addEventListener("click",()=>showFeel(true));
 
 /* legend key */
 const lk=document.getElementById("legendkey");
