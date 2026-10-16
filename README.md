@@ -12,7 +12,7 @@ A synthesis of earlier models, described in our own words: the window of toleran
 - **Inside the window:** one continuous soft-yellow ring that blends between four healthy states, one per direction: energized, still, settled, connected. Each is the regulated, safety-held form of the defense beyond it (Deb Dana's blended states). The window is framed in gold, with four gold doorways for orienting.
 - **At the edge:** the early signals: revving, bracing, sinking, over-tuning.
 - **Outside the window:** fight or flight (top), freeze (right), collapse (bottom), fawn (left), as one continuous ring: the colors flow into one another round the circle with no border between them.
-- **The movements:** at each junction between two defenses, two slender tapered arrows, one in each direction (eight in all). The braid is a three-strand plait: one gold strand for the Self and the safe and connected state, and two that carry the four defense colors as they flow round, so the whole nervous system is woven in.
+- **The movements:** at each junction between two defenses, two slender tapered arrows, one in each direction (eight in all). The braid is a three-strand plait of the three nervous systems: gold for ventral (safe and connected), red for sympathetic (fight or flight), and blue for dorsal (collapse).
 - **Look and feel:** a soft pastel palette on warm ivory (a deep plum night in dark mode, where the window stays yellow), Cormorant Garamond for the wheel and headings, and a halo of light round the ring. Hovering lights only the section under the pointer.
 - **Your window:** a slider that widens the Self and the window and thins the rings of threat. The "How wide is mine?" reflection sets it.
 

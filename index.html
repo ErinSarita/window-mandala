@@ -250,7 +250,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <p id="modelnote"></p>
     <h3>How it is built</h3>
     <p>At the center is the Self, in two layers: the Flower of Life at its heart, and around it eight petals, one for each of its qualities. Around them is the window of capacity, the range in which you can feel strong things and stay connected, divided into four directions. Inside the window, each direction is a healthy state: energized, still, settled, and connected. Just outside the window's dashed edge are the early signals of each: revving, bracing, sinking, and over-tuning. Outside those are the four defenses: fight or flight, freeze, collapse, and fawn, which flow into one another as one continuous ring. At each junction between two defenses sit two small arrows, one in each direction, for the movement between them, and four gold doorways on the window's edge mark orienting, the way back in.</p>
-    <p>The window is not fixed. Drag "Your window" and the center grows while the threat rings thin, the way practice, support, and safety can widen it over time. The braid at the edge weaves the whole nervous system together: gold for the safe and connected state, red for fight or flight, purple for freeze, blue for collapse, and pink for fawn.</p>
+    <p>The window is not fixed. Drag "Your window" and the center grows while the threat rings thin, the way practice, support, and safety can widen it over time. The braid at the edge weaves the three nervous systems together: gold for ventral, the safe and connected state; red for sympathetic, fight or flight; and blue for dorsal, collapse.</p>
     <h3>An evolutionary view</h3>
     <p>Each state on this wheel is an inheritance. Collapse is the oldest, shared with reptiles and fish: playing dead. Fight and flight belong to every mammal. The social, connected state, and the ability to calm one another with a face and a voice, is the newest. Polyvagal theory orders them this way; some physiologists dispute its anatomy, but the picture of defenses as survival strategies, each wise in its time, is widely shared. Nothing on the outer ring is a flaw. Each is the body trying to keep you alive.</p>
     <h3>Going gently</h3>
@@ -618,15 +618,15 @@ function addCell(d, layer, k, fill){
   cells.push(c); return c;
 }
 /* The braid: a three-strand plait round the whole wheel, the same weave as The Pregnancy and Birth Mandala.
-   One strand is gold, for the Self and the safe and connected state; the other two carry the four defenses'
-   colors as they flow round the circle, half a turn apart, so every state of the nervous system is woven in.
+   Its three strands are the three nervous systems of polyvagal theory: gold for ventral, the safe and connected
+   state of the window; red for sympathetic, fight or flight; and blue for dorsal, collapse.
    Each strand weaves across the band and passes over one strand, then under the other, in turn: every strand
    is cut into pieces where it changes from lying under to lying on top, the lower pieces are drawn first, and
    each piece carries a thin satin highlight down its middle. */
 function drawBraid(){
   const hit=el("path",{d:`M0 ${-R.braid[1]-4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${R.braid[1]+4} A${R.braid[1]+4} ${R.braid[1]+4} 0 1 1 0 ${-R.braid[1]-4} M0 ${-R.braid[0]+4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${R.braid[0]-4} A${R.braid[0]-4} ${R.braid[0]-4} 0 1 0 0 ${-R.braid[0]+4}Z`,
     class:"braidhit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The braid. Read what it means"});
-  const html=`<b>The braid</b>The whole nervous system, woven into one. The gold strand is the Self and the safe, connected state; the other two carry fight or flight, freeze, collapse, and fawn as they flow round. Every state belongs to you.`;
+  const html=`<b>The braid</b>The three nervous systems, woven into one: gold for ventral, the safe and connected state; red for sympathetic, fight or flight; and blue for dorsal, collapse. Freeze and fawn are where these strands cross. Every state belongs to you.`;
   hit.addEventListener("click",e=>{ e.stopPropagation();
     if(hit.classList.contains("open")){ moonTip(null); return; }
     const pt=new DOMPoint(e.clientX,e.clientY).matrixTransform(svg.getScreenCTM().inverse());
@@ -634,15 +634,15 @@ function drawBraid(){
   hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); moonTip(hit,{x:0,y:-(R.braid[0]+R.braid[1])/2,html}); } });
   hit.addEventListener("blur",()=>{ if(openMoon===hit) moonTip(null); });
   const g=el("g",{class:"braid","pointer-events":"none","aria-hidden":"true"});
-  const rc=(R.braid[0]+R.braid[1])/2, A=8.4, N=52, SUB=8, gold=rgb(hexRGB(cssv("--sun4")));
-  const strands=[["gold",0],[0,2*Math.PI/3],[180,4*Math.PI/3]];
+  const rc=(R.braid[0]+R.braid[1])/2, A=8.4, N=52, SUB=8;
+  const strands=[["--sun4",0],["--ff",2*Math.PI/3],["--co",4*Math.PI/3]];
   const pieces=[[],[]];   // [under, over]
   strands.forEach(([kind,ph])=>{
     for(let m=0;m<N*4;m++){
       const t0=m*Math.PI/2-ph, pts=[];
       for(let j=0;j<=SUB;j++){ const t=t0+j*Math.PI/(2*SUB), [x,y]=P(rc+A*Math.sin(t+ph), t*180/(Math.PI*N)); pts.push((j?"L":"M")+f(x)+" "+f(y)); }
       const mid=(t0+Math.PI/4)*180/(Math.PI*N);
-      pieces[m%2===0?1:0].push([pts.join(" "), kind==="gold"?gold:colorAt(mid+kind,"out")]);
+      pieces[m%2===0?1:0].push([pts.join(" "), rgb(hexRGB(cssv(kind)))]);
     }
   });
   pieces.forEach(list=>list.forEach(([d,color])=>{
