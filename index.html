@@ -127,7 +127,12 @@ svg.dimming .cell.lit{filter:brightness(1.05) saturate(1.06)}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
 svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door{display:none}
-.loop-under{fill:none;stroke:var(--surface);stroke-width:9;stroke-opacity:.6;pointer-events:none}
+.loop-band{fill:#F4D98A;fill-opacity:.32;pointer-events:none}
+.loop-border{fill:none;stroke:#B98428;stroke-width:1.6;stroke-opacity:.9;pointer-events:none}
+.loop-hit{fill:transparent;cursor:help;outline:none}
+.loop-strain{fill:none;stroke:#B98428;stroke-width:1.6;stroke-dasharray:1.5 5;stroke-linecap:round;opacity:.9;pointer-events:none}
+.broken-band{fill:var(--ink);fill-opacity:.05;pointer-events:none}
+.broken-border{fill:none;stroke:var(--ink);stroke-width:1;stroke-opacity:.35;stroke-dasharray:6 6;pointer-events:none}
 .loop-line{fill:none;stroke:#C9962E;stroke-width:3.5;stroke-dasharray:14 7;pointer-events:none}
 @media (prefers-reduced-motion: no-preference){ .loop-line.flowing{animation:loopflow 2.4s linear infinite} }
 @keyframes loopflow{to{stroke-dashoffset:-42}}
@@ -520,7 +525,12 @@ const WAY_KEYS=["ff","fr","co","fa","edge","win"];
 // Heart rate variability is the loop's readout. Outside the window the brake has given way and the loop is broken.
 const LOOP={
   nodes:[["prefrontal cortex","the brake",45],["amygdala","the alarm",165],["heart","the rhythm",290]],
-  broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]]
+  broken:[["the brake gives way",22],["the alarm runs",112],["the rhythm drops away",202],["the heart races, rigid",292]],
+  tips:{
+    whole:"The window is polyvagal theory's ventral state, safe and connected, and this unbroken loop is what holds it: the prefrontal cortex brakes the alarm, and through the ventral vagus the heart's rhythm stays steady and flexible. Porges calls this the vagal brake.",
+    strain:"The brake begins to slip: the heart speeds up and its rhythm grows less flexible. In polyvagal terms, the vagal brake is starting to withdraw. Caught here, the loop can still close again.",
+    broken:"The prefrontal brake has given way. In fight or flight the sympathetic system drives the heart fast and rigid; in collapse the dorsal vagus drops it low; freeze holds both at once; fawn keeps a social face over fear. In polyvagal terms, the ventral vagal brake has withdrawn."
+  }
 };
 // One emotion, held or driving: the same feeling in three places along its direction. Inside the window it is felt
 // and held: sympathetic or dorsal energy carried by the safe, connected state (Dana's blended states), a part felt
@@ -772,24 +782,40 @@ function drawTrace(animate){
   const g=document.getElementById("traceG"); if(!g) return; g.innerHTML=""; if(!TRACE) return;
   const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(TRACE.loop){
-    // inside the window: one closed loop through the prefrontal cortex, the amygdala, and the heart, flowing
-    const wm=(R.win[0]+R.win[1])/2, rl=wm+(R.win[1]-wm)*0.62, rt=R.win[1]-6, ro=R.out[0]+10, rot=R.out[0]+28;
+    // three rings: the loop whole inside the window, straining at the edge, and broken outside it
+    const wm=(R.win[0]+R.win[1])/2, rl=wm+(R.win[1]-wm)*0.62, rt=R.win[1]-6;
     const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-    el("path",{d:ring(rl),class:"loop-under"},g);
+    const band=(r0,r1)=>ring(r1)+" "+ring(r0)+"Z";
+    const go=()=>{ const t=document.getElementById("loop"); if(t) bringPanel(t); };
+    const tipHit=(r0,r1,tip,html)=>{ const h=el("path",{d:band(r0,r1),"fill-rule":"evenodd",class:"loop-hit",tabindex:"0",role:"button","aria-label":tip},g);
+      hookTip(h,()=>{ const [x,y]=P((r0+r1)/2,0); return {x,y,html}; },go); };
+    // whole: a bordered band of light, with the loop flowing inside it
+    const b0=rl-11, b1=rl+11;
+    el("path",{d:band(b0,b1),"fill-rule":"evenodd",class:"loop-band"},g);
+    [b0,b1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"loop-border"},g));
     el("path",{d:ring(rl),class:"loop-line"+(reduce?"":" flowing")},g);
     LOOP.nodes.forEach(([name,role,a],i)=>{
       const [x,y]=P(rl,a);
       el("circle",{cx:f(x),cy:f(y),r:i===2?13:10,class:"loop-node"+(i===2?" heart":"")},g);
       if(i===2) el("path",{d:"M0 5.5 C-6 1.5 -6 -3.5 -3 -4.5 C-1.5 -5 -0.5 -4 0 -3 C0.5 -4 1.5 -5 3 -4.5 C6 -3.5 6 1.5 0 5.5 Z",transform:`translate(${f(x)} ${f(y)}) scale(1.15)`,fill:"#fff"},g);
       arcText(rt+3,a-34,a+34,`${name} · ${role}`,"lbl t-loop",17,0.6,g);
-      // small chevrons between the nodes show the way the loop turns
       const mid=a+60, [cx,cy]=P(rl,mid), t=rad(mid)+Math.PI/2, ux=Math.cos(t), uy=Math.sin(t), nx=-uy, ny=ux;
       el("path",{d:`M${f(cx-ux*6+nx*6)} ${f(cy-uy*6+ny*6)} L${f(cx+ux*4)} ${f(cy+uy*4)} L${f(cx-ux*6-nx*6)} ${f(cy-uy*6-ny*6)}`,class:"loop-chev"},g);
     });
-    // outside the window: the same loop, broken, where the brake has given way
+    tipHit(b0,b1,"The loop, whole",`<span class="ringtag">Inside the window</span><b>The loop, whole</b><span class="tl">${LOOP.tips.whole}</span><span>Tap to read more.</span>`);
+    // straining: a thin, fraying loop at the edge
+    const rs=R.edge[0]+7;
+    el("path",{d:ring(rs),class:"loop-strain"},g);
+    [[45,"the loop strains"],[225,"the loop strains"]].forEach(([a,txt])=>arcText(R.edge[0]+20,a-20,a+20,txt,"lbl t-loopbroken",15,0.5,g));
+    tipHit(R.edge[0],R.edge[0]+26,"The loop strains",`<span class="ringtag">At the edge</span><b>The loop strains</b><span class="tl">${LOOP.tips.strain}</span><span>Tap to read more.</span>`);
+    // broken: its own faint ring in the defenses, with the loop in pieces
+    const o0=R.out[0]+3, o1=R.out[0]+50, ro=R.out[0]+15, rot=R.out[0]+33;
+    el("path",{d:band(o0,o1),"fill-rule":"evenodd",class:"broken-band"},g);
+    [o0,o1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"broken-border"},g));
     const seg=(r,a0,a1)=>{ const [x0,y0]=P(r,a0); return `M${f(x0)} ${f(y0)} `+arc(r,a0,a1,1); };
     [[12,36],[56,80],[102,126],[146,170],[192,216],[236,260],[282,306],[326,350]].forEach(([a0,a1])=>el("path",{d:seg(ro,a0,a1),class:"loop-broken"},g));
     LOOP.broken.forEach(([txt,a])=>arcText(rot,a-22,a+22,txt,"lbl t-loopbroken",16,0.5,g));
+    tipHit(o0,o1,"The loop, broken",`<span class="ringtag">Outside the window</span><b>The loop, broken</b><span class="tl">${LOOP.tips.broken}</span><span>Tap to read more.</span>`);
     return;
   }
   if(TRACE.held!=null){
@@ -1232,7 +1258,8 @@ function showIntro(){
     <p class="note">The window, top, and bottom follow polyvagal theory. Reading freeze and fawn as blends is this mandala's synthesis; fawn itself comes from Pete Walker's work, not from polyvagal theory.</p>
     <h2 id="loop">The loop that holds the window</h2>
     <p>Inside your window, a loop is working. The <b>prefrontal cortex</b>, behind the forehead, acts as a brake on the <b>amygdala</b>, the brain's alarm. Through the vagus nerve, the same brake slows and steadies the <b>heart</b>, and the heart sends its rhythm back up to the brain. When the loop holds, the heart's rhythm stays flexible, quickening a little on each in-breath and slowing on each out-breath. That flexibility is heart rate variability, and the more flexible it is, the more feeling you can carry and still choose what to do.</p>
-    <p>At the edge of your capacity the loop strains, and when there is more energy than it can hold, the brake gives way. The prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is what leaving the window is, in the body.</p>
+    <p>At the edge of your capacity the loop strains, and when there is more energy than it can hold, the brake gives way. The prefrontal cortex goes quiet, the alarm runs on its own, and the heart's rhythm loses its flexibility: racing and rigid in fight or flight, dropping away in collapse. That is what leaving the window is, in the body. On the wheel, the loop is whole inside the window, strains at the edge, and is broken outside it, in the defenses.</p>
+    <p><b>Polyvagal theory describes the same loop from the vagus nerve's side.</b> In its terms, the window of capacity is the ventral state, safe and connected, and the unbroken loop is what holds you there. Stephen Porges calls the ventral vagus's steadying of the heart the vagal brake. Inside the window the brake holds; at the edge it begins to withdraw; outside it has withdrawn, and older systems take over: the sympathetic in fight or flight, the dorsal vagus in collapse, both at once in freeze. The two models agree that a flexible, vagally steadied heart sits at the center of regulation. They differ on anatomy, and the polyvagal account of it is disputed by some physiologists.</p>
     <p>The heart is where the loop can be felt and reached. The brain sets the rhythm, but slow breathing near six breaths a minute strengthens the loop from the body up, which is why coherent breathing is one of the most direct ways back, and, practiced over time, one of the ways the window widens.</p>
     <p><button type="button" class="btn" id="loopbtn">Show the loop on the wheel</button></p>
     <p class="note">This is Julian Thayer and Richard Lane's neurovisceral integration model, simplified: the real loop is a wider network. Lower heart rate variability is linked with poorer emotion regulation, and heart rate variability biofeedback has modest evidence for easing stress and anxiety (Goessl and colleagues, 2017). Under strong stress, the prefrontal cortex's control drops quickly (Arnsten, 2009).</p>
