@@ -270,9 +270,15 @@ svg.rimfocus .rim-focus{opacity:1}
 .caprow input.arousal{accent-color:var(--ff)}
 .caprow.arow{margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
 .arousalcap{margin:0;min-height:2.6em}
+.arpaths{display:flex;flex-wrap:wrap;gap:6px}
+.arpaths button{font:inherit;font-size:13px;font-weight:600;padding:4px 11px 4px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.arpaths button .sw{width:10px;height:10px}
+.arpaths button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.ar-charge{fill:none;stroke:#C24A3C;stroke-width:4.5;stroke-linecap:round;pointer-events:none}
+.ar-mask{fill:#FFF1F6;stroke:var(--fa);stroke-width:1.6;stroke-dasharray:4 4;pointer-events:none}
 .arousalcap small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 /* the arousal slider's marks on the wheel: the alarm warming, the brake straining, the break, the clamp, and where you are */
-.ar-alarm{fill:var(--ff);pointer-events:none}
+.ar-alarm{pointer-events:none}
 .ar-strain{fill:#FFF6D6;stroke:#FFD866;stroke-width:1.5;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
 .ar-break{fill:none;stroke:#B23A2E;stroke-width:5;stroke-linejoin:round;stroke-linecap:round;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.9))}
 .ar-clamp{fill:#2E3550;pointer-events:none}
@@ -388,7 +394,8 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
         <p>Drag to see the window widen as awareness widens: the Self stays at the center, the window grows around it, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
-        <div class="caprow arow"><label for="arousal">What's rising</label><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="capname" id="arousalname"></span></div>
+        <div class="caprow arow"><label for="arousal">What's building</label><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="capname" id="arousalname"></span></div>
+        <div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
         <p class="arousalcap" id="arousalcap" aria-live="polite"></p>
         <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
@@ -1416,52 +1423,102 @@ const cap=document.getElementById("cap"), capname=document.getElementById("capna
 function bandOf(t){ return WIDTH.bands.find(b=>t<b.upto); }
 function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(CAP*100); capname.textContent=bandOf(CAP).name; if(redraw!==false) draw(); }
 cap.addEventListener("input",()=>setCap(cap.value/100));
-// What's rising: one common path of rising arousal, the defense cascade. The breakpoint sits at the window's border,
-// so a wider window holds more before the brake gives way.
-let AROUSAL=0;
-const arousal=document.getElementById("arousal"), arousalname=document.getElementById("arousalname"), arousalcap=document.getElementById("arousalcap");
+// What's building: as the load rises, which way the body goes depends on the situation and on what it learned. Each
+// direction walks the same loop, from the window through its own edge signal to the brake, and meets the rim in its own
+// way: the brake gives way (fight or flight), clamps on top of the charge (freeze), clamps down (collapse), or holds the
+// face but not the fear (fawn). A fifth path follows one common sequence, the defense cascade. The breakpoint sits at the
+// window's border, so a wider window holds more before the rim is crossed.
+let AROUSAL=0, ARPATH=0;
+const arousal=document.getElementById("arousal"), arousalname=document.getElementById("arousalname"), arousalcap=document.getElementById("arousalcap"), arpaths=document.getElementById("arpaths");
 function arousalMarks(){ const b=0.45+0.25*CAP; return {on:b-0.22, strain:b-0.07, b, freeze:Math.min(0.92,b+0.2)}; }
-function arousalStage(a){ const S=arousalMarks(); if(a<=0) return "rest"; if(a<S.on) return "held"; if(a<S.strain) return "alarm"; if(a<S.b) return "strain"; if(a<S.freeze) return "ff"; return a<S.freeze+(1-S.freeze)*0.45?"freeze":"collapse"; }
-const AROUSAL_TEXT={
-  rest:["At rest","Drag to watch energy rise: the alarm building, the brake holding, and where it gives way."],
-  held:["Rising, held","Energy is rising, held by your window: alive, and still able to choose. The heart's rhythm stays flexible."],
-  alarm:["The alarm builds","The alarm is building at the edge: revving. You are still inside your window, with a way back. HRV begins to fall."],
+// per direction: held, the edge, the brake straining, past the rim, and deeper in
+const BUILD_TEXT=[
+  ["Energy is rising, held by your window: alive, and still able to choose. The heart's rhythm stays flexible.",
+   "Revving at the edge: restless, irritable, urgent. You are still inside your window, with a way back. HRV begins to fall.",
+   "The brake is straining: you are near your capacity, but it is still manageable. This is the moment to turn back toward center.",
+   "Past the breakpoint, the brake gives way. Fight or flight takes over: the heart fast and rigid, the loop broken.",
+   "Deeper in, the charge runs the whole body. The way back starts with moving the energy, then slowing the breath."],
+  ["Alert and still, held by your window: watching, listening, and able to move.",
+   "Bracing at the edge: a held breath, scanning, going still. You are still inside your window, with a way back.",
+   "The brake is straining against the charge: you are near your capacity, but it is still manageable. Turn back toward center now.",
+   "Past the breakpoint, the brake clamps down on top of the charge: accelerator and brake at once, and the body locks still.",
+   "Deeper in: stuck, unable to move or speak. The way back starts with tiny movements and a long out-breath."],
+  ["Slowing down, held by your window: rest that still feels safe.",
+   "Sinking at the edge: heaviness, fog, pulling away. You are still inside your window, with a way back.",
+   "The brake is pressing harder: you are near your capacity, but it is still manageable. Warmth and gentle movement help here.",
+   "Past the breakpoint, the brake clamps down too hard: feeling is pressed out of reach, and the body drops low.",
+   "Deeper in: far away, numb. The way back starts with warmth, gentle movement, and safety, not more calm."],
+  ["Reaching toward others, held by your window: warm, and still yourself.",
+   "Over-tuning at the edge: scanning moods, a yes that is not yours. You are still inside your window, with a way back.",
+   "The brake is straining: your own needs are slipping from view, but it is still manageable. Turn back toward center now.",
+   "Past the breakpoint, the face stays social while fear takes over underneath: the brake holds the smile, not the fear.",
+   "Deeper in: pleasing, self-erasing. The way back starts with safety, then one small no."]];
+const CASCADE_TEXT={
+  held:["Building, held","Energy is rising, held by your window: alive, and still able to choose. The heart's rhythm stays flexible."],
+  alarm:["Revving","The alarm is building at the edge. You are still inside your window, with a way back. HRV begins to fall."],
   strain:["The brake strains","The brake is straining: you are near your capacity, but it is still manageable. This is the moment to turn back toward center."],
-  ff:["Past the breakpoint","Past the breakpoint, the brake gives way. Fight or flight takes over: the heart fast and rigid, the loop broken."],
+  ff:["Fight or flight","Past the breakpoint, the brake gives way. Fight or flight takes over: the heart fast and rigid, the loop broken."],
   freeze:["Freeze","Still more than it can hold: the brake clamps down on top of the charge, and the body locks still."],
   collapse:["Collapse","The brake clamps down hard: feeling drops away, into collapse. The way back starts with warmth, gentle movement, and safety."]};
+const NOTE_DIR="Which way you go depends on the situation and on what your body learned: how close the threat is, and whether fighting or fleeing seems possible. A wider window moves the breakpoint further out.";
+const NOTE_CASCADE="One common sequence, the defense cascade; many people skip steps or go straight to freeze, fawn, or collapse. A wider window moves the breakpoint further out.";
+// the five paths, as chips under the slider
+[["Toward fight or flight",0],["Toward freeze",1],["Toward collapse",2],["Toward fawn",3],["If it keeps building",4]].forEach(([t,k])=>{
+  const b=document.createElement("button"); b.type="button"; b.dataset.k=k; b.setAttribute("aria-pressed",k===ARPATH?"true":"false");
+  b.innerHTML=(k<4?sw(DIRS[k].color):`<span class="sw" style="background:linear-gradient(90deg,var(--ff),var(--fr),var(--co))"></span>`)+t;
+  b.addEventListener("click",()=>{ ARPATH=k; arpaths.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.k===k?"true":"false")); drawArousal(); });
+  arpaths.appendChild(b); });
+function buildStage(a){ const S=arousalMarks();
+  if(a<=0) return "rest"; if(a<S.on) return "held"; if(a<S.strain) return "alarm"; if(a<S.b) return "strain";
+  if(ARPATH<4) return a<S.b+(1-S.b)*0.45?"past":"deep";
+  if(a<S.freeze) return "ff"; return a<S.freeze+(1-S.freeze)*0.45?"freeze":"collapse"; }
 function drawArousal(){
-  const a=AROUSAL, st=arousalStage(a), [nm,tx]=AROUSAL_TEXT[st];
+  const a=AROUSAL, st=buildStage(a), casc=ARPATH===4, k=casc?0:ARPATH, d=DIRS[k];
+  const idx={held:0,alarm:1,strain:2,past:3,deep:4}[st];
+  let nm, tx;
+  if(st==="rest"){ nm="At rest"; tx="Choose which way it tends to go, then drag to watch the load build: the edge signals, the brake straining, and what happens at the rim."; }
+  else if(casc){ [nm,tx]=CASCADE_TEXT[st]; }
+  else { nm=[ "Building, held", d.edge.name, "The brake strains", d.name, d.name ][idx]; tx=BUILD_TEXT[k][idx]; }
   arousalname.textContent=nm;
-  arousalcap.innerHTML=tx+(a>0?"<small>One common path, the defense cascade; not everyone moves in this order. A wider window moves the breakpoint further out.</small>":"");
+  arousalcap.innerHTML=tx+(a>0?`<small>${casc?NOTE_CASCADE:NOTE_DIR}</small>`:"");
   const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML=""; if(a<=0) return;
-  const S=arousalMarks(), A=12, E=R.edge, rimIn=R.rim?R.rim[0]:R.edge[1]-6, rimOut=R.rim?R.rim[1]:R.edge[1], om=(R.out[0]+R.out[1])/2;
+  const S=arousalMarks(), base=d.angle, A=base+12, E=R.edge, rimIn=R.rim?R.rim[0]:R.edge[1]-6, rimOut=R.rim?R.rim[1]:R.edge[1];
   const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`, band=(r0,r1)=>ring(r1)+" "+ring(r0)+"Z";
   const u=(x,y)=>Math.max(0,Math.min(1,x/y)), lerp=(x,y,t)=>x+(y-x)*Math.max(0,Math.min(1,t)), q=(r,ang)=>{ const [x,y]=P(r,ang); return `${f(x)} ${f(y)}`; };
-  const start=(CR.L1+3+R.win[1])/2;
-  // the alarm warms in the fight-or-flight quarter as it builds
+  const start=(CR.L1+3+R.win[1])/2, rc=R.out[0]+(R.out[1]-R.out[0])*0.3, rDeep=R.out[0]+(R.out[1]-R.out[0])*0.42;
+  // the edge warms in this direction's quarter as the signal builds
   const al=u(a-S.on*0.7,S.b-S.on*0.7);
-  if(al>0) el("path",{d:sector(E[0],E[1],-45,45,1,0),class:"ar-alarm","fill-opacity":f(Math.min(al,1)*0.62)},g);
+  if(al>0) el("path",{d:sector(E[0],E[1],base-45,base+45,1,0),class:"ar-alarm",fill:`var(${d.color})`,"fill-opacity":f(al*0.62)},g);
   // the brake strains as the breakpoint nears
-  if(R.brake&&a<S.b){ const su=u(a-(S.strain-0.05),S.b-(S.strain-0.05)); if(su>0) el("path",{d:sector(R.brake[0],R.brake[1],-45,45,1,0),class:"ar-strain","fill-opacity":f(su*0.85)},g); }
-  // past the breakpoint the rim breaks open at the top
-  if(a>=S.b){ const m=(rimIn+rimOut)/2, B0=A-7; el("path",{d:`M${q(rimIn-7,B0-2.5)} L${q(m-4,B0+2.5)} L${q(m+4,B0-2.5)} L${q(rimOut+7,B0+2.5)}`,class:"ar-break"},g); }
-  // then the brake clamps down: the rim darkens all the way round, and the wheel dims toward collapse
-  if(a>=S.freeze){ const cu=u(a-S.freeze,1-S.freeze);
-    el("path",{d:band(0.5,R.out[1]),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(cu*0.22)},g);
-    el("path",{d:band(rimIn,rimOut),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(0.25+cu*0.4)},g); }
-  // where you are: out from the window through the alarm and the brake, across the rim, then round the defense cascade
-  const rc=R.out[0]+(R.out[1]-R.out[0])*0.3;
+  if(R.brake&&a<S.b){ const su=u(a-(S.strain-0.05),S.b-(S.strain-0.05)); if(su>0) el("path",{d:sector(R.brake[0],R.brake[1],base-45,base+45,1,0),class:"ar-strain","fill-opacity":f(su*0.85)},g); }
+  // at the rim, each direction meets it in its own way
+  const past=a>=S.b, pu=u(a-S.b,1-S.b), m=(rimIn+rimOut)/2;
+  const crack=ang=>el("path",{d:`M${q(rimIn-7,ang-2.5)} L${q(m-4,ang+2.5)} L${q(m+4,ang-2.5)} L${q(rimOut+7,ang+2.5)}`,class:"ar-break"},g);
+  if(past&&!casc){
+    if(k===0) crack(A-7);
+    if(k===1||k===2) el("path",{d:sector(rimIn-1,rimOut+1,base-45,base+45,1,0),class:"ar-clamp","fill-opacity":f((k===2?0.5:0.4)+pu*0.3)},g);
+    // freeze: the charge still pressing up under the clamp
+    if(k===1){ const [x0,y0]=P(rimIn-2,base-44); el("path",{d:`M${f(x0)} ${f(y0)} `+arc(rimIn-2,base-44,base+44,1),class:"ar-charge"},g); }
+    if(k===2) el("path",{d:band(0.5,R.out[1]),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(pu*0.24)},g);
+    if(k===3) el("path",{d:sector(rimIn-1,rimOut+1,base-45,base+45,1,0),class:"ar-mask","fill-opacity":f(0.55+pu*0.3)},g);
+  }
+  if(past&&casc){ crack(A-7);
+    if(a>=S.freeze){ const cu=u(a-S.freeze,1-S.freeze);
+      el("path",{d:band(0.5,R.out[1]),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(cu*0.22)},g);
+      el("path",{d:band(rimIn,rimOut),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(0.25+cu*0.4)},g); } }
+  // where you are
   let r=start, ang=A;
   if(a<S.on) r=lerp(start,E[0],a/S.on);
   else if(a<S.b) r=lerp(E[0],rimOut-3,(a-S.on)/(S.b-S.on));
+  else if(!casc) r=lerp(R.out[0]+12,rDeep,pu);
   else if(a<S.freeze) r=lerp(R.out[0]+12,rc,(a-S.b)/(S.freeze-S.b));
   else { r=rc; ang=lerp(A,168,(a-S.freeze)/(1-S.freeze)); }
   let trail=`M${q(start,A)} L${q(r,A)}`;
   if(ang>A) trail+=" "+arc(rc,A,ang,1);
   el("path",{d:trail,class:"ar-trail"},g);
+  const dk=casc?(st==="freeze"?1:st==="collapse"?2:0):k;
   const [x,y]=P(r,ang);
-  el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot ar-"+(st==="alarm"?"alarm-dot":st==="strain"?"strain-dot":st)},g);
+  el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot",fill:st==="held"?"var(--sun4)":`var(${DIRS[dk].color})`},g);
 }
 arousal.addEventListener("input",()=>{ AROUSAL=arousal.value/100; drawArousal(); });
 document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
