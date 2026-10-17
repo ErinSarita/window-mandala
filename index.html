@@ -267,6 +267,18 @@ svg.rimfocus .rim-focus{opacity:1}
 .caprow label{font-size:14px;font-weight:700}
 .caprow input{flex:1;min-width:160px;accent-color:var(--self)}
 .capname{font-family:var(--display);font-size:17px;min-width:12ch}
+.caprow input.arousal{accent-color:var(--ff)}
+.caprow.arow{margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+.arousalcap{margin:0;min-height:2.6em}
+.arousalcap small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+/* the arousal slider's marks on the wheel: the alarm warming, the brake straining, the break, the clamp, and where you are */
+.ar-alarm{fill:var(--ff);pointer-events:none}
+.ar-strain{fill:#FFF6D6;stroke:#FFD866;stroke-width:1.5;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
+.ar-break{fill:none;stroke:#B23A2E;stroke-width:5;stroke-linejoin:round;stroke-linecap:round;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.9))}
+.ar-clamp{fill:#2E3550;pointer-events:none}
+.ar-trail{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1.8;stroke-dasharray:3 6;stroke-linecap:round;pointer-events:none}
+.ar-dot{stroke:#FFFFFF;stroke-width:3;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,214,110,.95))}
+.ar-dot.ar-held{fill:var(--sun4)} .ar-dot.ar-alarm-dot,.ar-dot.ar-strain-dot{fill:#E8925A} .ar-dot.ar-ff{fill:var(--ff)} .ar-dot.ar-freeze{fill:var(--fr)} .ar-dot.ar-collapse{fill:var(--co)}
 .capbar p{margin:0;font-size:13.5px;color:var(--muted)}
 .btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
 .btn:hover{background:var(--bg)} .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -375,8 +387,10 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
         <p>Drag to see the window widen as awareness widens: the Self stays at the center, the window grows around it, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
+        <div class="caprow arow"><label for="arousal">What's rising</label><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="capname" id="arousalname"></span></div>
+        <p class="arousalcap" id="arousalcap" aria-live="polite"></p>
+        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -1353,8 +1367,9 @@ function draw(){
     el("path",{d:ringP(R.braid[1]+6)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"self-shade"},sf);
     el("circle",{cx:0,cy:0,r:f(r0),class:"self-glow"},sf); }
   el("g",{id:"lensG"});
+  el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawLens();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawLens(); drawArousal();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1401,6 +1416,54 @@ const cap=document.getElementById("cap"), capname=document.getElementById("capna
 function bandOf(t){ return WIDTH.bands.find(b=>t<b.upto); }
 function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(CAP*100); capname.textContent=bandOf(CAP).name; if(redraw!==false) draw(); }
 cap.addEventListener("input",()=>setCap(cap.value/100));
+// What's rising: one common path of rising arousal, the defense cascade. The breakpoint sits at the window's border,
+// so a wider window holds more before the brake gives way.
+let AROUSAL=0;
+const arousal=document.getElementById("arousal"), arousalname=document.getElementById("arousalname"), arousalcap=document.getElementById("arousalcap");
+function arousalMarks(){ const b=0.45+0.25*CAP; return {on:b-0.22, strain:b-0.07, b, freeze:Math.min(0.92,b+0.2)}; }
+function arousalStage(a){ const S=arousalMarks(); if(a<=0) return "rest"; if(a<S.on) return "held"; if(a<S.strain) return "alarm"; if(a<S.b) return "strain"; if(a<S.freeze) return "ff"; return a<S.freeze+(1-S.freeze)*0.45?"freeze":"collapse"; }
+const AROUSAL_TEXT={
+  rest:["At rest","Drag to watch energy rise: the alarm building, the brake holding, and where it gives way."],
+  held:["Rising, held","Energy is rising, held by your window: alive, and still able to choose. The heart's rhythm stays flexible."],
+  alarm:["The alarm builds","The alarm is building at the edge: revving. You are still inside your window, with a way back. HRV begins to fall."],
+  strain:["The brake strains","The brake is straining: you are near your capacity, but it is still manageable. This is the moment to turn back toward center."],
+  ff:["Past the breakpoint","Past the breakpoint, the brake gives way. Fight or flight takes over: the heart fast and rigid, the loop broken."],
+  freeze:["Freeze","Still more than it can hold: the brake clamps down on top of the charge, and the body locks still."],
+  collapse:["Collapse","The brake clamps down hard: feeling drops away, into collapse. The way back starts with warmth, gentle movement, and safety."]};
+function drawArousal(){
+  const a=AROUSAL, st=arousalStage(a), [nm,tx]=AROUSAL_TEXT[st];
+  arousalname.textContent=nm;
+  arousalcap.innerHTML=tx+(a>0?"<small>One common path, the defense cascade; not everyone moves in this order. A wider window moves the breakpoint further out.</small>":"");
+  const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML=""; if(a<=0) return;
+  const S=arousalMarks(), A=12, E=R.edge, rimIn=R.rim?R.rim[0]:R.edge[1]-6, rimOut=R.rim?R.rim[1]:R.edge[1], om=(R.out[0]+R.out[1])/2;
+  const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`, band=(r0,r1)=>ring(r1)+" "+ring(r0)+"Z";
+  const u=(x,y)=>Math.max(0,Math.min(1,x/y)), lerp=(x,y,t)=>x+(y-x)*Math.max(0,Math.min(1,t)), q=(r,ang)=>{ const [x,y]=P(r,ang); return `${f(x)} ${f(y)}`; };
+  const start=(CR.L1+3+R.win[1])/2;
+  // the alarm warms in the fight-or-flight quarter as it builds
+  const al=u(a-S.on*0.7,S.b-S.on*0.7);
+  if(al>0) el("path",{d:sector(E[0],E[1],-45,45,1,0),class:"ar-alarm","fill-opacity":f(Math.min(al,1)*0.62)},g);
+  // the brake strains as the breakpoint nears
+  if(R.brake&&a<S.b){ const su=u(a-(S.strain-0.05),S.b-(S.strain-0.05)); if(su>0) el("path",{d:sector(R.brake[0],R.brake[1],-45,45,1,0),class:"ar-strain","fill-opacity":f(su*0.85)},g); }
+  // past the breakpoint the rim breaks open at the top
+  if(a>=S.b){ const m=(rimIn+rimOut)/2, B0=A-7; el("path",{d:`M${q(rimIn-7,B0-2.5)} L${q(m-4,B0+2.5)} L${q(m+4,B0-2.5)} L${q(rimOut+7,B0+2.5)}`,class:"ar-break"},g); }
+  // then the brake clamps down: the rim darkens all the way round, and the wheel dims toward collapse
+  if(a>=S.freeze){ const cu=u(a-S.freeze,1-S.freeze);
+    el("path",{d:band(0.5,R.out[1]),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(cu*0.22)},g);
+    el("path",{d:band(rimIn,rimOut),"fill-rule":"evenodd",class:"ar-clamp","fill-opacity":f(0.25+cu*0.4)},g); }
+  // where you are: out from the window through the alarm and the brake, across the rim, then round the defense cascade
+  const rc=R.out[0]+(R.out[1]-R.out[0])*0.3;
+  let r=start, ang=A;
+  if(a<S.on) r=lerp(start,E[0],a/S.on);
+  else if(a<S.b) r=lerp(E[0],rimOut-3,(a-S.on)/(S.b-S.on));
+  else if(a<S.freeze) r=lerp(R.out[0]+12,rc,(a-S.b)/(S.freeze-S.b));
+  else { r=rc; ang=lerp(A,168,(a-S.freeze)/(1-S.freeze)); }
+  let trail=`M${q(start,A)} L${q(r,A)}`;
+  if(ang>A) trail+=" "+arc(rc,A,ang,1);
+  el("path",{d:trail,class:"ar-trail"},g);
+  const [x,y]=P(r,ang);
+  el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot ar-"+(st==="alarm"?"alarm-dot":st==="strain"?"strain-dot":st)},g);
+}
+arousal.addEventListener("input",()=>{ AROUSAL=arousal.value/100; drawArousal(); });
 document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
 
 /* ---------- Panel ---------- */
