@@ -298,6 +298,11 @@ svg.rimfocus .rim-focus{opacity:1}
 .arpaths button .sw{width:10px;height:10px}
 .arpaths button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .ar-charge{fill:none;stroke:#C24A3C;stroke-width:4.5;stroke-linecap:round;pointer-events:none}
+.discern{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.discern>div{background:color-mix(in srgb, var(--self) 8%, transparent);border-radius:10px;padding:10px 12px}
+.discern h4{margin:0 0 4px;font-size:14px}
+.discern ul{margin:0;padding-left:18px;font-size:14.5px}
+@media (max-width:560px){ .discern{grid-template-columns:1fr} }
 .ar-mask{fill:#FFF1F6;stroke:var(--fa);stroke-width:1.6;stroke-dasharray:4 4;pointer-events:none}
 .arousalcap small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 /* the arousal slider's marks on the wheel: the alarm warming, the brake straining, the break, the clamp, and where you are */
@@ -455,6 +460,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Dickerson, S. S., &amp; Kemeny, M. E. (2004). Acute stressors and cortisol responses: A theoretical integration and synthesis of laboratory research. <i>Psychological Bulletin, 130</i>(3), 355–391.</li>
       <li>Downey, G., Freitas, A. L., Michaelis, B., &amp; Khouri, H. (1998). The self-fulfilling prophecy in close relationships: Rejection sensitivity and rejection by romantic partners. <i>Journal of Personality and Social Psychology, 75</i>(2), 545–560.</li>
       <li>Dunn, B. D., Galton, H. C., Morgan, R., Evans, D., Oliver, C., Meyer, M., Cusack, R., Lawrence, A. D., &amp; Dalgleish, T. (2010). Listening to your heart: How interoception shapes emotion experience and intuitive decision making. <i>Psychological Science, 21</i>(12), 1835–1844.</li>
+      <li>Dunsmoor, J. E., &amp; Paz, R. (2015). Fear generalization and anxiety: Behavioral and neural mechanisms. <i>Biological Psychiatry, 78</i>(5), 336–343.</li>
       <li>Fredrickson, B. L. (2001). The role of positive emotions in positive psychology: The broaden-and-build theory of positive emotions. <i>American Psychologist, 56</i>(3), 218–226.</li>
       <li>Fredrickson, B. L., Cohn, M. A., Coffey, K. A., Pek, J., &amp; Finkel, S. M. (2008). Open hearts build lives: Positive emotions, induced through loving-kindness meditation, build consequential personal resources. <i>Journal of Personality and Social Psychology, 95</i>(5), 1045–1062.</li>
       <li>Glover, V. (2014). Maternal depression, anxiety and stress during pregnancy and child outcome; what needs to be done. <i>Best Practice &amp; Research Clinical Obstetrics &amp; Gynaecology, 28</i>(1), 25–35.</li>
@@ -467,6 +473,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Jung, C. G. (1959). <i>Aion: Researches into the Phenomenology of the Self</i>. Princeton University Press.</li>
       <li>Jung, C. G. (1960). Synchronicity: An acausal connecting principle. In <i>The Structure and Dynamics of the Psyche</i> (Collected Works, Vol. 8). Princeton University Press.</li>
       <li>Kabat-Zinn, J. (1994). <i>Wherever You Go, There You Are</i>. Hyperion.</li>
+      <li>Kahneman, D., &amp; Klein, G. (2009). Conditions for intuitive expertise: A failure to disagree. <i>American Psychologist, 64</i>(6), 515–526.</li>
       <li>Kisilevsky, B. S., Hains, S. M. J., Lee, K., Xie, X., Huang, H., Ye, H. H., Zhang, K., &amp; Wang, Z. (2003). Effects of experience on fetal voice recognition. <i>Psychological Science, 14</i>(3), 220–224.</li>
       <li>Kok, B. E., &amp; Fredrickson, B. L. (2010). Upward spirals of the heart: Autonomic flexibility, as indexed by vagal tone, reciprocally and prospectively predicts positive emotions and social connectedness. <i>Biological Psychology, 85</i>(3), 432–436.</li>
       <li>Kreibig, S. D. (2010). Autonomic nervous system activity in emotion: A review. <i>Biological Psychology, 84</i>(3), 394–421.</li>
@@ -487,6 +494,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Schauer, M., &amp; Elbert, T. (2010). Dissociation following traumatic stress: Etiology and treatment. <i>Zeitschrift für Psychologie / Journal of Psychology, 218</i>(2), 109–127.</li>
       <li>Schwartz, R. C. (2021). <i>No Bad Parts</i>. Sounds True.</li>
       <li>Schwartz, R. C., &amp; Sweezy, M. (2020). <i>Internal Family Systems Therapy</i> (2nd ed.). Guilford.</li>
+      <li>Schwarz, N., &amp; Clore, G. L. (1983). Mood, misattribution, and judgments of well-being: Informative and directive functions of affective states. <i>Journal of Personality and Social Psychology, 45</i>(3), 513–523.</li>
       <li>Shadick, N. A., et al. (2013). A randomized controlled trial of an internal family systems-based psychotherapeutic intervention on outcomes in rheumatoid arthritis: A proof-of-concept study. <i>Journal of Rheumatology, 40</i>(11), 1831–1841.</li>
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
       <li>Subramaniam, K., Kounios, J., Parrish, T. B., &amp; Jung-Beeman, M. (2009). A brain mechanism for facilitation of insight by positive affect. <i>Journal of Cognitive Neuroscience, 21</i>(3), 415–432.</li>
@@ -1526,6 +1534,15 @@ function showBody(user, focus){
       <p><b>Synchronicity.</b> In these states many people notice more meaningful coincidences, what Carl Jung called synchronicity (Jung, 1960). A calm, wide attention picks up more connections, and meaning feels close at hand. Whether anything more is at work is a question science has not answered. The mandala holds synchronicity as a felt experience, not a claim.</p>
       <p><b>Safety comes first.</b> In practices like sensing with the eyes closed or blindfolded, the first step is not effort but settling: calming the nervous system until the body feels safe enough to open. Then the subtler senses come forward, and the practice can become playful.</p>
       <button type="button" class="linkbtn" data-pr="receptive">Practice: Receptive sensing</button></div>
+    <div class="ring" id="body-discern"><h3>Intuition, or an old alarm?</h3>
+      <p>Not every strong feeling is intuition. Outside the window, an old fear can feel just as certain: a warning that is really a memory of past danger, replaying in a new situation. Discernment means telling the two apart, and the window helps. Intuition tends to be more trustworthy when it comes from safety and connection, and an old alarm tends to come from fear and conditioning.</p>
+      <div class="discern">
+        <div><h4>An old alarm often feels</h4><ul><li>Urgent and loud: act now.</li><li>Braced in the body: racing heart, held breath, a tight gut.</li><li>All or nothing: "always," "everyone," "this will be a disaster."</li><li>Familiar, like an old story replaying.</li><li>It fades or shifts once you feel safe again.</li></ul></div>
+        <div><h4>Intuition often feels</h4><ul><li>Quiet and steady; it can wait.</li><li>Settled in the body, even when the answer is no.</li><li>Specific to this moment and these people.</li><li>New, or simply clear.</li><li>Still there after you settle, and open to being checked.</li></ul></div>
+      </div>
+      <p><b>Settle, then ask again.</b> Before trusting a strong pull, come back toward the window first: lengthen the out-breath, feel your feet, look around the room. Then ask again. What remains once you are settled is more likely intuition. It also helps to ask: is this about now, or does it feel old?</p>
+      <p><b>What the science says.</b> When the brain learns a fear, it spreads it to anything similar, a process called fear generalization. After trauma it can spread widely, so a tone of voice or a smell sets off the old alarm (Dunsmoor and Paz, 2015). Mood also colors judgments about things it has nothing to do with: in one classic study, people rated their whole lives as worse on rainy days, unless they were first reminded of the weather (Schwarz and Clore, 1983). And research on expert intuition finds that gut feelings are most trustworthy when they come from long, relevant experience with honest feedback, and least trustworthy when the situation is new or the feeling comes from somewhere else (Kahneman and Klein, 2009).</p>
+      <p class="note">Fear is not always wrong. Sometimes the alarm is accurate and the danger is real. Discernment is not dismissing fear; it is checking it, from as settled a place as you can.</p></div>
     <div class="ring"><h3>Reading outward</h3>
       <ul><li><b>The window.</b> The four states as the body feels them: warm and strong, steady and alert, heavy and digesting, soft-faced and warm-voiced. The heart's rhythm stays flexible.</li>
         <li><b>The edge.</b> The body's early signals: a quickening heart and tight jaw, a held breath, heaviness and fog, a tight throat and a scanning gaze.</li>
@@ -1541,7 +1558,7 @@ function showBody(user, focus){
     <div class="ring"><h3>A note on the heart's field</h3>
       <p class="note">The heart's electrical rhythm is the strongest rhythmic signal in the body, and it can be measured a short distance outside the skin. Claims that this field heals, or brings other people into coherence, are not well established. What is well established is how coherence feels from the inside, and what it does for health.</p></div>
     <div class="lensnav"><button type="button" class="btn" data-selfview>Back to the Self view</button></div>
-    <p class="src">Lehrer &amp; Gevirtz (2014); Kok &amp; Fredrickson (2010); Dunn et al. (2010); Damasio (1994); Subramaniam et al. (2009); Fredrickson (2001); Porges (2011); Jung (1960); McEwen (1998); Thayer, Yamamoto &amp; Brosschot (2010); Thayer &amp; Lane (2009)</p>`;
+    <p class="src">Lehrer &amp; Gevirtz (2014); Kok &amp; Fredrickson (2010); Dunn et al. (2010); Damasio (1994); Subramaniam et al. (2009); Fredrickson (2001); Porges (2011); Jung (1960); Dunsmoor &amp; Paz (2015); Schwarz &amp; Clore (1983); Kahneman &amp; Klein (2009); McEwen (1998); Thayer, Yamamoto &amp; Brosschot (2010); Thayer &amp; Lane (2009)</p>`;
   panel.querySelector("[data-selfview]").addEventListener("click",()=>setBody(false));
   wire(); if(user) bringPanel(focus?document.getElementById("body-"+focus):null);
 }
@@ -1673,6 +1690,7 @@ function wire(){
   on("[data-patterns]",()=>showPatterns(true));
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
+  on("[data-discern]",()=>{ setBody(true); const t=document.getElementById("body-discern"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); });
   on("[data-loopread]",()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); });
   // hovering a layer of the Self in the panel lights it on the wheel
   panel.querySelectorAll("[data-lhl]").forEach(n=>{ if(n.dataset.bound) return; n.dataset.bound=1;
@@ -1842,6 +1860,7 @@ function showAware(user){
       <p><b>The first mirror.</b> We first learn who we are, and what the world is like, from the faces around us. We come to see ourselves partly as we believe others see us, the "looking-glass self" (Cooley, 1902). In one long study, parents' beliefs about their teenagers predicted the teens' later behavior, beyond what the teens were already doing (Madon and colleagues, 2004). Parents who see their baby as a person with a mind of their own tend to raise children with a more secure sense of self (Meins and colleagues, 2001). <a href="https://erinsarita.github.io/return-mandala/">The Return Mandala</a> explores this early mirror and how it can echo in us now.</p>
       <p><b>Before birth.</b> The first sense of how safe the world is begins in the womb. By the third trimester the baby hears, and its heart rate responds to the mother's voice (Kisilevsky and colleagues, 2003). A mother's long-lasting stress reaches the baby through her body chemistry and blood flow, and is linked with differences in the child's stress system (Glover, 2014). These are average effects, not destiny: warm, responsive care after birth can buffer a great deal. <a href="https://erinsarita.github.io/prenatal-mandala/">The Pregnancy and Birth Mandala</a> follows this from the very beginning.</p>
       <p><b>From the center, hardship can become wisdom.</b> Near the center there is room to take in a hard experience, reflect on it, and learn from it, rather than only survive it. Seeing a situation another way reliably changes how it feels (Gross, 2002), and many people describe real growth after hardship: deeper relationships, new priorities, a stronger sense of meaning (Tedeschi and Calhoun, 2004). This is how resilience, creativity, and wisdom grow. Contemplative traditions have said this for a very long time; the Dhammapada opens by naming the mind as the forerunner of all things.</p>
+      <p><b>Intuition, or an old alarm?</b> The same lens shapes our gut feelings. Outside the window, an old, conditioned fear can feel as certain as intuition: a warning that is really a memory of past danger. Feelings that remain once you are settled, safe, and connected tend to be more trustworthy than ones that arrive with a racing heart and a braced body (Dunsmoor and Paz, 2015; Kahneman and Klein, 2009). <button type="button" class="linkbtn" data-discern>See the comparison in the Body view</button></p>
       <p class="note">A caution. "We create our own reality" can slide into blaming people for what happened to them. Trauma, illness, loss, and injustice are not caused by how someone sees the world. What the science supports is something gentler: our state shapes what we notice and how we respond, and those responses can loop back. Coming back toward the center widens the lens. Popular teachers such as Joe Dispenza draw on real findings about mental rehearsal and expectation; claims that thought reshapes outside events through quantum fields are not supported.</p></div>
     <div class="ring"><h3>On the wheel</h3>
       <p>The soft halo around the whole wheel is the field of awareness: it holds every state, the window and the defenses alike. The slider shows it widening: the window grows around a steady center, and the rings of threat thin.</p>
