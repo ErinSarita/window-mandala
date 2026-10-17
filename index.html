@@ -1513,11 +1513,12 @@ const COH_HEART={name:"Beyond words", tag:"Not measured", feel:"Where the tradit
 function bodyCenter(g,L1){
   const rc=R.core, r1=L1+2, r0=rc*0.72, step=(r1-r0)/COH_LAYERS.length;
   // the whole center glows, brightest at the heart, like the gold nimbus of an icon
-  el("circle",{cx:0,cy:0,r:f(r1+14),class:"body-aura","pointer-events":"none"},g);
+  // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
+  el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
   const mix=(t)=>{ const A=[0xF2,0xC9,0x62], B=[0xFF,0xFD,0xF2]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
-  COH_LAYERS.forEach((L,i)=>{ const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.72+i*0.05),"pointer-events":"none"},g); });
+  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.72+i*0.05),"pointer-events":"none"},g); });
   el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFFFF","pointer-events":"none",class:"coh-core"},g);
-  COH_LAYERS.forEach((L,i)=>{ const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i?"coh-line":"body-halo"},g); });
+  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
   // names, along the top of each ring
   COH_LAYERS.forEach((L,i)=>{ const rm=r1-i*step-step/2, fs=Math.min(13.5,step*0.84), span=Math.min(85,(L.name.length*fs*0.62/2)/rm*57.3+6); arcText(rm,-span,span,L.name.toLowerCase(),"lbl t-coh",fs,0.6,g); });
   // the heart, white at its center, warming to gold at its edges
