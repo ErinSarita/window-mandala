@@ -94,7 +94,7 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .body-heart{stroke:#FFFFFF;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 14px #FFD866) drop-shadow(0 0 26px #FFE9A8)}
 .body-aura{fill:#FFE39A;fill-opacity:.55;pointer-events:none;filter:blur(12px)}
 .body-halo{fill:none;stroke:#D7A83A;stroke-width:4;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
-.flow-arc{fill:none;stroke:#F2A65A;stroke-width:5;stroke-linecap:round;stroke-opacity:.75;pointer-events:none;filter:drop-shadow(0 0 6px #FFD39A)}
+.flow-band{fill:#F29A55;fill-opacity:.3;stroke:#E8874A;stroke-opacity:.6;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,180,120,.75))}
 .monkey-arc{fill:none;stroke:#B85A4A;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:.8;pointer-events:none}
 .t-monkey{fill:#8A3A2E;font-style:italic;font-weight:700}
 .is-dark .t-monkey{fill:#5E2A22}
@@ -1558,38 +1558,54 @@ function bodyCenter(g,L1){
     hookTip(h,()=>({x:hx,y:hy,html:`<span class="ringtag">Body view</span><b>Connection grows inward</b><span class="tl">The more safe and whole you feel in your own body, the more connected you can be with others and with life.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"inward")); });
 }
 // Flow: the sweet spot at the window's growing edge, on the Energized side. A glowing arc just inside the heart ring.
+// Flow: a translucent band around the whole window, widest on the Energized side (most common, best studied) and
+// thinnest toward Settled, where rest turns into relaxation rather than flow. In the Body view it laps over the outer
+// layers of coherence. Monkey mind is its mirror: a restless band at the edge, all the way around.
+const FLOW_DIR=["Flow is most common here: absorbed in a challenge that stretches you just enough, energy up and held by safety.",
+  "Quiet flow: absorbed, alert attention, like careful craft, birdwatching, or deep listening.",
+  "Flow is thinnest here: a gentle absorption, like gardening or slow painting. Deeper rest becomes relaxation rather than flow.",
+  "Group flow: moving as one with others, in music, play, or a conversation that carries everyone along."];
+const MONKEY_DIR=["Racing thoughts, jumping from one thing to the next, a sense that everything is urgent.",
+  "Scanning for what could go wrong, thoughts circling the danger.",
+  "Heavy rumination: going over and over the same thoughts, with little energy to move.",
+  "Replaying conversations and reading every mood, the mind busy with other people."];
 function drawFlow(){
   const g=document.getElementById("flowG"); if(!g) return; g.innerHTML="";
-  const r=R.win[1]-4, [x0,y0]=P(r,-42);
-  el("path",{d:`M${f(x0)} ${f(y0)} `+arc(r,-42,42,1),class:"flow-arc"},g);
-  arcText(R.win[1]-13,16,44,"flow","lbl t-flow",14,2,g);
+  const rc=BODY?CR.L1-8:CR.L1+16, wMax=30, wMin=7, w=a=>wMin+(wMax-wMin)*(1+Math.cos(a*Math.PI/180))/2;
+  let outer="", inner="";
+  for(let a=0;a<=360;a+=2){ const [x,y]=P(rc+w(a)/2,a); outer+=(a?"L":"M")+f(x)+" "+f(y); }
+  for(let a=360;a>=0;a-=2){ const [x,y]=P(rc-w(a)/2,a); inner+=(a===360?"M":"L")+f(x)+" "+f(y); }
+  el("path",{d:outer+"Z "+inner+"Z","fill-rule":"evenodd",class:"flow-band"},g);
+  arcText(rc+1,26,48,"flow","lbl t-flow",14,2,g);
+  const fh=el("path",{d:sector(rc-13,rc+13,22,52,1,0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Flow: a band around the whole window, widest on the Energized side"},g);
+  hookTip(fh,()=>{ const [x,y]=P(rc,36); return {x,y,html:`<span class="ringtag">Around the window</span><b>Flow</b><span class="tl">Absorbed in something that holds you just enough. Widest on the Energized side, quieter elsewhere.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showFlow(true));
+  // monkey mind: a restless, broken line through the edge, all the way around
+  const E=R.edge, rm=E[0]+6; let d="";
+  for(let a=0,i=0;a<360;a+=1.6,i++){ const rr=rm+(i%2?3.5:-3.5)*(0.6+0.4*Math.sin(i*1.7)); const [x,y]=P(rr,a); d+=(d&&i%7?"L":"M")+f(x)+" "+f(y); }
+  el("path",{d,class:"monkey-arc"},g);
+  arcText((E[0]+E[1])/2,10,31,"monkey mind","lbl t-monkey",11.5,0.4,g);
   const ring=q=>`M0 ${f(-q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(-q)}`;
-  const h=el("path",{d:sector(R.win[1]-20,R.win[1],-42,42,1,0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Flow: the sweet spot at the growing edge of your window"},g);
-  // monkey mind: flow's scattered counterpart, out at the edge on the revving side, drawn as a restless, broken line
-  { const E=R.edge, rm=E[0]+6; let d=""; for(let a=-40,i=0;a<=40;a+=1.6,i++){ const rr=rm+(i%2?3.5:-3.5)*(0.6+0.4*Math.sin(i*1.7)); const [x,y]=P(rr,a); d+=(d?"L":"M")+f(x)+" "+f(y); if(i%7===6){ a+=2.4; const [x2,y2]=P(rm,a); d+="M"+f(x2)+" "+f(y2); } }
-    el("path",{d,class:"monkey-arc"},g);
-    arcText((E[0]+E[1])/2,10,31,"monkey mind","lbl t-monkey",11.5,0.4,g);
-    const mh=el("path",{d:sector(E[0],E[1],-40,40,1,0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Monkey mind: the scattered counterpart of flow, at the edge"},g);
-    hookTip(mh,()=>{ const [x,y]=P((E[0]+E[1])/2,20); return {x,y,html:`<span class="ringtag">At the edge, revving</span><b>Monkey mind</b><span class="tl">Thoughts jumping branch to branch: worry, planning, replaying. The same rising energy as flow, scattered instead of gathered.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showMonkey(true)); }
-  hookTip(h,()=>{ const [x,y]=P(R.win[1]-10,28); return {x,y,html:`<span class="ringtag">Inside the window, at its growing edge</span><b>Flow</b><span class="tl">Absorbed in something that stretches you just enough: energy up, held by safety, the inner critic quiet.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showFlow(true));
+  const mh=el("path",{d:sector(E[0],E[1],8,33,1,0),class:"body-hit monkey-hit",tabindex:"0",role:"button","aria-label":"Monkey mind: flow's scattered mirror, at the edge all the way around"},g);
+  hookTip(mh,()=>{ const [x,y]=P((E[0]+E[1])/2,20); return {x,y,html:`<span class="ringtag">At the edge, all the way around</span><b>Monkey mind</b><span class="tl">Thoughts scattering instead of gathering: racing, scanning, ruminating, replaying.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showMonkey(true));
 }
 function showFlow(user){
   setView("flow");
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">Inside the window, at its growing edge</div><h2>Flow</h2><div class="meta">Being in the zone</div>
       <p>Flow is the state of being completely absorbed in something that stretches you just enough. Goals are clear, feedback is immediate, action and awareness merge, self-consciousness fades, time bends, and the activity becomes its own reward. Psychologist Mihaly Csikszentmihalyi named it after the way people described it: like being carried by a current (Csikszentmihalyi, 1990).</p></div>
     <div class="ring"><h3>Where it lies on the wheel</h3>
-      <p>Inside the window, on the <b>Energized</b> side, toward its growing edge. Flow needs some activation, so it is not rest; and it needs safety, so it is not fight or flight. In polyvagal terms it is the play blend: sympathetic energy held by the ventral, connected state.</p>
-      <p>Research finds flow follows a curve: a moderate rise in arousal helps, and too much or too little breaks it (Peifer and colleagues, 2014). On the wheel, too much challenge pushes you toward revving at the edge and on into fight or flight; too little drifts you toward boredom, sinking, and in the end apathy. The glowing arc marks the band in between.</p></div>
+      <p>All the way around the window, drawn as a translucent band. It is widest on the <b>Energized</b> side, where flow is most common and best studied: energy up and held by safety, polyvagal theory's play blend. It is quieter on the <b>Still</b> side (absorbed attention) and the <b>Connected</b> side (group flow), and thinnest toward <b>Settled</b>, where deeper rest becomes relaxation rather than flow. Flow needs some engagement, and it needs safety.</p>
+      <p>Research finds flow follows a curve: a moderate rise in arousal helps, and too much or too little breaks it (Peifer and colleagues, 2014). Too much challenge pushes you toward the edge and on into survival; too little drifts you toward boredom, and in the end apathy.</p>
+      <p>In the Body view the band laps over the outer layers of coherence. Flow shares a great deal with them: it is receptive, often attuned, and absorbed, with attention unified and self-consciousness gone. What it usually lacks is the resting heart coherence of stillness, because flow comes with effort. It is coherence of attention, in motion.</p></div>
     <div class="ring"><h3>The body in flow</h3>
       <p>The heart speeds up somewhat and the breath deepens. Heart rate variability is lower than at rest, a sign of effort (Keller and colleagues, 2011), yet it is not stress: in pianists playing in flow, the accelerator and the brake were both active at once, the body energized and steadied together, often with a slight smile (de Manzano and colleagues, 2010).</p>
-      <p>That makes flow a different kind of coherence from the still, resting kind at the center of the Body view: coherence in motion. Many people find it a bridge, the receptive and absorbed layers reached through action rather than stillness.</p></div>
+      <p>That makes flow a bridge between the everyday window and the deeper layers of coherence: the receptive and absorbed layers, reached through action rather than stillness.</p></div>
     <div class="ring"><h3>The brain in flow</h3>
       <p>The parts of the brain that watch and judge the self grow quieter, an idea called transient hypofrontality (Dietrich, 2004). In brain scans of people in flow, activity in self-referential areas of the prefrontal cortex and in the amygdala goes down, while reward areas become more active (Ulrich and colleagues, 2014). The alarm is quiet and the critic steps back. In IFS terms, the managers relax, and the Self leads the action.</p></div>
     <div class="ring"><h3>Flow widens the window</h3>
       <p>Flow lives where challenge and skill meet. As skill grows, the same challenge becomes easy, and flow asks for a little more. Each time you stretch to the edge and stay inside it, the window grows. This is the growing edge in action: not pushed past the breakpoint, and not resting far inside it, but working right at the edge with safety.</p>
-      <p>Flow appears in other directions too, more quietly: an absorbed, alert stillness on the Still side, like birdwatching or careful craft; and group flow on the Connected side, when musicians, teammates, or friends move as one.</p></div>
+</div>
     <div class="ring"><h3>Its opposite: monkey mind</h3>
-      <p>Just beyond flow, out at the edge, is its scattered counterpart: the restless mind that jumps from thought to thought. The energy is similar; what differs is whether attention gathers or scatters. <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p></div>
+      <p>Out at the edge, all the way around, is its scattered mirror: the restless mind that jumps from thought to thought. Flow gathers attention inside the window; monkey mind scatters it at the edge. <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p></div>
     <div class="ring"><h3>When flow turns against you</h3>
       <p class="note">Absorption can be hijacked. Some games and gambling machines are designed to produce a "dark flow" that people use to escape pain, and it can feed a cycle of numbing (Dixon and colleagues, 2018). Flow also does not protect against real risk. The question to ask is whether you come out of it more alive and connected, or more drained and far away.</p></div>
     <p class="src">Csikszentmihalyi (1990); Peifer et al. (2014); Keller et al. (2011); de Manzano et al. (2010); Dietrich (2004); Ulrich et al. (2014); Dixon et al. (2018)</p>`;
@@ -1597,11 +1613,14 @@ function showFlow(user){
 }
 function showMonkey(user){
   setView("monkey");
-  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">At the edge, revving</div><h2>Monkey mind</h2><div class="meta">Flow's scattered counterpart</div>
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">At the edge, all the way around</div><h2>Monkey mind</h2><div class="meta">Flow's scattered counterpart</div>
       <p>The Buddhist image is a monkey swinging from branch to branch: the mind jumping from one thought to the next, worrying, planning, replaying, unable to settle. Attention is captured again and again, and nothing holds it for long.</p></div>
     <div class="ring"><h3>Where it lies on the wheel</h3>
-      <p>At the edge of the window on the revving side, just beyond flow. Flow and monkey mind can carry the same rising energy; the difference is organization. In flow, attention gathers into one stream. In monkey mind it scatters, and as it scatters the alarm starts to sound. "Racing thoughts" is one of the early signals of revving.</p>
-      <p>It has a quieter, heavier form on the sinking side too: going over the same thoughts again and again with little energy, the drift of rumination that pulls toward collapse.</p></div>
+      <p>At the edge of the window, all the way around: the mirror of flow. In flow, attention gathers into one stream inside the window. In monkey mind it scatters, and as it scatters the alarm starts to sound. It takes a different shape in each direction:</p>
+      <ul><li><b>Revving:</b> racing thoughts, jumping from one thing to the next.</li>
+        <li><b>Bracing:</b> scanning for what could go wrong, thoughts circling the danger.</li>
+        <li><b>Sinking:</b> heavy rumination, going over and over the same thoughts.</li>
+        <li><b>Over-tuning:</b> replaying conversations and reading every mood.</li></ul></div>
     <div class="ring"><h3>What the science says</h3>
       <p>In a large study that pinged people through their day, their minds were wandering nearly half the time, and they were less happy while it wandered, whatever they were doing (Killingsworth and Gilbert, 2010). Much of this inner chatter runs through the brain's default mode network, which tends to be quieter in experienced meditators (Brewer and colleagues, 2011).</p>
       <p>When the wandering turns to worry and rumination, the body pays. Researchers call it perseverative cognition: going over a stressor in the mind keeps the stress response running long after the stressor has passed, raising heart rate and lowering heart rate variability (Brosschot, Gerin, and Thayer, 2006). In the loop's terms, the brake is straining, kept busy by thoughts instead of events.</p></div>
@@ -2199,10 +2218,10 @@ function showDir(k, layer, user){
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p>${k===0?`<p><b>Flow lives here.</b> Absorbed in a challenge that stretches you just enough, at the growing edge of the window: energy up, held by safety. <button type="button" class="linkbtn" data-flow>Read about flow</button></p>`:""}</div>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
     <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
     <div class="ring${hl("stem")}" id="L-stem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p>${k===0?`<p><b>Monkey mind lives here.</b> Racing, scattered thoughts: the same energy as flow, scattered instead of gathered. <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p>`:""}<button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
+    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
     <div class="ring${hl("brake")}" id="L-brake"><h3>${sw("--gold")}${step(5,"The brake: the prefrontal cortex")}</h3><p class="about">The rim of your window of capacity.</p><p>${L.brake}</p></div>
     <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}${step(6,`Outside the window: ${d.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p><p>${o.text}</p><p>${L.outside}</p><p class="src">${L.evidence}</p>
       <h4>How it can feel</h4>${ul(o.feels)}
