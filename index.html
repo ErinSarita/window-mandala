@@ -94,6 +94,10 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .body-heart{stroke:#FFFFFF;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 14px #FFD866) drop-shadow(0 0 26px #FFE9A8)}
 .body-aura{fill:#FFE39A;fill-opacity:.55;pointer-events:none;filter:blur(12px)}
 .body-halo{fill:none;stroke:#D7A83A;stroke-width:4;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
+.flow-arc{fill:none;stroke:#F2A65A;stroke-width:5;stroke-linecap:round;stroke-opacity:.75;pointer-events:none;filter:drop-shadow(0 0 6px #FFD39A)}
+.t-flow{fill:#B4561E;font-style:italic;font-weight:700}
+.is-dark .t-flow{fill:#7A3A10}
+svg.mapview #flowG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
 .coh-core{filter:drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px #FFE9A8)}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
@@ -462,9 +466,13 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Brewer, J. A., Worhunsky, P. D., Gray, J. R., Tang, Y.-Y., Weber, J., &amp; Kober, H. (2011). Meditation experience is associated with differences in default mode network activity and connectivity. <i>Proceedings of the National Academy of Sciences, 108</i>(50), 20254–20259.</li>
       <li>Cannon, W. B. (1915). <i>Bodily Changes in Pain, Hunger, Fear and Rage</i>. Appleton.</li>
       <li>Cooley, C. H. (1902). <i>Human Nature and the Social Order</i>. Scribner.</li>
+      <li>Csikszentmihalyi, M. (1990). <i>Flow: The Psychology of Optimal Experience</i>. Harper &amp; Row.</li>
       <li>Damasio, A. R. (1994). <i>Descartes' Error: Emotion, Reason, and the Human Brain</i>. Putnam.</li>
       <li>Dana, D. (2018). <i>The Polyvagal Theory in Therapy</i>. Norton.</li>
+      <li>de Manzano, Ö., Theorell, T., Harmat, L., &amp; Ullén, F. (2010). The psychophysiology of flow during piano playing. <i>Emotion, 10</i>(3), 301–311.</li>
       <li>Dickerson, S. S., &amp; Kemeny, M. E. (2004). Acute stressors and cortisol responses: A theoretical integration and synthesis of laboratory research. <i>Psychological Bulletin, 130</i>(3), 355–391.</li>
+      <li>Dietrich, A. (2004). Neurocognitive mechanisms underlying the experience of flow. <i>Consciousness and Cognition, 13</i>(4), 746–761.</li>
+      <li>Dixon, M. J., Stange, M., Larche, C. J., Graydon, C., Fugelsang, J. A., &amp; Harrigan, K. A. (2018). Dark flow, depression and multiline slot machine play. <i>Journal of Gambling Studies, 34</i>(1), 73–84.</li>
       <li>Downey, G., Freitas, A. L., Michaelis, B., &amp; Khouri, H. (1998). The self-fulfilling prophecy in close relationships: Rejection sensitivity and rejection by romantic partners. <i>Journal of Personality and Social Psychology, 75</i>(2), 545–560.</li>
       <li>Dunn, B. D., Galton, H. C., Morgan, R., Evans, D., Oliver, C., Meyer, M., Cusack, R., Lawrence, A. D., &amp; Dalgleish, T. (2010). Listening to your heart: How interoception shapes emotion experience and intuitive decision making. <i>Psychological Science, 21</i>(12), 1835–1844.</li>
       <li>Dunsmoor, J. E., &amp; Paz, R. (2015). Fear generalization and anxiety: Behavioral and neural mechanisms. <i>Biological Psychiatry, 78</i>(5), 336–343.</li>
@@ -482,6 +490,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Jung, C. G. (1960). Synchronicity: An acausal connecting principle. In <i>The Structure and Dynamics of the Psyche</i> (Collected Works, Vol. 8). Princeton University Press.</li>
       <li>Kabat-Zinn, J. (1994). <i>Wherever You Go, There You Are</i>. Hyperion.</li>
       <li>Kahneman, D., &amp; Klein, G. (2009). Conditions for intuitive expertise: A failure to disagree. <i>American Psychologist, 64</i>(6), 515–526.</li>
+      <li>Keller, J., Bless, H., Blomann, F., &amp; Kleinböhl, D. (2011). Physiological aspects of flow experiences: Skills-demand-compatibility effects on heart rate variability and salivary cortisol. <i>Journal of Experimental Social Psychology, 47</i>(4), 849–852.</li>
       <li>Kisilevsky, B. S., Hains, S. M. J., Lee, K., Xie, X., Huang, H., Ye, H. H., Zhang, K., &amp; Wang, Z. (2003). Effects of experience on fetal voice recognition. <i>Psychological Science, 14</i>(3), 220–224.</li>
       <li>Kok, B. E., &amp; Fredrickson, B. L. (2010). Upward spirals of the heart: Autonomic flexibility, as indexed by vagal tone, reciprocally and prospectively predicts positive emotions and social connectedness. <i>Biological Psychology, 85</i>(3), 432–436.</li>
       <li>Konvalinka, I., Xygalatas, D., Bulbulia, J., Schjødt, U., Jegindø, E.-M., Wallot, S., Van Orden, G., &amp; Roepstorff, A. (2011). Synchronized arousal between performers and related spectators in a fire-walking ritual. <i>Proceedings of the National Academy of Sciences, 108</i>(20), 8514–8519.</li>
@@ -500,6 +509,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Newberg, A., Alavi, A., Baime, M., Pourdehnad, M., Santanna, J., &amp; d'Aquili, E. (2001). The measurement of regional cerebral blood flow during the complex cognitive task of meditation: A preliminary SPECT study. <i>Psychiatry Research: Neuroimaging, 106</i>(2), 113–122.</li>
       <li>Ochsner, K. N., &amp; Gross, J. J. (2005). The cognitive control of emotion. <i>Trends in Cognitive Sciences, 9</i>(5), 242–249.</li>
       <li>Ogden, P., Minton, K., &amp; Pain, C. (2006). <i>Trauma and the Body</i>. Norton.</li>
+      <li>Peifer, C., Schulz, A., Schächinger, H., Baumann, N., &amp; Antoni, C. H. (2014). The relation of flow-experience and physiological arousal under stress: Can u shape it? <i>Journal of Experimental Social Psychology, 53</i>, 62–69.</li>
       <li>Porges, S. W. (2007). The polyvagal perspective. <i>Biological Psychology, 74</i>(2), 116–143.</li>
       <li>Porges, S. W. (2011). <i>The Polyvagal Theory</i>. Norton.</li>
       <li>Roelofs, K. (2017). Freeze for action: Neurobiological mechanisms in animal and human freezing. <i>Philosophical Transactions of the Royal Society B, 372</i>(1718), 20160206.</li>
@@ -517,6 +527,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Thayer, J. F., &amp; Lane, R. D. (2009). Claude Bernard and the heart–brain connection: Further elaboration of a model of neurovisceral integration. <i>Neuroscience &amp; Biobehavioral Reviews, 33</i>(2), 81–88.</li>
       <li>Thayer, J. F., Yamamoto, S. S., &amp; Brosschot, J. F. (2010). The relationship of autonomic imbalance, heart rate variability and cardiovascular disease risk factors. <i>International Journal of Cardiology, 141</i>(2), 122–131.</li>
       <li>Treleaven, D. A. (2018). <i>Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing</i>. Norton.</li>
+      <li>Ulrich, M., Keller, J., Hoenig, K., Waller, C., &amp; Grön, G. (2014). Neural correlates of experimentally induced flow experiences. <i>NeuroImage, 86</i>, 194–202.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
       <li>Yaden, D. B., Haidt, J., Hood, R. W., Vago, D. R., &amp; Newberg, A. B. (2017). The varieties of self-transcendent experience. <i>Review of General Psychology, 21</i>(2), 143–160.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
@@ -1447,10 +1458,11 @@ function draw(){
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     el("path",{d:ringP(R.braid[1]+6)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"self-shade"},sf);
     el("circle",{cx:0,cy:0,r:f(r0),class:"self-glow"},sf); }
+  el("g",{id:"flowG"});
   el("g",{id:"lensG"});
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawLens(); drawArousal();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawFlow(); drawLens(); drawArousal();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1538,6 +1550,36 @@ function bodyCenter(g,L1){
   [45,135,225,315].forEach(a=>{ [0,1,2].forEach(i=>{ const r=R.win[1]-12-i*13, w=5.5; el("path",{d:`M${f(P(r,a-w)[0])} ${f(P(r,a-w)[1])} L${f(P(r-8,a)[0])} ${f(P(r-8,a)[1])} L${f(P(r,a+w)[0])} ${f(P(r,a+w)[1])}`,class:"body-chev","stroke-opacity":f(0.35+i*0.25)},g); });
     const [hx,hy]=P(R.win[1]-24,a), h=el("circle",{cx:f(hx),cy:f(hy),r:22,class:"body-hit",tabindex:"0",role:"button","aria-label":"Connection grows inward"},g);
     hookTip(h,()=>({x:hx,y:hy,html:`<span class="ringtag">Body view</span><b>Connection grows inward</b><span class="tl">The more safe and whole you feel in your own body, the more connected you can be with others and with life.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"inward")); });
+}
+// Flow: the sweet spot at the window's growing edge, on the Energized side. A glowing arc just inside the heart ring.
+function drawFlow(){
+  const g=document.getElementById("flowG"); if(!g) return; g.innerHTML="";
+  const r=R.win[1]-4, [x0,y0]=P(r,-42);
+  el("path",{d:`M${f(x0)} ${f(y0)} `+arc(r,-42,42,1),class:"flow-arc"},g);
+  arcText(R.win[1]-13,16,44,"flow","lbl t-flow",14,2,g);
+  const ring=q=>`M0 ${f(-q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(-q)}`;
+  const h=el("path",{d:sector(R.win[1]-20,R.win[1],-42,42,1,0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Flow: the sweet spot at the growing edge of your window"},g);
+  hookTip(h,()=>{ const [x,y]=P(R.win[1]-10,28); return {x,y,html:`<span class="ringtag">Inside the window, at its growing edge</span><b>Flow</b><span class="tl">Absorbed in something that stretches you just enough: energy up, held by safety, the inner critic quiet.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showFlow(true));
+}
+function showFlow(user){
+  setView("flow");
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">Inside the window, at its growing edge</div><h2>Flow</h2><div class="meta">Being in the zone</div>
+      <p>Flow is the state of being completely absorbed in something that stretches you just enough. Goals are clear, feedback is immediate, action and awareness merge, self-consciousness fades, time bends, and the activity becomes its own reward. Psychologist Mihaly Csikszentmihalyi named it after the way people described it: like being carried by a current (Csikszentmihalyi, 1990).</p></div>
+    <div class="ring"><h3>Where it lies on the wheel</h3>
+      <p>Inside the window, on the <b>Energized</b> side, toward its growing edge. Flow needs some activation, so it is not rest; and it needs safety, so it is not fight or flight. In polyvagal terms it is the play blend: sympathetic energy held by the ventral, connected state.</p>
+      <p>Research finds flow follows a curve: a moderate rise in arousal helps, and too much or too little breaks it (Peifer and colleagues, 2014). On the wheel, too much challenge pushes you toward revving at the edge and on into fight or flight; too little drifts you toward boredom, sinking, and in the end apathy. The glowing arc marks the band in between.</p></div>
+    <div class="ring"><h3>The body in flow</h3>
+      <p>The heart speeds up somewhat and the breath deepens. Heart rate variability is lower than at rest, a sign of effort (Keller and colleagues, 2011), yet it is not stress: in pianists playing in flow, the accelerator and the brake were both active at once, the body energized and steadied together, often with a slight smile (de Manzano and colleagues, 2010).</p>
+      <p>That makes flow a different kind of coherence from the still, resting kind at the center of the Body view: coherence in motion. Many people find it a bridge, the receptive and absorbed layers reached through action rather than stillness.</p></div>
+    <div class="ring"><h3>The brain in flow</h3>
+      <p>The parts of the brain that watch and judge the self grow quieter, an idea called transient hypofrontality (Dietrich, 2004). In brain scans of people in flow, activity in self-referential areas of the prefrontal cortex and in the amygdala goes down, while reward areas become more active (Ulrich and colleagues, 2014). The alarm is quiet and the critic steps back. In IFS terms, the managers relax, and the Self leads the action.</p></div>
+    <div class="ring"><h3>Flow widens the window</h3>
+      <p>Flow lives where challenge and skill meet. As skill grows, the same challenge becomes easy, and flow asks for a little more. Each time you stretch to the edge and stay inside it, the window grows. This is the growing edge in action: not pushed past the breakpoint, and not resting far inside it, but working right at the edge with safety.</p>
+      <p>Flow appears in other directions too, more quietly: an absorbed, alert stillness on the Still side, like birdwatching or careful craft; and group flow on the Connected side, when musicians, teammates, or friends move as one.</p></div>
+    <div class="ring"><h3>When flow turns against you</h3>
+      <p class="note">Absorption can be hijacked. Some games and gambling machines are designed to produce a "dark flow" that people use to escape pain, and it can feed a cycle of numbing (Dixon and colleagues, 2018). Flow also does not protect against real risk. The question to ask is whether you come out of it more alive and connected, or more drained and far away.</p></div>
+    <p class="src">Csikszentmihalyi (1990); Peifer et al. (2014); Keller et al. (2011); de Manzano et al. (2010); Dietrich (2004); Ulrich et al. (2014); Dixon et al. (2018)</p>`;
+  wire(); if(user) bringPanel();
 }
 function showBody(user, focus){
   setView("body");
@@ -1718,6 +1760,7 @@ function wire(){
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
   on("[data-discern]",()=>{ setBody(true); const t=document.getElementById("body-discern"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); });
+  on("[data-flow]",()=>showFlow(true));
   on("[data-loopread]",()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); });
   // hovering a layer of the Self in the panel lights it on the wheel
   panel.querySelectorAll("[data-lhl]").forEach(n=>{ if(n.dataset.bound) return; n.dataset.bound=1;
@@ -2121,7 +2164,7 @@ function showDir(k, layer, user){
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p></div>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p>${k===0?`<p><b>Flow lives here.</b> Absorbed in a challenge that stretches you just enough, at the growing edge of the window: energy up, held by safety. <button type="button" class="linkbtn" data-flow>Read about flow</button></p>`:""}</div>
     <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
     <div class="ring${hl("stem")}" id="L-stem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
     <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
