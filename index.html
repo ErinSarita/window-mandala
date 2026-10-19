@@ -1548,21 +1548,16 @@ function bodyCenter(g,L1){
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.72+i*0.05),"pointer-events":"none"},g); });
   el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFFFF","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
-  // names, along the top of each ring
-  COH_LAYERS.forEach((L,i)=>{ const rm=r1-i*step-step/2, fs=Math.min(13.5,step*0.84), span=Math.min(85,(L.name.length*fs*0.62/2)/rm*57.3+6); arcText(rm,-span,span,L.name.toLowerCase(),"lbl t-coh",fs,0.6,g); });
+  // one name for the whole center: coherence, deepening toward the heart
+  { const rm=r1-step*1.5; arcText(rm,-40,40,"coherence","lbl t-coh",14,2,g); arcText(rm,140,220,"deepening toward the heart","lbl t-coh",11.5,0.6,g); }
   // the heart, white at its center, warming to gold at its edges
   const s=rc*0.62, hh="bodyheartfill", hf=el("radialGradient",{id:hh,gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(s)},g);
   [[0,"#FFFFFF",1],[0.55,"#FFF6D6",1],[1,"#F3CF6E",1]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},hf));
   const hp=`M0 ${f(0.72*s)} C${f(-0.92*s)} ${f(0.05*s)} ${f(-1.06*s)} ${f(-0.56*s)} ${f(-0.56*s)} ${f(-0.86*s)} C${f(-0.26*s)} ${f(-1.03*s)} 0 ${f(-0.86*s)} 0 ${f(-0.6*s)} C0 ${f(-0.86*s)} ${f(0.26*s)} ${f(-1.03*s)} ${f(0.56*s)} ${f(-0.86*s)} C${f(1.06*s)} ${f(-0.56*s)} ${f(0.92*s)} ${f(0.05*s)} 0 ${f(0.72*s)}Z`;
   el("path",{d:hp,class:"body-heart",fill:`url(#${hh})`,transform:`translate(0 ${f(0.12*s)}) scale(0.82)`},g);
-  // hover: each ring, and the heart
-  const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-  const tip=(L,tag,x,y)=>`<span class="ringtag">${tag}</span><b>${L.name}</b><span class="tl">${L.feel}</span><span class="tl coh-ev">${L.tag}</span><span>Tap to read more.</span>`;
-  COH_LAYERS.forEach((L,i)=>{ const ro=r1-i*step, ri=ro-step;
-    const h=el("path",{d:ring(ro)+" "+ring(ri)+"Z","fill-rule":"evenodd",class:"body-hit",tabindex:"0",role:"button","aria-label":`${L.name}: a layer of coherence`},g);
-    hookTip(h,()=>{ const [x,y]=P((ro+ri)/2,30); return {x,y,html:tip(L,`Layer ${i+1} of 6, toward the heart`),color:"--sun3"}; },()=>showBody(true,"layers")); });
-  const hc=el("circle",{cx:0,cy:0,r:f(r0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Beyond words, at the very heart"},g);
-  hookTip(hc,()=>({x:0,y:-r0*0.6,html:tip(COH_HEART,"At the very heart"),color:"--sun3"}),()=>showBody(true,"layers"));
+  // one hover for the whole center
+  const hc=el("circle",{cx:0,cy:0,r:f(r1-step),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, deepening toward the heart"},g);
+  hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center, in the Body view</span><b>Coherence</b><span class="tl">Heart, breath, and brain in step. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
   // connection grows inward: soft chevrons on the window's diagonals, pointing in
   [45,135,225,315].forEach(a=>{ [0,1,2].forEach(i=>{ const r=R.win[1]-12-i*13, w=5.5; el("path",{d:`M${f(P(r,a-w)[0])} ${f(P(r,a-w)[1])} L${f(P(r-8,a)[0])} ${f(P(r-8,a)[1])} L${f(P(r,a+w)[0])} ${f(P(r,a+w)[1])}`,class:"body-chev","stroke-opacity":f(0.35+i*0.25)},g); });
     const [hx,hy]=P(R.win[1]-24,a), h=el("circle",{cx:f(hx),cy:f(hy),r:22,class:"body-hit",tabindex:"0",role:"button","aria-label":"Connection grows inward"},g);
@@ -1609,7 +1604,7 @@ const FINDS=[
   {key:"monkey", label:"Monkey mind", group:"States", spans:()=>[R.edge],
    pins:g=>["racing","scanning","ruminating","replaying"].forEach((t,k)=>pin(g,midR(R.edge),DIRS[k].angle+28,t,12)), open:u=>showMonkey(u)},
   {key:"coherence", label:"Coherence", group:"States", body:true, spans:()=>[[0,cohR(1)[1]]],
-   pins:g=>pin(g,midR(cohR(1)),180,"coherence deepens toward the heart",11.5), open:u=>showBody(u,"layers")},
+   open:u=>showBody(u,"layers")},
   {key:"receptivity", label:"Receptivity", group:"States", body:true, spans:()=>[cohR(2)],
    pins:g=>pin(g,midR(cohR(2)),180,"receptivity lives here",11.5), open:u=>showBody(u,"receptive")},
   {key:"absorption", label:"Absorption", group:"States", body:true, spans:()=>[cohR(4)], open:u=>showBody(u,"layers")},
@@ -1717,12 +1712,12 @@ function showBody(user, focus){
       <p>When you feel safe, the heart's rhythm becomes smooth and wave-like, quickening a little on each in-breath and slowing on each out-breath. Heart, breath, and brain fall into step through the vagus nerve. Researchers can measure this as heart rhythm coherence, and slow breathing near six breaths a minute brings it on reliably (Lehrer and Gevirtz, 2014).</p>
       <p>From the inside it feels like peace: safe, whole, warm, at home in yourself. Many people also feel more open and connected, to others and to something greater.</p>
       <button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button></div>
-    <div class="ring" id="body-layers"><h3>Layers of coherence</h3>
-      <p>Coherence deepens in layers. Moving inward from the window, each ring is a more complete harmony: first within the body, then with others, then in the mind, and finally beyond the sense of a separate self. The rings around the heart show them, brightest at the center.</p>
-      <ol class="cohlist">${COH_LAYERS.map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ol>
-      <p><b>Not a ladder.</b> People can touch a deep layer without passing through each ring, and states come and go. Depth here is about harmony, not worth.</p>
-      <p><b>The evidence fades inward.</b> The outer layers are measured in the body; the inner ones rest more on what contemplative traditions describe. Each ring says how well it is known.</p>
-      <p class="note">Go gently. Deep meditative states can bring up strong energy, intense joy, or unsettling experiences, and research on meditation's challenging effects shows they are not rare (Lindahl and colleagues, 2017). Explore the inner layers with a trusted teacher, and come back to the body and the breath whenever you need to.</p></div>
+    <div class="ring" id="body-layers"><h3>As coherence deepens</h3>
+      <p>At the center, heart, breath, and brain move in step: coherence. The rings around the heart grow brighter toward the center, because coherence can deepen. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
+      <ul class="cohlist">${COH_LAYERS.slice(2).map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ul>
+      <p><b>Not a ladder.</b> People can touch a deeper quality without passing through the others, and states come and go. Depth here is about harmony, not worth.</p>
+      <p><b>The evidence fades inward.</b> Coherence itself is measured in the body; the deeper qualities rest more on what contemplative traditions describe. Each says how well it is known.</p>
+      <p class="note">Go gently. Deep meditative states can bring up strong energy, intense joy, or unsettling experiences, and research on meditation's challenging effects shows they are not rare (Lindahl and colleagues, 2017). Explore the deeper states with a trusted teacher, and come back to the body and the breath whenever you need to.</p></div>
     <div class="ring" id="body-inward"><h3>Connection grows inward</h3>
       <p>On a wheel you might expect connection to grow as you move outward. Here it grows as you move in. To feel truly connected with others, the body first needs to feel safe and connected within itself. Warm connection and the heart's vagal tone build each other over time, an upward spiral (Kok and Fredrickson, 2010).</p></div>
     <div class="ring" id="body-receptive"><h3>Receptivity: when the body feels safe, it can listen</h3>
