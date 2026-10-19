@@ -94,13 +94,21 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .body-heart{stroke:#FFFFFF;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 14px #FFD866) drop-shadow(0 0 26px #FFE9A8)}
 .body-aura{fill:#FFE39A;fill-opacity:.55;pointer-events:none;filter:blur(12px)}
 .body-halo{fill:none;stroke:#D7A83A;stroke-width:4;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
+.findbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;max-width:740px;margin:0 auto;width:100%}
+.fgroup{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.fglbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.fchip{font:inherit;font-size:13px;font-weight:600;line-height:1.2;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.fchip:hover{border-color:var(--goldline)}
+.fchip[aria-pressed="true"]{background:var(--goldline);border-color:var(--goldline);color:#fff}
+.t-pin{fill:#2C2433;font-style:italic;font-weight:700;paint-order:stroke;stroke:#FFF8E4;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
+@media (prefers-reduced-motion: no-preference){ #findG,#findPinG{animation:lensin .35s ease} }
 .flow-band{fill:#F29A55;fill-opacity:.3;stroke:#E8874A;stroke-opacity:.6;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,180,120,.75))}
 .monkey-arc{fill:none;stroke:#B85A4A;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:.8;pointer-events:none}
 .t-monkey{fill:#8A3A2E;font-style:italic;font-weight:700}
 .is-dark .t-monkey{fill:#5E2A22}
 .t-flow{fill:#B4561E;font-style:italic;font-weight:700}
 .is-dark .t-flow{fill:#7A3A10}
-svg.mapview #flowG{display:none}
+svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
 .coh-core{filter:drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px #FFE9A8)}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
@@ -432,6 +440,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <div class="stage">
       <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
         <p>Drag to see the window widen as awareness widens: the Self stays at the center, the window grows around it, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
@@ -1012,7 +1021,7 @@ function petal(r0,r1,a0,a1,bulgeIn){
   return `M${f(b0[0])} ${f(b0[1])} Q${f(c0[0])} ${f(c0[1])} ${f(tip[0])} ${f(tip[1])} Q${f(c1[0])} ${f(c1[1])} ${f(b1[0])} ${f(b1[1])} `+(bulgeIn ? `Q${f(P(r0+bulgeIn,m)[0])} ${f(P(r0+bulgeIn,m)[1])} ${f(b0[0])} ${f(b0[1])}` : arc(r0,a1,a0,0))+"Z";
 }
 // text path along an arc that reads upright
-let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null, LENS=null;
+let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null, LENS=null, FIND=null;
 /* ---------- Patterns on the wheel ----------
    A route is a list of [angle, depth] points: the angle is the direction (0 fight or flight at the top, 90 freeze,
    180 collapse, 270 fawn), and the depth runs from the Self (0) through the window (about .35), the edge (about .56),
@@ -1464,11 +1473,13 @@ function draw(){
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     el("path",{d:ringP(R.braid[1]+6)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"self-shade"},sf);
     el("circle",{cx:0,cy:0,r:f(r0),class:"self-glow"},sf); }
+  el("g",{id:"findG"});
   el("g",{id:"flowG"});
+  el("g",{id:"findPinG"});
   el("g",{id:"lensG"});
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawFlow(); drawLens(); drawArousal();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawFind(); drawFlow(); drawLens(); drawArousal();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1569,24 +1580,88 @@ const MONKEY_DIR=["Racing thoughts, jumping from one thing to the next, a sense 
   "Scanning for what could go wrong, thoughts circling the danger.",
   "Heavy rumination: going over and over the same thoughts, with little energy to move.",
   "Replaying conversations and reading every mood, the mind busy with other people."];
-function drawFlow(){
-  const g=document.getElementById("flowG"); if(!g) return; g.innerHTML="";
-  const rc=BODY?CR.L1-8:CR.L1+16, wMax=30, wMin=7, w=a=>wMin+(wMax-wMin)*(1+Math.cos(a*Math.PI/180))/2;
+const flowR=()=>BODY?CR.L1-8:CR.L1+16;
+function flowBand(g){
+  const rc=flowR(), wMax=30, wMin=7, w=a=>wMin+(wMax-wMin)*(1+Math.cos(a*Math.PI/180))/2;
   let outer="", inner="";
   for(let a=0;a<=360;a+=2){ const [x,y]=P(rc+w(a)/2,a); outer+=(a?"L":"M")+f(x)+" "+f(y); }
   for(let a=360;a>=0;a-=2){ const [x,y]=P(rc-w(a)/2,a); inner+=(a===360?"M":"L")+f(x)+" "+f(y); }
   el("path",{d:outer+"Z "+inner+"Z","fill-rule":"evenodd",class:"flow-band"},g);
-  arcText(rc+1,26,48,"flow","lbl t-flow",14,2,g);
-  const fh=el("path",{d:sector(rc-13,rc+13,22,52,1,0),class:"body-hit",tabindex:"0",role:"button","aria-label":"Flow: a band around the whole window, widest on the Energized side"},g);
-  hookTip(fh,()=>{ const [x,y]=P(rc,36); return {x,y,html:`<span class="ringtag">Around the window</span><b>Flow</b><span class="tl">Absorbed in something that holds you just enough. Widest on the Energized side, quieter elsewhere.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showFlow(true));
-  // monkey mind: a restless, broken line through the edge, all the way around
+}
+function monkeyLine(g){
   const E=R.edge, rm=E[0]+6; let d="";
   for(let a=0,i=0;a<360;a+=1.6,i++){ const rr=rm+(i%2?3.5:-3.5)*(0.6+0.4*Math.sin(i*1.7)); const [x,y]=P(rr,a); d+=(d&&i%7?"L":"M")+f(x)+" "+f(y); }
   el("path",{d,class:"monkey-arc"},g);
-  arcText((E[0]+E[1])/2,10,31,"monkey mind","lbl t-monkey",11.5,0.4,g);
-  const ring=q=>`M0 ${f(-q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(q)} A${f(q)} ${f(q)} 0 1 1 0 ${f(-q)}`;
-  const mh=el("path",{d:sector(E[0],E[1],8,33,1,0),class:"body-hit monkey-hit",tabindex:"0",role:"button","aria-label":"Monkey mind: flow's scattered mirror, at the edge all the way around"},g);
-  hookTip(mh,()=>{ const [x,y]=P((E[0]+E[1])/2,20); return {x,y,html:`<span class="ringtag">At the edge, all the way around</span><b>Monkey mind</b><span class="tl">Thoughts scattering instead of gathering: racing, scanning, ruminating, replaying.</span><span>Tap to read more.</span>`,color:"--ff"}; },()=>showMonkey(true));
+}
+function drawFlow(){
+  const g=document.getElementById("flowG"); if(!g) return; g.innerHTML="";
+  if(FIND==="flow") flowBand(g);
+  if(FIND==="monkey") monkeyLine(g);
+}
+// Find on the map: the foundation stays clean, and each idea lights up where it usually lives, with a short pin
+const cohR=i=>{ const r1=CR.L1+2, r0=R.core*0.72, st=(r1-r0)/6; return [r1-(i+1)*st, r1-i*st]; };
+const midR=sp=>(sp[0]+sp[1])/2, omR=()=>(R.out[0]+R.out[1])/2, winMid=()=>(CR.L1+3+R.win[1])/2;
+function pin(g,r,a,t,sz){ sz=sz||12.5; const sp=Math.min(80,(t.length*sz*0.56/2)/r*57.3+3); arcText(r,a-sp,a+sp,t,"lbl t-pin",sz,0.3,g); }
+const toLoop=u=>{ showIntro(); if(u){ const t=document.getElementById("loop"); if(t) bringPanel(t); } };
+const FINDS=[
+  {key:"flow", label:"Flow", group:"States", spans:()=>{ const c=flowR(); return [[c-16,c+16]]; },
+   pins:g=>{ const c=flowR(); pin(g,c,45,"most flow here"); pin(g,c,135,"thinnest toward Settled"); }, open:u=>showFlow(u)},
+  {key:"monkey", label:"Monkey mind", group:"States", spans:()=>[R.edge],
+   pins:g=>["racing","scanning","ruminating","replaying"].forEach((t,k)=>pin(g,midR(R.edge),DIRS[k].angle+28,t,12)), open:u=>showMonkey(u)},
+  {key:"coherence", label:"Coherence", group:"States", body:true, spans:()=>[[0,cohR(1)[1]]],
+   pins:g=>pin(g,midR(cohR(1)),180,"coherence deepens toward the heart",11.5), open:u=>showBody(u,"layers")},
+  {key:"receptivity", label:"Receptivity", group:"States", body:true, spans:()=>[cohR(2)],
+   pins:g=>pin(g,midR(cohR(2)),180,"receptivity lives here",11.5), open:u=>showBody(u,"receptive")},
+  {key:"absorption", label:"Absorption", group:"States", body:true, spans:()=>[cohR(4)], open:u=>showBody(u,"layers")},
+  {key:"unity", label:"Unity", group:"States", body:true, spans:()=>[cohR(5)], open:u=>showBody(u,"layers")},
+  {key:"hrv", label:"Heart rate variability", group:"The body", loop:true, spans:()=>[R.heart,R.edge,R.out],
+   pins:g=>{ const a=67.5; pin(g,midR(R.heart),a,"HRV high",Math.min(12.5,(R.heart[1]-R.heart[0])*0.55)); pin(g,midR(R.edge),a,"HRV falling",12.5); pin(g,R.out[0]+26,a,"HRV low",13); }, open:toLoop},
+  {key:"alarm", label:"The alarm", group:"The body", loop:true, spans:()=>[R.edge], open:u=>showWhere(u,null,"edge")},
+  {key:"brake", label:"The brake", group:"The body", loop:true, spans:()=>[[R.brake[0],R.rim[1]]], open:toLoop},
+  {key:"lasts", label:"If it lasts", group:"The body", body:true, spans:()=>[[R.out[1]+2,R.braid[0]-5]], open:u=>showBody(u,"lasts")},
+  {key:"parts", label:"Parts", group:"The mind", self:true, spans:()=>[[CR.L1+4,R.out[1]]], extra:g=>{ const L=LENSES.find(l=>l.key==="ifs");
+  (L.partsIn||[]).forEach(([name,a])=>{
+    const dr=CR.L1+13, [x,y]=P(dr,a), [sx,sy]=P(R.core+4,a);
+    el("line",{x1:f(x),y1:f(y),x2:f(sx),y2:f(sy),class:"part-line led"},g);
+    el("circle",{cx:f(x),cy:f(y),r:6,class:"part-dot led"},g);
+    arcText(dr+21,a-24,a+24,name,"lbl t-part t-partin",15,0.2,g); });
+  (L.partsOut||PATTERNS.parts).forEach(([name,a,dp])=>{ const led=0;
+    const [x,y]=P(depthR(dp),a), [sx,sy]=P(R.core+4,a), right=x>=0, vert=Math.abs(y)>Math.abs(x);
+    el("line",{x1:f(x),y1:f(y),x2:f(sx),y2:f(sy),class:"part-line"},g);
+    el("circle",{cx:f(x),cy:f(y),r:7,class:"part-dot"},g);
+    const t=el("text",vert?{x:f(x),y:f(y<0?y-14:y+28),"text-anchor":"middle",class:"lbl t-part"}:{x:f(x+(right?-12:12)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-part"},g); t.textContent=name; });
+   }, open:u=>showSelf(u)},
+  {key:"perception", label:"Perception", group:"The mind", spans:()=>[[CR.L1+4,R.out[1]]],
+   pins:g=>{ pin(g,winMid(),45,"a wide, open lens",12); pin(g,omR(),67.5,"a narrowed lens",12.5); },
+   open:u=>{ showAware(u); if(u){ const t=document.getElementById("aware-perception"); if(t) bringPanel(t); } }},
+  {key:"intuition", label:"Intuition, or an old alarm?", group:"The mind", body:true, spans:()=>[cohR(2),R.out],
+   pins:g=>{ pin(g,midR(cohR(2)),180,"intuition: quiet, settled",11.5); pin(g,omR(),157.5,"old alarms: loud, urgent",12.5); }, open:u=>showBody(u,"discern")}];
+function drawFind(){
+  const g=document.getElementById("findG"), gp=document.getElementById("findPinG"); if(!g||!gp) return; g.innerHTML=""; gp.innerHTML="";
+  svg.classList.toggle("findview",!!FIND); if(!FIND) return;
+  const F=FINDS.find(x=>x.key===FIND); if(!F||(F.loop&&!R.heart)) return;
+  const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`, spans=F.spans();
+  let d=ring(R.braid[1]+8); spans.forEach(([a,b])=>{ d+=" "+ring(b); if(a>0.5) d+=" "+ring(a); });
+  el("path",{d,"fill-rule":"evenodd",class:"lens-dim","fill-opacity":.45},g);
+  spans.forEach(([a,b])=>{ el("circle",{cx:0,cy:0,r:f(b),class:"lens-line"},g); if(a>0.5) el("circle",{cx:0,cy:0,r:f(a),class:"lens-line"},g); });
+  if(F.extra) F.extra(gp);
+  if(F.pins) F.pins(gp);
+}
+const findbar=document.getElementById("findbar");
+["States","The body","The mind"].forEach(grp=>{ const box=document.createElement("span"); box.className="fgroup"; box.innerHTML=`<span class="fglbl">${grp}</span>`;
+  FINDS.filter(x=>x.group===grp).forEach(F=>{ const b=document.createElement("button"); b.type="button"; b.className="fchip"; b.dataset.find=F.key; b.setAttribute("aria-pressed","false"); b.textContent=F.label; b.addEventListener("click",()=>findGo(F.key)); box.appendChild(b); });
+  findbar.appendChild(box); });
+function markFind(){ findbar.querySelectorAll(".fchip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.find===FIND?"true":"false")); }
+function findGo(key, fromCard){
+  if(FIND===key&&!fromCard){ FIND=null; drawFind(); drawFlow(); markFind(); return; }
+  const F=FINDS.find(x=>x.key===key);
+  if(F.body&&!BODY) setBody(true);
+  if(F.self&&BODY) setBody(false);
+  if(F.loop&&!LOOPON) setLoop(true);
+  const u=!isNarrow()||!!fromCard;
+  F.open(u);
+  FIND=key; drawFind(); drawFlow(); markFind();
+  if(!u) document.querySelector(".svgbox").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function showFlow(user){
   setView("flow");
@@ -1794,7 +1869,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(FIND){ FIND=null; drawFind(); drawFlow(); markFind(); } if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1813,8 +1888,8 @@ function wire(){
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
   on("[data-discern]",()=>{ setBody(true); const t=document.getElementById("body-discern"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); });
-  on("[data-flow]",()=>showFlow(true));
-  on("[data-monkey]",()=>showMonkey(true));
+  on("[data-flow]",()=>findGo("flow",true));
+  on("[data-monkey]",()=>findGo("monkey",true));
   on("[data-loopread]",()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); });
   // hovering a layer of the Self in the panel lights it on the wheel
   panel.querySelectorAll("[data-lhl]").forEach(n=>{ if(n.dataset.bound) return; n.dataset.bound=1;
