@@ -463,9 +463,9 @@ svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;strok
 .wp{border-left:3px solid var(--mc);padding:2px 0 2px 12px;display:grid;gap:3px;border-radius:0}
 .wp>b{font-family:var(--display);font-weight:500;font-size:19px}
 .wp p{margin:0}
-.backchips{margin-top:12px}
-.backchips button{display:inline-flex;align-items:center;gap:6px}
-.backchips button[aria-pressed="true"]{border-color:var(--ink);background:var(--surface)}
+.dirsub{margin-top:-8px}
+.dirsub button{display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:6px 14px}
+.dirsub button[aria-pressed="true"]{border-color:var(--ink);background:var(--surface)}
 .backsteps{gap:10px}
 .notyet{background:color-mix(in srgb, var(--mc) 16%, var(--surface));border-radius:10px;padding:10px 12px;font-size:14.5px}
 .waychips button{display:inline-flex;align-items:center;gap:6px}
@@ -534,6 +534,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <div class="panel">
       <div class="tabs" role="tablist" id="tabs"></div>
       <div class="dirnav" id="dirnav" hidden></div>
+      <div class="chips dirsub" id="dirsub" role="group" aria-label="Show" hidden></div>
       <nav class="dirnav secnav" id="secnav" aria-label="Sections" hidden></nav>
       <div id="panel" aria-live="polite"></div>
     </div>
@@ -2210,13 +2211,21 @@ addTab("Where am I?","where",()=>showWhere(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
 addTab("Practices","practice",()=>showPractice(true));
-DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${PATHS[k].name}`; b.title=PATHS[k].span; b.dataset.k=k; b.addEventListener("click",()=>showDir(k,null,true)); dnav.appendChild(b); });
+// inside The four directions, each direction has two pages: the direction itself, and its way back
+let DIRSUB="about";
+const dsub=document.getElementById("dirsub");
+function dirSub(k){
+  dsub.innerHTML=`<button type="button" data-dirsub="about" aria-pressed="${DIRSUB==="about"}">About ${DIRS[k].name.toLowerCase()}</button><button type="button" data-dirsub="back" aria-pressed="${DIRSUB==="back"}">${sw(DIRS[k].color)}The way back: practices</button>`;
+  dsub.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>b.dataset.dirsub==="back"?showBack(KEYS[k],true):showDir(k,null,true)));
+  return "";
+}
+DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${PATHS[k].name}`; b.title=PATHS[k].span; b.dataset.k=k; b.addEventListener("click",()=>DIRSUB==="back"?showBack(KEYS[k],true):showDir(k,null,true)); dnav.appendChild(b); });
 function sw(v){ return `<span class="sw" style="background:var(${v})"></span>`; }
 function ul(items,cls){ return `<ul${cls?` class="${cls}"`:""}>`+items.map(i=>`<li>${i}</li>`).join("")+"</ul>"; }
 const isNarrow=()=>window.matchMedia("(max-width:900px)").matches;
 function markTabs(){
   [...tabs.children].forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===view?"true":"false"));
-  dnav.hidden=view!=="dir";
+  dnav.hidden=view!=="dir"; dsub.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
 function setView(v,s){ if(FIND){ FIND=null; drawFind(); drawFlow(); markFind(); } if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); drawRes(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
@@ -2243,7 +2252,6 @@ function wire(){
   on("[data-home]",()=>showHome(true));
   on("[data-where]",b=>showWhere(true,b.dataset.where||null));
   on("[data-way]",b=>{ const w=b.dataset.way; if(BACK[w]) showBack(w,true); else showWhere(true,null,w||null); });
-  on("[data-back]",b=>showBack(b.dataset.back,true));
   on("[data-practice]",()=>showPractice(true));
   on("[data-pr]",b=>showPractice(true,b.dataset.pr));
   on("[data-res]",b=>showResources(true,b.dataset.res||null));
@@ -2403,16 +2411,17 @@ function showWay(k, scroll){
 
 // The way back, on its own page: only the return from one survival state
 function showBack(k, user){
-  setView("back"); const W=WAYS[k], B=BACK[k], c=wayColor(k), d=["ff","fr","co","fa"].indexOf(k), D=DIRS[d];
+  const d=["ff","fr","co","fa"].indexOf(k); DIRSUB="back"; setView("dir",{kind:"dir",k:d,layer:"out"});
+  const W=WAYS[k], B=BACK[k], c=wayColor(k), D=DIRS[d];
   const wp=p=>`<div class="wp"><b>${p.name}</b><p>${p.how}</p><span class="why"><b>Why it helps here.</b> ${p.why}</span></div>`;
-  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The way back</div><h2>From ${D.name.toLowerCase()}, back to the window</h2><div class="meta">Step by step, in the order the body tends to need</div>
-      <p>${W.needs}</p>
-      <div class="chips backchips">${["ff","fr","co","fa"].map((x,i)=>`<button type="button" data-back="${x}" aria-pressed="${x===k}">${sw(DIRS[i].color)}From ${DIRS[i].name.toLowerCase()}</button>`).join("")}</div></div>
+  const practices=`<div class="ring way" data-nav="Practices" style="--mc:var(${c})"><h3>${sw(c)}Practices for the way back</h3>
+      <div class="wps">${[...W.practices,...B.more].map(wp).join("")}</div></div>`;
+  panel.innerHTML=dirSub(d)+`<div class="phasehead"><div class="eyebrow">The four directions · The way back</div><h2>From ${D.name.toLowerCase()}, back to the window</h2>
+      <p>${W.needs}</p></div>
+    ${practices}
     <div class="ring way" data-nav="Step by step" style="--mc:var(${c})"><h3>${sw(c)}Step by step</h3>
       <ol class="backsteps">${B.steps.map(([t,x])=>`<li><b>${t}.</b> ${x}</li>`).join("")}</ol>
       <p class="about">Go at your own pace. Each step can take a minute or much longer, and you can come back to an earlier one whenever you need.</p></div>
-    <div class="ring way" data-nav="Practices" style="--mc:var(${c})"><h3>${sw(c)}Practices for the way back</h3>
-      <div class="wps">${[...W.practices,...B.more].map(wp).join("")}</div></div>
     ${STRESS[k]?`<div class="ring way" data-nav="Completing it" style="--mc:var(${c})"><h3>${sw(c)}Completing the stress response</h3><p class="about">${k==="ff"||k==="fr"?"Survival energy wants to finish. Let it move and sound, starting at about a fifth of your strength, and stop if it gets to be too much.":k==="co"?"Shutdown lifts slowly and gently. Go a little at a time, and rest between.":"Fawning set aside its own reach. These help the body practice wanting, and receiving."} Adapted from Linda Thai.</p>
       <div class="wps">${STRESS[k].map(wp).join("")}</div></div>`:""}
     <div class="ring way" data-nav="With others" style="--mc:var(${c})"><h3>${sw(c)}With someone who feels safe</h3><p>${B.withOthers}</p></div>
@@ -2422,7 +2431,6 @@ function showBack(k, user){
       ${W.care?`<p class="note">${W.care}</p>`:""}</div>
     <p><button type="button" class="linkbtn" data-res="${k}">Add what helps to my resources map</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>
     <p class="src">Levine (2010); Ogden, Minton &amp; Pain (2006); Dana (2018); Walker (2013); Balban et al. (2023); Artigas &amp; Jarero (2014); Linda Thai</p>`;
-  sel={kind:"dir",k:d,layer:"out"}; applySel();
   wire(); if(user) bringPanel();
 }
 function showWhere(user, focus, way){
@@ -2643,7 +2651,8 @@ function showDir(k, layer, user){
   const nb=[(k+1)%4,(k+3)%4];
   const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
-  panel.innerHTML=dirIntro()+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
+  DIRSUB="about";
+  panel.innerHTML=dirIntro()+dirSub(k)+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
     <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
     <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
