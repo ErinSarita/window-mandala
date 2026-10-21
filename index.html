@@ -119,6 +119,8 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .body-halo-in{stroke:#E8C25A;stroke-width:1.4;stroke-opacity:.85;filter:none}
 .t-body{fill:var(--sunink);font-style:italic;font-weight:600}
 .body-hit{fill:transparent;cursor:pointer;outline:none}
+.center-dim{fill:var(--bg);fill-opacity:.62;pointer-events:none;transition:opacity .2s}
+.t-survring{font-style:italic;font-weight:600;opacity:.8}
 .t-blend{font-family:var(--body);font-style:normal;font-weight:600;opacity:.62}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
 .mv-b{fill:var(--arrow);pointer-events:none;transition:fill .2s ease}
@@ -217,9 +219,8 @@ svg.rimfocus .rim-focus{opacity:1}
 .fig .fi{font-family:var(--display);font-style:italic;font-size:14px}
 .fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);text-align:center;margin:6px auto 0;max-width:46ch}
 .brake-ring{fill-opacity:.9;pointer-events:none}
-.brake-line{fill:none;stroke:#FFE7A0;stroke-width:3.2;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 3px #FFD866) drop-shadow(0 0 7px rgba(255,214,102,.75))}
-.t-wincap{fill:#8A5A12;font-style:italic;font-weight:700;letter-spacing:.12em;paint-order:stroke;stroke:#FFF6DC;stroke-width:4px;stroke-linejoin:round}
-.is-dark .t-wincap{fill:#FFE7A0;stroke:#3A2E1C}
+.brake-line{fill:none;stroke:#FFEAA8;stroke-width:15;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 4px #FFD866) drop-shadow(0 0 9px rgba(255,214,102,.7))}
+.t-wincap{fill:#7A4D10;font-style:italic;font-weight:700;letter-spacing:.12em;stroke:none}
 .t-brakeline{fill:#7A4D10;font-style:italic;font-weight:600}
 .is-dark .t-brakeline{fill:#F3D58A}
 .window-rim{fill-opacity:1;pointer-events:none}
@@ -996,7 +997,7 @@ function radii(t){
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[546,572]};
   }
   // the alarm runs straight on from the window's steady center, inside the window's glow, and the window ends beyond it
-  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+8], o0=rim[1];
+  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+17], o0=rim[1];
   return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,428], braid:[546,572]};
 }
 let LOOPON=false, LOOPGEO=false, BODY=true, CAP=0.5, R=radii(CAP);
@@ -1279,12 +1280,12 @@ function ringShade(layer,r0,r1){
 
 /* ---------- Draw ---------- */
 const cells=[];
-const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"Outside the window"};
+const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"The ring of survival"};
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
   if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">Ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
   if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${more}`;
-  return `<span class="ringtag">Outside the window</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
+  return `<span class="ringtag">The ring of survival</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
 }
 function hookTip(node, info, go){
   node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(null); go(); });
@@ -1457,15 +1458,17 @@ function draw(){
     grad("winglow",{...U,r:g1},[[g0/g1,"var(--sun2)",isDark()?0.34:0.42],[(g0+(g1-g0)*0.55)/g1,"var(--sun2)",isDark()?0.2:0.24],[1,"var(--sun2)",isDark()?0.5:0.6]]);
     el("circle",{cx:0,cy:0,r:f((g0+g1)/2),fill:"none",stroke:"url(#winglow)","stroke-width":f(g1-g0),"pointer-events":"none"}); }
   el("circle",{cx:0,cy:0,r:f(WB),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
+  // the ring of survival, named along its outer rim, above each direction's name
+  DIRS.forEach(d=>arcText(R.out[1]-13,d.angle-20,d.angle+20,"ring of survival","lbl t-out t-survring",11.5,1.6,labels));
   // in the simpler wheel the brake is one line, right beside the window's border: while it holds, you are inside your
   // window, alarm and all; when it gives way or clamps down, you leave it
   if(!LOOPGEO){ const br=(R.rim[0]+R.rim[1])/2+0.5;
     el("circle",{cx:0,cy:0,r:f(br),class:"brake-line"});
     [37,143,217,323].forEach(a=>arcText(R.out[0]+11,a-9,a+9,"the brake","lbl t-brakeline",11.5,0.4,labels));
     // the window of capacity, named along its glowing border, top and bottom
-    [0,180].forEach(a=>arcText(br+3,a-20,a+20,"window of capacity","lbl t-wincap",14,1.2,labels));
+    [0,180].forEach(a=>arcText(br,a-20,a+20,"window of capacity","lbl t-wincap",13,1.2,labels));
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-    const hit=el("path",{d:ringP(br+5)+" "+ringP(br-5)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, at the border of your window. Read about the loop"});
+    const hit=el("path",{d:ringP(br+8)+" "+ringP(br-8)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, at the border of your window. Read about the loop"});
     hookTip(hit,()=>({x:0,y:-br,html:`<span class="ringtag">At the border of your window</span><b>The brake</b><span class="tl">The thinking brain holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding. When it gives way, you go into fight or flight; when it clamps down, into shutdown.</span><span>Tap to read about the loop.</span>`}),
       ()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); }); }
   [45,135,225,315].forEach(a=>{
@@ -1609,7 +1612,12 @@ function bodyCenter(g,L1){
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
   const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
-  hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center, in the Body view</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
+  { const dimOn=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove();
+      const r0=(R.rim?R.rim[1]:R.edge[1])+1, ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+      el("path",{id:"centerdim",d:`M${-VB} ${-VB} H${VB} V${VB} H${-VB} Z `+ringP(r0)+"Z","fill-rule":"evenodd",class:"center-dim"}); },
+      dimOff=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove(); };
+    ["mouseenter","focus"].forEach(ev=>hc.addEventListener(ev,dimOn)); ["mouseleave","blur","click"].forEach(ev=>hc.addEventListener(ev,dimOff)); }
+  hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
 }
 // Flow: the sweet spot at the window's growing edge, on the Energized side. A glowing arc just inside the heart ring.
 // Flow: a translucent band around the whole window, widest on the Energized side (most common, best studied) and
@@ -2116,9 +2124,9 @@ function showIntro(){
       <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window, shown when you turn the loop on: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
       <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. In the simpler wheel, the window's glow reaches out over it: too much or too little energy, but still inside the window.</div></li>
       <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. In the simpler wheel it is one gold line, right beside the window's glowing border; with the loop turned on, it is a band, with a deeper gold border around it. Either way it marks the edge of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
-      <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
+      <li>${sw("--ff")}<div><b>The ring of survival</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
       <li>${sw("--sun2")}<div><b>The braid, and the golden rays</b>The braid weaves the three nervous systems together round the whole mandala. Outside it, short golden rays show resonance: they lengthen as the Lately dial turns toward the center, and run longest where the wheel's lines cross.</div></li>
-      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it, Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
+      <li>${sw("--fa")}<div><b>The petals: the way back</b>Around the ring of survival, a petal at each direction holds the way back from it, toward the window. Tap one to read it. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with coherence at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
@@ -2232,7 +2240,7 @@ const LENSES=[
    intro:"Two maps of the same ground: how much the nervous system can hold, and what it does when there is too much. Together they give the wheel its shape: the window at the center, and the survival states around it.",
    lit:[["The window of capacity","The ring of Energized, Settled, Still, and Connected: the states in which you can feel a great deal and still think, connect, and choose."],
         ["Its border","The deep gold band at the window's edge. Inside it, you can come back on your own. Beyond it, survival takes over."],
-        ["Outside the window","The four survival states: fight or flight, freeze, collapse, and fawn."]],
+        ["The ring of survival","The four survival states: fight or flight, freeze, collapse, and fawn."]],
    brings:[`<b>The window of tolerance</b> comes from psychiatrist Dan Siegel (1999): a zone of arousal in which we can take in what is happening and respond. Above it lies hyperarousal, too much charge; below it, hypoarousal, too little. Pat Ogden and colleagues (2006) carried it into body-based trauma therapy. Many now call it the window of capacity, because it can widen.`,
      `<b>Polyvagal theory</b> comes from neuroscientist Stephen Porges (2007, 2011): three states in an evolutionary order. The ventral vagal state is safe and social; the sympathetic mobilizes for fight or flight; the dorsal vagal immobilizes and shuts down. Therapist Deb Dana (2018) turned it into a ladder people can climb, and named its blends: play, mobilization held by safety, and stillness, rest held by safety.`],
    reimagined:["Siegel's window is a band, with too much charge above it and too little below. Polyvagal theory is a ladder, climbed down under threat and back up with safety. Both are drawn in straight lines. Here they bend into a circle, and the circle shows what straight lines cannot: movement, and a center.", "<b>A continuous flow.</b> Around the outer ring the survival states lead into one another: fight or flight can tip into freeze, freeze can drop into collapse, collapse can surface through fawn, and fawn can flare back into fight. The arrows between them run both ways, because the nervous system moves back and forth between sympathetic charge and dorsal shutdown, sometimes many times in a day. On a ladder that looks like jumping between rungs. On a circle it is one flowing movement around the edge.", "<b>A clear border.</b> The deep gold band is the edge of your window of capacity. Inside it you can feel a great deal, even anger or fear, and still think, connect, and choose. Beyond it, survival takes over.", "<b>Ventral, held as the center.</b> In polyvagal theory the ventral state is the top rung. Here it is the whole window, holding coherence at its heart. Each of the four window states is the safe, held form of the defense beyond it: Energized beneath fight or flight, Still beneath freeze, Settled beneath collapse, Connected beneath fawn. Even the defenses have a healthy root near the center.", "<b>As the window widens, the center holds steady.</b> Turn the Lately dial: the center stays where it is, the window spreads out around it, and the rings of survival thin. They stay: they are still there for when they are truly needed. What grows is the room to feel, and the ease of coming back.", "<b>Always a way toward the center.</b> Because it is a circle, every place on the outer ring faces the center. From fight or flight, freeze, collapse, or fawn, there is a path inward: back through the edge, into the healthy root of that same direction, and home. The ladder still teaches something true about the route: from collapse, a little gentle movement often comes before calm.", "Freeze and fawn are read as blends: freeze holds accelerator and brake at once, and fawn uses the social system for defense, a response Pete Walker (2013) named."],
@@ -2385,7 +2393,7 @@ function showDir(k, layer, user){
     <div class="ring${hl("stem")}" id="L-stem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
     <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
     <div class="ring${hl("brake")}" id="L-brake"><h3>${sw("--gold")}${step(5,"The brake: the prefrontal cortex")}</h3><p class="about">The rim of your window of capacity.</p><p>${L.brake}</p></div>
-    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}${step(6,`Outside the window: ${d.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p><p>${o.text}</p><p>${L.outside}</p><p class="src">${L.evidence}</p>
+    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}${step(6,`The ring of survival: ${d.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p><p>${o.text}</p><p>${L.outside}</p><p class="src">${L.evidence}</p>
       <h4>How it can feel</h4>${ul(o.feels)}
       <h4>How the world looks from here</h4><p>${PERCEIVE[k].out}</p>
       <h4>The story it tells</h4>${storyLine(KEYS[k])}
@@ -2547,7 +2555,7 @@ function regionOf(a,d){
 function regionName(key){
   if(key==="self") return "At the center, in coherence";
   const [L,k]=key.split(":"), d=DIRS[+k];
-  return L==="win"?`Inside the window: ${d.win.name.toLowerCase()}`:L==="edge"?`At the edge: ${d.edge.name.toLowerCase()}, toward ${d.name.toLowerCase()}`:`Outside the window: ${d.name.toLowerCase()}`;
+  return L==="win"?`Inside the window: ${d.win.name.toLowerCase()}`:L==="edge"?`At the edge: ${d.edge.name.toLowerCase()}, toward ${d.name.toLowerCase()}`:`In the ring of survival: ${d.name.toLowerCase()}`;
 }
 const REGIONS=["self",...["win","edge","out"].flatMap(L=>DIRS.map((d,k)=>L+":"+k))];
 function regionPoint(key){
@@ -2635,7 +2643,7 @@ svg.addEventListener("keydown",e=>{ if(MAP.on&&(e.key==="Enter"||e.key===" ")) e
 
 function mapGroups(){
   const groups=[["At the center, in coherence",["self"]],["Inside the window: what steadies you",DIRS.map((d,k)=>"win:"+k)],["At the edge: early signals",DIRS.map((d,k)=>"edge:"+k)],
-    ...DIRS.map((d,k)=>[`Outside the window: what takes you into ${d.name.toLowerCase()}`,["out:"+k]])];
+    ...DIRS.map((d,k)=>[`The ring of survival: what takes you into ${d.name.toLowerCase()}`,["out:"+k]])];
   return groups.map(([title,keys])=>({title,items:MAP.items.filter(it=>keys.includes(regionOf(it.a,it.d).key))})).filter(g=>g.items.length);
 }
 const typeName=t=>(MAPTYPES.find(m=>m.key===t)||MAPTYPES[3]).long;
@@ -3029,8 +3037,8 @@ function drawPetals(){
     // on screen an empty petal asks; on the printout it stays blank, room to write by hand
     if(empty) items=RES.force?[]:[{t:"What helps you come back from here?",c:""}];
     const [tx,ty]=P(PETAL.r1-30,a);
-    hookTip(pg,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">Beyond the survival ring</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
-      :`<span class="ringtag">Beyond the survival ring</span><b>Ways back from ${d.name.toLowerCase()}</b><span class="tl">What helps the body come back from here, toward the window.</span><span>Tap to read more.</span>`}),
+    hookTip(pg,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">The way back</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
+      :`<span class="ringtag">The way back</span><b>From ${d.name.toLowerCase()}, back to the window</b><span class="tl">What helps the body come back from here, toward the window.</span><span>Tap to read more.</span>`}),
       ()=>mine?showResources(true,key):showWhere(true,null,key));
     // fill the lines from the base of the petal outward, each holding what fits inside the petal at that radius;
     // a few ways back spread evenly over three lines, and a long list packs each line full
