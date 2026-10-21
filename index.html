@@ -215,6 +215,9 @@ svg.rimfocus .rim-focus{opacity:1}
 .fig .fi{font-family:var(--display);font-style:italic;font-size:14px}
 .fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);text-align:center;margin:6px auto 0;max-width:46ch}
 .brake-ring{fill-opacity:.9;pointer-events:none}
+.brake-line{fill:none;stroke:#A9781F;stroke-width:2.6;stroke-opacity:.95;pointer-events:none}
+.t-brakeline{fill:#7A4D10;font-style:italic;font-weight:600}
+.is-dark .t-brakeline{fill:#F3D58A}
 .window-rim{fill-opacity:1;pointer-events:none}
 .t-rim{fill:#3A2604;font-style:normal;font-weight:700;letter-spacing:.1em;stroke:none}
 .window-line{fill:#FFF8E1;fill-opacity:1;pointer-events:none}
@@ -488,7 +491,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
           <div class="dialtext dt-n"><div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
             <p class="arousalcap" id="arousalcap" aria-live="polite"></p></div>
         </div>
-        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><button type="button" class="btn" id="resbtn">My resources</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
+        <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="true">Show the loop</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><button type="button" class="btn" id="resbtn">My resources</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -988,10 +991,10 @@ function radii(t){
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
   }
   // the alarm runs straight on from the window's steady center, inside the window's glow, and the window ends beyond it
-  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, o0=e1+6;
-  return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
+  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+8], o0=rim[1];
+  return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,428], braid:[450,476]};
 }
-let LOOPON=true, LOOPGEO=true, BODY=true, CAP=0.5, R=radii(CAP);
+let LOOPON=false, LOOPGEO=false, BODY=true, CAP=0.5, R=radii(CAP);
 // the field of coherence spreads from the center into the window as the window widens, and draws back as it narrows;
 // the center itself stays where it is
 const cohEdge=()=>CR.L1+2+(R.win[1]-CR.L1-2)*(0.2+0.55*CAP);
@@ -1417,6 +1420,15 @@ function draw(){
     grad("winglow",{...U,r:g1},[[g0/g1,"var(--sun2)",isDark()?0.34:0.42],[(g0+(g1-g0)*0.55)/g1,"var(--sun2)",isDark()?0.2:0.24],[1,"var(--sun2)",isDark()?0.5:0.6]]);
     el("circle",{cx:0,cy:0,r:f((g0+g1)/2),fill:"none",stroke:"url(#winglow)","stroke-width":f(g1-g0),"pointer-events":"none"}); }
   el("circle",{cx:0,cy:0,r:f(WB),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
+  // in the simpler wheel the brake is one line, right beside the window's border: while it holds, you are inside your
+  // window, alarm and all; when it gives way or clamps down, you leave it
+  if(!LOOPGEO){ const br=(R.rim[0]+R.rim[1])/2+0.5;
+    el("circle",{cx:0,cy:0,r:f(br),class:"brake-line"});
+    [37,143,217,323].forEach(a=>arcText(R.out[0]+11,a-9,a+9,"the brake","lbl t-brakeline",11.5,0.4,labels));
+    const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    const hit=el("path",{d:ringP(br+5)+" "+ringP(br-5)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, at the border of your window. Read about the loop"});
+    hookTip(hit,()=>({x:0,y:-br,html:`<span class="ringtag">At the border of your window</span><b>The brake</b><span class="tl">The thinking brain holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding. When it gives way, you go into fight or flight; when it clamps down, into shutdown.</span><span>Tap to read about the loop.</span>`}),
+      ()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); }); }
   [45,135,225,315].forEach(a=>{
     const [x,y]=P(WB,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
     el("circle",{cx:f(x),cy:f(y),r:11,class:"dh"},g); el("circle",{cx:f(x),cy:f(y),r:5.6,class:"dc"},g);
@@ -1622,9 +1634,9 @@ const FINDS=[
    pins:g=>{ const a=67.5; pin(g,midR(R.heart),a,"HRV high",Math.min(12.5,(R.heart[1]-R.heart[0])*0.55)); pin(g,midR(R.edge),a,"HRV falling",12.5); pin(g,R.out[0]+26,a,"HRV low",13); }, open:toLoop},
   {key:"early", label:"The early alarm", group:"The body", spans:()=>[R.edge],
    pins:g=>["alert","orient","find","fidget"].forEach((t,k)=>pin(g,midR(R.edge),DIRS[k].angle+24,t,12)), open:u=>showEarly(u)},
-  {key:"alarm", label:"The alarm", group:"The body", loop:true, spans:()=>[R.edge], open:u=>showWhere(u,null,"edge")},
-  {key:"brake", label:"The brake", group:"The body", loop:true, spans:()=>[[R.brake[0],R.rim[1]]], open:toLoop},
-  {key:"rim", label:"At the rim", group:"The body", loop:true, spans:()=>[[R.rim[0],R.out[0]+30]], open:u=>showRim(u)},
+  {key:"alarm", label:"The alarm", group:"The body", spans:()=>[R.edge], open:u=>showWhere(u,null,"edge")},
+  {key:"brake", label:"The brake", group:"The body", spans:()=>[[R.brake[0]-(LOOPGEO?0:3),R.rim[1]+(LOOPGEO?0:2)]], open:toLoop},
+  {key:"rim", label:"At the rim", group:"The body", spans:()=>[[R.rim[0],R.out[0]+30]], open:u=>showRim(u)},
   {key:"lasts", label:"If it lasts", group:"The body", body:true, spans:()=>[[R.out[1]+2,R.braid[0]-5]], open:u=>showBody(u,"lasts")},
   {key:"perception", label:"Perception", group:"The mind", spans:()=>[[CR.L1+4,R.out[1]]],
    pins:g=>{ pin(g,winMid(),45,"a wide, open lens",12); pin(g,omR(),67.5,"a narrowed lens",12.5); },
@@ -2072,9 +2084,9 @@ function showIntro(){
       <li>${sw("--sun3")}<div><b>The center: coherence</b>Three circles, mind, heart, and body, overlapping in light. The closer to the center, the more fully they move in step, and the clearer awareness becomes. Further out, protection takes the lead, but the center is always there to return to.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction, each the safe root of the defense beyond it. Inside your window of capacity the qualities many call Self come forward, calm, curiosity, compassion, and clarity, and the connection with Self is easier to feel.</div></li>
       <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>In the simpler wheel, the words just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
-      <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
+      <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window, shown when you turn the loop on: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
       <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. In the simpler wheel, the window's glow reaches out over it: too much or too little energy, but still inside the window.</div></li>
-      <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. The deeper gold band around it is the border of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
+      <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. In the simpler wheel it is one gold line, right beside the window's glowing border; with the loop turned on, it is a band, with a deeper gold border around it. Either way it marks the edge of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
       <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
@@ -2296,7 +2308,7 @@ function drawLens(){
     const t=el("text",vert?{x:f(x),y:f(y<0?y-14:y+28),"text-anchor":"middle",class:"lbl t-part"}:{x:f(x+(right?-12:12)),y:f(y+6),"text-anchor":right?"end":"start",class:"lbl t-part"},g); t.textContent=name; });
 }
 function showLens(key, user){
-  if(!LOOPON) setLoop(true);
+  if(key==="loop"&&!LOOPON) setLoop(true);
   LENS=key; setView("lens"); drawLens(); markLens();
   const L=LENSES.find(l=>l.key===key), i=LENSES.indexOf(L), next=LENSES[(i+1)%LENSES.length];
   // the four sources, named together, this one in bold and the others a tap away
@@ -3017,7 +3029,6 @@ function setLoop(on){
   moonTip(null); draw();
 }
 loopswitch.addEventListener("click",()=>setLoop(!LOOPON));
-svg.classList.add("loopview");
 setCap(0.5,false);
 draw();
 showIntro();
