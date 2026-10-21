@@ -416,6 +416,11 @@ svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;strok
 .phasehead p{margin:10px 0 0;max-width:62ch}
 .ring{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:10px;scroll-margin-top:16px}
 .ring.hl{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.dirintro summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dirintro summary::-webkit-details-marker{display:none}
+.dirintro summary::after{content:"Hide";font-size:13px;font-weight:600;color:var(--muted)}
+.dirintro:not([open]) summary::after{content:"Show"}
+.ring.dirintro p{margin:10px 0 0}
 .ring h3{margin:0;font-family:var(--display);font-weight:500;font-size:22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ring h3 small{font-family:var(--body);font-size:13px;color:var(--muted)}
 .ring h4{margin:4px 0 0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -2180,6 +2185,9 @@ function wire(){
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
   on("[data-lasts]",()=>showBody(true,"lasts"));
+  on("[data-tabgo]",b=>{ const t=tabs.querySelector(`[data-tab="${b.dataset.tabgo}"]`), sec=b.dataset.sec; if(!t) return; t.click();
+    // straight to the section, settling the tab's own scroll first
+    if(sec) setTimeout(()=>{ const r=panel.querySelector(`.ring[data-nav="${sec}"]`); if(!r) return; r.style.scrollMarginTop=(secnav.offsetHeight+12)+"px"; r.scrollIntoView({block:"start"}); },60); });
   on("[data-discern]",()=>{ showBody(true); const t=document.getElementById("body-discern"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); });
   on("[data-flow]",()=>findGo("flow",true));
   on("[data-monkey]",()=>findGo("monkey",true));
@@ -2528,13 +2536,20 @@ function showLens(key, user){
   wire(); if(user&&!isNarrow()) bringPanel();
 }
 
+// the same opening for all four directions: what they are, how energy moves through them, and when they wear on us
+let DIRINTRO_OPEN=true;
+const dirIntro=()=>`<details class="ring dirintro"${DIRINTRO_OPEN?" open":""}><summary><h3>About the four directions</h3></summary>
+  <p>Each direction follows one way the nervous system moves. <b>Up the wheel, energy rises:</b> the sympathetic branch quickens the heart and readies the body to act, toward fight or flight. <b>Down the wheel, energy settles and drops:</b> the dorsal branch slows the body for rest, and under threat, shuts it down, toward collapse. To the right, <b>freeze</b> holds both at once, the accelerator and the brake pressed together. To the left, <b>fawn</b> reaches toward others, using connection itself to stay safe.</p>
+  <p><b>Each direction has two forms.</b> Inside your window it is healthy, held by ventral safety: rising energy becomes play, passion, and focus; settling becomes digestion, repair, and sleep; stillness becomes calm, open attention; reaching out becomes warm connection. Pushed past the window's edge, the same branch takes its survival form: fight or flight, freeze, collapse, or fawn.</p>
+  <p><b>Going there is natural.</b> The survival states are the body protecting you, and every nervous system visits them. They are wise answers to real danger, and they are meant to pass. What wears on body and mind is staying too long, going too often, or going when the danger is gone and the alarm keeps sounding. So the aim is to visit these far places less often and for less time, and to find the way back a little more easily each time.</p>
+  <p><button type="button" class="linkbtn" data-lasts>If it lasts</button> · <button type="button" class="linkbtn" data-tabgo="found" data-sec="The branches">Foundations: the branches</button></p></details>`;
 function showDir(k, layer, user){
   setView("dir",{kind:"dir",k,layer});
   const d=DIRS[k], o=d.out, hl=x=>layer===x?" hl":"", Pt=PATHS[k], L=LAYERS[k];
   const nb=[(k+1)%4,(k+3)%4];
   const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
-  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
+  panel.innerHTML=dirIntro()+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
     <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
     <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
@@ -2559,6 +2574,7 @@ function showDir(k, layer, user){
     <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
     <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
     <p class="src">${["Cannon (1915); Imai et al. (1994); Kreibig (2010); Arnsten (2009); Lieberman et al. (2007); Ochsner &amp; Gross (2005)","Roelofs (2017); Schauer &amp; Elbert (2010)","Thayer &amp; Lane (2009); Lanius et al. (2010); Schauer &amp; Elbert (2010)","Kok &amp; Fredrickson (2010); Dickerson &amp; Kemeny (2004); Walker (2013); Taylor et al. (2000)"][k]}; Porges (2007); Thayer &amp; Lane (2000); Dana (2018); Siegel (1999); Levine (2010)</p>`;
+  const di=panel.querySelector(".dirintro"); if(di) di.addEventListener("toggle",()=>{ DIRINTRO_OPEN=di.open; });
   const hb=panel.querySelector("[data-held]"); if(hb) hb.addEventListener("click",()=>{ const on=TRACE&&TRACE.held===k; showTrace(on?null:{held:k}); hb.textContent=on?"See it on the wheel":"Hide it from the wheel"; });
   wire();
   if(user) bringPanel(layer?document.getElementById("L-"+layer):null);
