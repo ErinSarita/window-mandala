@@ -226,6 +226,7 @@ svg.rimfocus .rim-focus{opacity:1}
 .fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);text-align:center;margin:6px auto 0;max-width:46ch}
 .brake-ring{fill-opacity:.9;pointer-events:none}
 .brake-line{fill:none;stroke:#FFEAA8;stroke-width:15;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 4px #FFD866) drop-shadow(0 0 9px rgba(255,214,102,.7))}
+.brake-inner{fill:none;stroke:#E9B949;stroke-width:2.6;pointer-events:none;filter:drop-shadow(0 0 2px #FFD866) drop-shadow(0 0 5px rgba(255,214,102,.7))}
 .t-wincap{fill:#7A4D10;font-style:italic;font-weight:700;letter-spacing:.12em;stroke:none}
 .t-brakeline{fill:#7A4D10;font-style:italic;font-weight:600}
 .is-dark .t-brakeline{fill:#F3D58A}
@@ -1530,8 +1531,14 @@ function draw(){
     // the window of capacity, named along its glowing border, top and bottom
     [0,180].forEach(a=>arcText(br,a-20,a+20,"window of capacity","lbl t-wincap",13,1.2,labels));
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-    const hit=el("path",{d:ringP(br+8)+" "+ringP(br-8)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, at the border of your window. Read about the loop"});
-    hookTip(hit,()=>({x:0,y:-br,html:`<span class="ringtag">At the border of your window</span><b>The brake</b><span class="tl">The thinking brain holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding. When it gives way, you go into fight or flight; when it clamps down, into shutdown.</span><span>Tap to read about the loop.</span>`}),
+    // the glowing border is the window of capacity itself; just inside it, a fine line of gold is the brake
+    const kr=R.rim[0]-1.5;
+    el("circle",{cx:0,cy:0,r:f(kr),class:"brake-inner"});
+    const wh=el("path",{d:ringP(R.rim[1]+6)+" "+ringP(R.rim[0]+2)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"Your window of capacity. Read about the window"});
+    hookTip(wh,()=>({x:0,y:-(R.rim[1]+4),html:`<span class="ringtag">The glowing border</span><b>Your window of capacity</b><span class="tl">Everything inside this border: the center, the window, and the alarm at its edge. Here you can feel a lot and still respond, and its width changes with life and practice.</span><span>Tap to read more.</span>`}),
+      ()=>showLens("window",true));
+    const hit=el("path",{d:ringP(kr+2)+" "+ringP(kr-6)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, just inside the border of your window. Read about the loop"});
+    hookTip(hit,()=>({x:0,y:-kr,html:`<span class="ringtag">Just inside the border</span><b>The brake</b><span class="tl">The thinking brain holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding. When it gives way, you go into fight or flight; when it clamps down, into shutdown.</span><span>Tap to read about the loop.</span>`}),
       ()=>{ showIntro(); const t=document.getElementById("loop"); if(t) bringPanel(t); }); }
   [45,135,225,315].forEach(a=>{
     const [x,y]=P(WB,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
