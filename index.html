@@ -132,6 +132,9 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .door:hover .dc,.door:focus-visible .dc{fill:var(--goldline)} .door:focus{outline:none}
 .awarehit{fill:transparent;cursor:pointer} .awarehit:focus{outline:none}
 .t-aware{fill:var(--goldline);font-style:italic;font-weight:500;opacity:.9}
+.ray{stroke:#DDA632;stroke-width:2.1;stroke-linecap:round;stroke-opacity:.9}
+.ray-x{stroke:#CF9420;stroke-width:3;stroke-opacity:1}
+.is-dark .ray{stroke:#F0CC6E} .is-dark .ray-x{stroke:#F6D98A}
 .braidhit{fill:transparent;cursor:pointer} .braidhit:focus{outline:none}
 .moontip{position:absolute;left:0;top:0;z-index:2;width:max-content;max-width:min(300px,80%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13.5px;line-height:1.4;text-align:center;box-shadow:0 6px 20px color-mix(in srgb, var(--ink) 16%, transparent);pointer-events:none;opacity:0;transition:opacity .15s ease}
 .moontip.on{opacity:1}
@@ -476,7 +479,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <div class="main">
     <div class="stage">
       <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
-      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><svg id="m" viewBox="-562 -562 1124 1124" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><svg id="m" viewBox="-618 -618 1236 1236" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
         <div class="dials">
@@ -594,6 +597,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Thayer, J. F., Yamamoto, S. S., &amp; Brosschot, J. F. (2010). The relationship of autonomic imbalance, heart rate variability and cardiovascular disease risk factors. <i>International Journal of Cardiology, 141</i>(2), 122–131.</li>
       <li>Treleaven, D. A. (2018). <i>Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing</i>. Norton.</li>
       <li>Ulrich, M., Keller, J., Hoenig, K., Waller, C., &amp; Grön, G. (2014). Neural correlates of experimentally induced flow experiences. <i>NeuroImage, 86</i>, 194–202.</li>
+      <li>Vaschillo, E. G., Vaschillo, B., &amp; Lehrer, P. M. (2006). Characteristics of resonance in heart rate variability stimulated by biofeedback. <i>Applied Psychophysiology and Biofeedback, 31</i>(2), 129–142.</li>
       <li>Vickhoff, B., Malmgren, H., Åström, R., Nyberg, G., Ekström, S.-R., Engwall, M., Snygg, J., Nilsson, M., &amp; Jörnsten, R. (2013). Music structure determines heart rate variability of singers. <i>Frontiers in Psychology, 4</i>, 334.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
       <li>Yaden, D. B., Haidt, J., Hood, R. W., Vago, D. R., &amp; Newberg, A. B. (2017). The varieties of self-transcendent experience. <i>Review of General Psychology, 21</i>(2), 143–160.</li>
@@ -978,7 +982,7 @@ const FINDER = [
 const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the neurovisceral integration model (Julian Thayer and Richard Lane), heart rhythm coherence (Paul Lehrer and Richard Gevirtz, and the HeartMath Institute), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
 
 /* ---------- Geometry ---------- */
-const VB = 562, WHEEL = 490;
+const VB = 618, WHEEL = 580;
 const GAP = 1.2;
 // the rings change with capacity, t from 0 (narrow) to 1 (wide): the center stays fixed, the window widens, the threshold at
 // the edge keeps the same width, and only the defenses thin, their outer edge staying where it is
@@ -988,11 +992,11 @@ function radii(t){
     // heart and brainstem, then the alarm at the edge, the brake, and the border of the window of capacity
     const self=142*0.85, core=self*0.44, w0=self+6, w1=w0+(80+80*t)*0.78;
     const heart=[w1,w1+25], stem=[w1+25,w1+50], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
-    return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
+    return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[546,572]};
   }
   // the alarm runs straight on from the window's steady center, inside the window's glow, and the window ends beyond it
   const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+8], o0=rim[1];
-  return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,428], braid:[450,476]};
+  return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,428], braid:[546,572]};
 }
 let LOOPON=false, LOOPGEO=false, BODY=true, CAP=0.5, R=radii(CAP);
 // the field of coherence spreads from the center into the window as the window widens, and draws back as it narrows;
@@ -1313,7 +1317,7 @@ function drawBraid(){
   hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); moonTip(hit,{x:0,y:-(R.braid[0]+R.braid[1])/2,html}); } });
   hit.addEventListener("blur",()=>{ if(openMoon===hit) moonTip(null); });
   const g=el("g",{class:"braid","pointer-events":"none","aria-hidden":"true"});
-  const rc=(R.braid[0]+R.braid[1])/2, A=8.4, N=52, SUB=8;
+  const rc=(R.braid[0]+R.braid[1])/2, A=8.4, N=64, SUB=8;
   const strands=[["--sun4",0],["--ff",2*Math.PI/3],["--co",4*Math.PI/3]];
   const pieces=[[],[]];   // [under, over]
   strands.forEach(([kind,ph])=>{
@@ -1329,6 +1333,15 @@ function drawBraid(){
     el("path",{d,fill:"none",stroke:color,"stroke-width":6.8,"stroke-linecap":"round"},g);
     el("path",{d,fill:"none",stroke:"#fff","stroke-width":1.7,"stroke-linecap":"round","stroke-opacity":.42},g);
   }));
+}
+
+// Resonance radiates: short golden rays all round the wheel, outside the braid. They lengthen as the window widens, and
+// run longest where the wheel's lines cross it: the four directions and the four diagonals.
+function drawRays(){
+  const g=el("g",{class:"rays","pointer-events":"none","aria-hidden":"true"}), r0=R.braid[1]+5, base=6+14*CAP;
+  for(let a=0;a<360;a+=3){ const off=Math.abs(((a+22.5)%45)-22.5), boost=Math.max(0,1-off/7.5), len=base*(1+boost*boost);
+    const [x0,y0]=P(r0,a), [x1,y1]=P(r0+len,a);
+    el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),class:"ray"+(boost>0.9?" ray-x":"")},g); }
 }
 
 function draw(){
@@ -1361,12 +1374,12 @@ function draw(){
   el("circle",{cx:0,cy:0,r:WHEEL,fill:"url(#aura)","pointer-events":"none"});
   el("g",{id:"petalG"}); drawPetals();
   // the halo between the defenses and the braid is the field of peripheral awareness, which holds every state
-  { const r0=R.out[1]+2, r1=R.braid[0]-5;
+  { const r0=R.out[1]+2, r1=R.out[1]+19;
     const ring=`M0 ${-r1} A${r1} ${r1} 0 1 1 0 ${r1} A${r1} ${r1} 0 1 1 0 ${-r1} M0 ${-r0} A${r0} ${r0} 0 1 0 0 ${r0} A${r0} ${r0} 0 1 0 0 ${-r0}Z`;
     const hit=el("path",{d:ring,class:"awarehit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The field of awareness. Read about awareness"});
     if(BODY) hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>If it lasts</b><span class="tl">Living out in the survival states for months or years wears the body down: heart, sleep, digestion, immunity, and mood.</span><span>Tap to read more.</span>`}),()=>showBody(true,"lasts"));
     else hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>The field of awareness</b><span class="tl">Peripheral awareness: the soft, wide knowing that holds every state, the window and the defenses alike.</span><span>Tap to read more.</span>`}),()=>showAware(true)); }
-  drawBraid();
+  drawBraid(); drawRays();
   const labels=el("g",{id:"ringLabels","pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
@@ -1461,8 +1474,8 @@ function draw(){
     el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#cohlight)"},cf);
     el("circle",{cx:0,cy:0,r:f(GL-6),class:"coh-edge"},cf);
     arcText(Math.max(GL-12,L1+21),26,64,"coherence","lbl t-cohedge",14,1.6,labels); }
-  if(BODY) BODY_LASTS.forEach((t,k)=>arcText((R.out[1]+R.braid[0])/2+1,DIRS[k].angle-44,DIRS[k].angle+44,t,"lbl t-aware t-lasts",12,0.6,labels));
-  else arcText((R.out[1]+R.braid[0])/2+1,-34,34,"the field of awareness","lbl t-aware",13,1.2,labels);
+  if(BODY) BODY_LASTS.forEach((t,k)=>arcText(R.out[1]+11,DIRS[k].angle-44,DIRS[k].angle+44,t,"lbl t-aware t-lasts",12,0.6,labels));
+  else arcText(R.out[1]+11,-34,34,"the field of awareness","lbl t-aware",13,1.2,labels);
   // held emotions: a ring just inside the window's edge. Any emotion can be felt here, in any direction, so the ring
   // names a few hard ones in their held form, mixed rather than matched to the direction beside them
   { const hr=R.win[1]-10;
@@ -1637,7 +1650,7 @@ const FINDS=[
   {key:"alarm", label:"The alarm", group:"The body", spans:()=>[R.edge], open:u=>showWhere(u,null,"edge")},
   {key:"brake", label:"The brake", group:"The body", spans:()=>[[R.brake[0]-(LOOPGEO?0:3),R.rim[1]+(LOOPGEO?0:2)]], open:toLoop},
   {key:"rim", label:"At the rim", group:"The body", spans:()=>[[R.rim[0],R.out[0]+30]], open:u=>showRim(u)},
-  {key:"lasts", label:"If it lasts", group:"The body", body:true, spans:()=>[[R.out[1]+2,R.braid[0]-5]], open:u=>showBody(u,"lasts")},
+  {key:"lasts", label:"If it lasts", group:"The body", body:true, spans:()=>[[R.out[1]+2,R.out[1]+19]], open:u=>showBody(u,"lasts")},
   {key:"perception", label:"Perception", group:"The mind", spans:()=>[[CR.L1+4,R.out[1]]],
    pins:g=>{ pin(g,winMid(),45,"a wide, open lens",12); pin(g,omR(),67.5,"a narrowed lens",12.5); },
    open:u=>showBody(u,"perception")},
@@ -2088,6 +2101,7 @@ function showIntro(){
       <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. In the simpler wheel, the window's glow reaches out over it: too much or too little energy, but still inside the window.</div></li>
       <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. In the simpler wheel it is one gold line, right beside the window's glowing border; with the loop turned on, it is a band, with a deeper gold border around it. Either way it marks the edge of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
+      <li>${sw("--sun2")}<div><b>The braid, and the golden rays</b>The braid weaves the three nervous systems together round the whole mandala. Outside it, short golden rays show resonance: they lengthen as the Lately dial turns toward the center, and run longest where the wheel's lines cross.</div></li>
       <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
@@ -2196,7 +2210,7 @@ function findResult(a){
 // says what the model brings and how the wheel reimagines it
 const LENSES=[
   {key:"window", tab:"Polyvagal theory and the window of capacity", icon:`<circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="2.6"/>`,
-   spans:()=>[[CR.L1+4,R.win[1]],R.rim,R.out], dim:.5,
+   spans:()=>LOOPGEO?[[CR.L1+4,R.win[1]],R.rim,R.out,[PETAL.r0,PETAL.r1]]:[[CR.L1+4,R.out[1]],[PETAL.r0,PETAL.r1]], dim:.5,
    title:"Polyvagal theory and the window of capacity", meta:"Stephen Porges and Deb Dana; Dan Siegel", name:"polyvagal theory and the window of capacity",
    short:"The mandala bends the window into a circle. The window of capacity sits at the center with four healthy states, and the survival states ring it in four directions, each with its safe root just inside.",
    intro:"Two maps of the same ground: how much the nervous system can hold, and what it does when there is too much. Together they give the wheel its shape: the window at the center, and the survival states around it.",
@@ -2236,6 +2250,19 @@ const LENSES=[
       <div class="lensnav"><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button><button type="button" class="linkbtn" data-pr="edge">Practice: Touch the edge, and come back</button></div></div>`,
    links:`<button type="button" class="linkbtn" data-loopread>Read about the loop</button><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button>`,
    src:"Thayer &amp; Lane (2000, 2009); Porges (2007); Siegel (1999); Lehrer &amp; Gevirtz (2014)"},
+  {key:"resonance", tab:"Coherence and resonance: mind, heart, and body", icon:`<circle cx="8" cy="5.4" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5.7" cy="9.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="10.3" cy="9.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/>`,
+   spans:()=>[[0,cohEdge()]], dim:.5,
+   title:"Coherence and resonance: mind, heart, and body", meta:"Paul Lehrer and Richard Gevirtz, the HeartMath Institute, and others", name:"coherence and resonance",
+   short:"At the center of the wheel, mind, heart, and body fall into step. Each has its own electrical rhythm, and in coherence they move together: the heart's rhythm smooth and wave-like, the breath slow, the brain steady. The mandala draws this as three overlapping circles of light at the center, a field of coherence that spreads into the window, and golden rays around the whole wheel that lengthen as resonance grows.",
+   intro:"Every heartbeat is an electrical wave, and so is the activity of the brain and the movement of every muscle. Researchers studying heart rate variability found that when breathing slows to about six breaths a minute, the heart's rhythm, the breath, and the pulse of blood pressure fall into step and amplify each other. They called this resonance, and the pace your resonance frequency (Vaschillo and colleagues, 2006; Lehrer and Gevirtz, 2014). The HeartMath Institute calls the smooth, ordered heart rhythm that comes with it coherence (McCraty and colleagues, 2009).",
+   lit:[["The three circles", "Mind, heart, and body with its nervous system, overlapping at the center, brightest where all three meet."], ["The field of coherence", "The light that spreads from the center into the window, wider as the Lately dial turns toward the center."], ["The golden rays", "Outside the braid, all round the wheel: short rays that lengthen as resonance grows, longest where the wheel's lines cross."]],
+   brings:["<b>Rhythms that fall into step.</b> At rest the heart speeds a little on each in-breath and slows on each out-breath. Breathing near six times a minute makes this wave large and smooth, and the heart, the breath, and blood pressure begin to move as one system. This is well measured, and it is the best-supported way to raise heart rate variability.", "<b>The heart's field.</b> The heart's electrical rhythm is the strongest in the body, and its magnetic field can be picked up by sensitive instruments a short way from the skin. In coherence its rhythm becomes smoother and more ordered: what changes is the pattern of the signal, not how far it reaches.", "<b>Feeling and rhythm.</b> Warm feelings like care and appreciation tend to bring the heart's rhythm into coherence, while frustration and fear tend to make it jagged. This is why the coherence practices pair slow breathing with a warm feeling."],
+   reimagined:["<b>The center of the wheel.</b> Coherence sits at the center: where you are most at home, where awareness is clearest, and where the qualities of the window come forward most fully.", "<b>Resonance radiates.</b> The golden rays are a picture of a state, not of a physical field growing: the more you live from the center, the more the whole system resonates.", "<b>Two timescales.</b> In the moment, coherence comes and goes, and the Right now dial follows it. Practiced over time, it raises resting vagal tone, and the Lately dial shows the window widening."],
+   note:"Resonance and coherence in heart rhythm are well measured. Drawing them as light and rays is this mandala's picture. Claims that the heart's field carries feeling between people, or heals at a distance, come mostly from the HeartMath Institute and are still early and debated.",
+   basicsAbout:"A few words this part of the wheel uses.",
+   basics:[["Heart rate variability (HRV)", "The small, healthy changes in time between heartbeats. Higher and more flexible goes with steadier regulation."], ["Resonance frequency", "The breathing pace, for most adults near six breaths a minute, at which heart rhythm, breath, and blood pressure amplify each other."], ["Coherence", "A smooth, ordered, wave-like heart rhythm, with the body's rhythms in step."], ["Vagal tone", "How strongly the vagus nerve steadies the heart: a resting level that practice can raise over time."]],
+   links:`<button type="button" class="linkbtn" data-pr="cohbuild">Practices: building coherence</button><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button>`,
+   src:"Vaschillo et al. (2006); Lehrer &amp; Gevirtz (2014); McCraty et al. (2009); Thayer &amp; Lane (2009)"},
 ];
 // each source model drawn small, the way it is usually pictured, so the card can show the original before the wheel's version
 const LENSFIGS={
@@ -2265,7 +2292,7 @@ const LENSFIGS={
   ],
 };
 const figHTML=key=>(LENSFIGS[key]||[]).map(F=>`<figure class="fig">${F.svg.replace("<svg ",`<svg role="img" aria-label="${F.label}" `)}<figcaption>${F.cap}</figcaption></figure>`).join("");// the same closing thought on every card: how the four models together describe the way back to the center
-const LENS_BIG="<b>The big picture.</b> Together the two models tell one story: the way home. Polyvagal theory and the window show where you are, and that the center is always there. The heart-brain loop shows how the body holds you in the window, and how it brings you back to coherence. Awareness of where you are is where the way home begins.";
+const LENS_BIG="<b>The big picture.</b> Together the three models tell one story: the way home. Polyvagal theory and the window show where you are, and that the center is always there. The heart-brain loop shows how the body holds you in the window, and brings you back. Coherence and resonance show what the center is: mind, heart, and body in step. Awareness of where you are is where the way home begins.";
 const lensbar=document.getElementById("lenses");
 LENSES.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.className="lens"; b.dataset.lens=L.key; b.setAttribute("aria-pressed","false");
   b.innerHTML=`<svg viewBox="0 0 16 16" aria-hidden="true">${L.icon}</svg>${L.tab}`;
@@ -2274,7 +2301,7 @@ function markLens(){ lensbar.querySelectorAll(".lens").forEach(b=>b.setAttribute
 // dims the whole wheel except the lit rings, which glow at their edges
 function drawLens(){
   const g=document.getElementById("lensG"); if(!g) return; g.innerHTML="";
-  svg.classList.toggle("lensview",!!LENS); if(!LENS||!R.heart) return;
+  svg.classList.toggle("lensview",!!LENS); if(!LENS) return;
   const L=LENSES.find(l=>l.key===LENS), spans=L.spans(), top=R.braid[1]+8;
   const ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
   // concentric circles, filled even-odd: each lit ring is a hole in the shade
@@ -2283,7 +2310,7 @@ function drawLens(){
   spans.forEach(([a,b])=>{ el("circle",{cx:0,cy:0,r:f(b),class:"lens-line"},g); if(a>0.5) el("circle",{cx:0,cy:0,r:f(a),class:"lens-line"},g); });
   // Self-led parts sit on the window's open diagonals, just past the petals, their names along the ring
   // HRV along one line out from the center: high in the heart ring, falling at the alarm, low beyond the border
-  if(L.hrv){ const a=67.5;
+  if(L.hrv&&R.heart){ const a=67.5;
     arcText((R.heart[0]+R.heart[1])/2,a-16,a+16,"HRV high","lbl t-hrv",Math.min(13,(R.heart[1]-R.heart[0])*0.6),0.3,g);
     arcText((R.edge[0]+R.edge[1])/2,a-17,a+17,"HRV falling","lbl t-hrv",13.5,0.3,g);
     arcText(R.out[0]+26,a-15,a+15,"HRV low","lbl t-hrv out",15,0.4,g);
@@ -2315,7 +2342,7 @@ function showLens(key, user){
   const names=LENSES.map(o=>o===L?`<b>${o.name}</b>`:`<button type="button" class="linkbtn" data-lens="${o.key}">${o.name}</button>`);
   const list=names.slice(0,-1).join(", ")+", and "+names[names.length-1];
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">A model this mandala comes from</div><h2>${L.title}</h2><div class="meta">${L.meta}</div>
-      <p class="hybrid">The Window Mandala is a hybrid, woven from four models: ${list}.</p></div>
+      <p class="hybrid">The Window Mandala is a hybrid, woven from ${["","one","two","three","four"][LENSES.length]} models: ${list}.</p></div>
     <div class="ring"><h3>What this mandala does with it</h3><p>${L.short}</p></div>
     ${L.basics?`<div class="ring"><h3>The basics, in brief</h3><p class="about">${L.basicsAbout||""}</p><dl class="basics">${L.basics.map(([n,t])=>`<dt>${n}</dt><dd>${t}</dd>`).join("")}</dl></div>`:""}
     <div class="ring"><h3>Lit on the wheel</h3><ul>${L.lit.map(([n,t])=>`<li><b>${n}.</b> ${t}</li>`).join("")}</ul></div>
@@ -2959,10 +2986,10 @@ async function downloadRes(){
 
 /* The petals: four broad petals beyond the braid, one at each direction, holding the ways back from it. On My resources
    map they hold the visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:458, rb:470, r1:558, half:34, lines:[489,504,519,533], size:12.5};
+const PETAL={r0:446, rb:450, r1:540, half:34, lines:[469,484,499,513], size:12.5};
 // the petal's half-width, in degrees, at a radius: the tip of a lotus petal rising from behind the braid, its sides
 // curving in to a point
-const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.rb)/(PETAL.r1-PETAL.rb))); return PETAL.half*(1-Math.pow(u,1.5)); };
+const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.rb)/(PETAL.r1-PETAL.rb))); return PETAL.half*(1-Math.pow(u,1.1)); };
 function petalPath(a){
   const N=28, L=[], Rr=[];
   for(let i=0;i<=N;i++){ const r=PETAL.r0+(PETAL.r1-PETAL.r0)*i/N, h=petalHalf(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
