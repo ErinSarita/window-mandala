@@ -2655,16 +2655,11 @@ function showDir(k, layer, user, focus){
       <h4>Emotions that tend to arise here</h4><p>${emoList(FEEL[k].out)}.</p>
       <p class="voice">${o.voice}</p>
       <h4>What it protects</h4><p>${o.protects}</p></div>
-    <div class="ring" id="L-held" data-nav="Held or driving"><h3>${HELD[k].emotion}, held or driving</h3><p>${FEEL[k].held}</p>
-      <p><button type="button" class="btn" data-held="${k}" style="justify-self:start">See it on the wheel</button></p>
-      <h4>What keeps it held</h4>${ul(KEEPS_HELD.map(t=>k===0?t:t.replace("I feel angry","I feel "+["angry","afraid","sad","longing"][k]).replace("I am anger","I am "+["anger","fear","sadness","longing"][k])))}
-      <p class="about">Inside the window, a strong emotion is felt and held, not driving: the safe, connected state carries the extra energy, and you are not swept away by it. What tells you where you are is the body: how much energy there is, and whether you feel held.</p></div>
     ${backHTML(KEYS[k])}
     <div class="ring" data-nav="Questions"><h3>Questions to notice</h3>${ul(o.questions)}</div>
     <div class="ring" data-nav="Neighbors"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
     <p class="src">${["Cannon (1915); Imai et al. (1994); Kreibig (2010); Arnsten (2009); Lieberman et al. (2007); Ochsner &amp; Gross (2005); Schauer &amp; Elbert (2010); Walker (2013); Artigas &amp; Jarero (2014)","Roelofs (2017); Schauer &amp; Elbert (2010); Artigas &amp; Jarero (2014)","Thayer &amp; Lane (2009); Lanius et al. (2010); Schauer &amp; Elbert (2010)","Kok &amp; Fredrickson (2010); Dickerson &amp; Kemeny (2004); Walker (2013); Taylor et al. (2000)"][k]}; Porges (2007); Thayer &amp; Lane (2000); Dana (2018); Siegel (1999); Levine (2010)</p>`;
   const di=panel.querySelector(".dirintro"); if(di) di.addEventListener("toggle",()=>{ DIRINTRO_OPEN=di.open; });
-  const hb=panel.querySelector("[data-held]"); if(hb) hb.addEventListener("click",()=>{ const on=TRACE&&TRACE.held===k; showTrace(on?null:{held:k}); hb.textContent=on?"See it on the wheel":"Hide it from the wheel"; });
   wire();
   if(user) bringPanel(focus?document.getElementById(focus):layer?document.getElementById("L-"+layer):null);
 }
