@@ -603,6 +603,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Kreibig, S. D. (2010). Autonomic nervous system activity in emotion: A review. <i>Biological Psychology, 84</i>(3), 394–421.</li>
       <li>Lanius, R. A., Vermetten, E., Loewenstein, R. J., Brand, B., Schmahl, C., Bremner, J. D., &amp; Spiegel, D. (2010). Emotion modulation in PTSD: Clinical and neurobiological evidence for a dissociative subtype. <i>American Journal of Psychiatry, 167</i>(6), 640–647.</li>
       <li>Lehrer, P. M., &amp; Gevirtz, R. (2014). Heart rate variability biofeedback: How and why does it work? <i>Frontiers in Psychology, 5</i>, 756.</li>
+      <li>Levenson, R. W., &amp; Ruef, A. M. (1992). Empathy: A physiological substrate. <i>Journal of Personality and Social Psychology, 63</i>(2), 234&ndash;246.</li>
       <li>Levine, P. A. (2010). <i>In an Unspoken Voice</i>. North Atlantic Books.</li>
       <li>Lieberman, M. D., Eisenberger, N. I., Crockett, M. J., Tom, S. M., Pfeifer, J. H., &amp; Way, B. M. (2007). Putting feelings into words: Affect labeling disrupts amygdala activity in response to affective stimuli. <i>Psychological Science, 18</i>(5), 421–428.</li>
       <li>Lindahl, J. R., Fisher, N. E., Cooper, D. J., Rosen, R. K., &amp; Britton, W. B. (2017). The varieties of contemplative experience: A mixed-methods study of meditation-related challenges in Western Buddhists. <i>PLoS ONE, 12</i>(5), e0176239.</li>
@@ -628,6 +629,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Schauer, M., &amp; Elbert, T. (2010). Dissociation following traumatic stress: Etiology and treatment. <i>Zeitschrift für Psychologie / Journal of Psychology, 218</i>(2), 109–127.</li>
       <li>Schwarz, N., &amp; Clore, G. L. (1983). Mood, misattribution, and judgments of well-being: Informative and directive functions of affective states. <i>Journal of Personality and Social Psychology, 45</i>(3), 513–523.</li>
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
+      <li>Singer, T., &amp; Klimecki, O. M. (2014). Empathy and compassion. <i>Current Biology, 24</i>(18), R875&ndash;R878.</li>
       <li>Stellar, J. E., Cohen, A., Oveis, C., &amp; Keltner, D. (2015). Affective and physiological responses to the suffering of others: Compassion and vagal activity. <i>Journal of Personality and Social Psychology, 108</i>(4), 572–585.</li>
       <li>Stellar, J. E., John-Henderson, N., Anderson, C. L., Gordon, A. M., McNeil, G. D., &amp; Keltner, D. (2015). Positive affect and markers of inflammation: Discrete positive emotions predict lower levels of inflammatory cytokines. <i>Emotion, 15</i>(2), 129–133.</li>
       <li>Subramaniam, K., Kounios, J., Parrish, T. B., &amp; Jung-Beeman, M. (2009). A brain mechanism for facilitation of insight by positive affect. <i>Journal of Cognitive Neuroscience, 21</i>(3), 415–432.</li>
@@ -687,7 +689,7 @@ const DIRS = [
      voice:"\"What's the point.\" \"I'm not here.\"",
      questions:["How long have I been here?","When did I first notice going away?","What was too much just before?","What is one small sign of life I can feel right now?"]}},
   {key:"fa", angle:270, color:"--fa", name:"Fawn", move:"Moving toward",
-   win:{name:"Connected", words:"warmth, care, kindness", text:"Care held by safety: warmth, kindness, attunement to another, with your own needs still in the room. You can tend to someone and stay yourself, and say no when you need to. This is the healthy root of fawn: our deep capacity to reach toward others for safety, which researchers call tend and befriend."},
+   win:{name:"Connected", words:"warmth, care, kindness", text:"Care held by safety: warmth, kindness, attunement to another, with your own needs still in the room. You can tend to someone and stay yourself, and say no when you need to. Nearer the center, connection deepens into empathy. This is the healthy root of fawn: our deep capacity to reach toward others for safety, which researchers call tend and befriend."},
    edge:{name:"Over-tuning", words:"scanning moods, can't say no", signs:["Scanning other people's moods, managing them","A yes that isn't yours, or trouble saying no","Apologizing, smoothing things over, smiling when you're not okay","Losing track of what you feel or want"]},
    out:{words:"move toward the threat", text:"When fighting, fleeing, or freezing are not safe, the body may move toward the threat: pleasing, placating, agreeing, becoming what is wanted. Pete Walker named this fawn. It often grows where a child could not fight or flee the very people they depended on, and appeasing them was the way to stay safe.",
      feels:["Anxious attention fixed on someone else","Agreeing, flattering, giving in","A self that disappears"],
@@ -708,7 +710,8 @@ const NERVE = [
   {state:"Dorsal", stateLong:"dorsal: the oldest brake", feel:"Numb, heavy, far away; nothing seems to matter.", way:"Warmth first, then gentle rhythm.",
    blend:"Ventral and dorsal together: stillness that feels safe.", winTag:"Ventral with dorsal", healthy:"In balance, the dorsal branch of the vagus runs rest and digest below the diaphragm: digestion, taking in nutrients, repair, and the slower heart of deep rest and sleep.", },
   {state:"The social system, used for defense", stateLong:"the ventral system's face and voice, recruited for defense, with sympathetic fear (or dorsal submission) underneath", feel:"Smiling and agreeing while your own self disappears.", way:"Pause before you answer, and ask what you want.",
-   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.", winTag:"Ventral, most social", healthy:"In balance, the ventral vagus tunes the face, the voice, and listening for connection, and oxytocin, released with warm touch and closeness, supports bonding and can ease the stress response.", }
+   blend:"Ventral at its most social: warmth toward others, with yourself still in the room. Nearer the center it deepens into empathy and resonance.", winTag:"Ventral, most social",
+   deepen:"Nearer the center, warmth becomes empathy: you feel with someone and stay yourself. Deeper still, empathy can become a quiet, intuitive resonance with another person.", healthy:"In balance, the ventral vagus tunes the face, the voice, and listening for connection, and oxytocin, released with warm touch and closeness, supports bonding and can ease the stress response.", }
 ];
 
 // Emotions: the feelings that tend to arise in each part of the wheel, shown in the direction panels only. These are
@@ -1702,17 +1705,21 @@ function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); syncLately(); capname
 // felt in the body, and the halo carries the long-term cost of living out in the survival states.
 const BODY_WIN=[["warm, strong, quick","heart up, still flexible"],["steady, alert, watching","heart slows to take things in"],["heavy, warm, digesting","heart slow and soft"],["soft face, warm voice","heart warmed by closeness"]];
 const BODY_LASTS=["if it lasts: high blood pressure, poor sleep, inflammation","if it lasts: tension, pain, exhaustion","if it lasts: fatigue, low mood, aches","if it lasts: burnout, losing yourself"];
+// the field is cut into six steps from the center out to its edge; the rings sit on these steps, so a ring added
+// at the outer edge leaves every other ring where it was
+const COH_STEPS=6;
 // layers of coherence, from the window inward to the circle at the center: each with how it feels and how well it is measured
 const COH_LAYERS=[
   {name:"Regulated", tag:"Well measured", feel:"Inside the window: safe, flexible, and able to choose.", ev:"Well measured: a flexible heart rate variability, and the brake holding."},
+  {name:"Engaged", tag:"Good evidence", feel:"The face softens, the voice warms, and the ears tune to the human voice. You can look, listen, and respond to the people around you.", ev:"Good evidence: a higher vagal tone goes with warmer, more open engagement with others (Kok and Fredrickson, 2010; Porges, 2011). The nerve pathways behind it are still debated."},
   {name:"Coherent", tag:"Well measured", feel:"Heart, breath, and brain in step through the vagus nerve: a smooth, wave-like rhythm near six breaths a minute.", ev:"Well measured: heart rhythm coherence can be scored from low to high (Lehrer and Gevirtz, 2014)."},
   {name:"Receptive", tag:"Good evidence", feel:"Open, playful, and intuitive. Attention wide and soft, insight close at hand.", ev:"Good evidence: settled states broaden attention and make insight more likely (Fredrickson, 2001; Subramaniam and colleagues, 2009)."},
-  {name:"Attuned", tag:"Measured", feel:"In step with others. Rhythms can fall into sync between people who feel close.", ev:"Measured: mother and infant heart rhythms align during attuned play (Feldman and colleagues, 2011), and heart rates synchronize between loved ones at a shared ritual (Konvalinka and colleagues, 2011)."},
+  {name:"Attuned", tag:"Measured", feel:"In step with others. Empathy comes easily, and rhythms can fall into sync between people who feel close.", ev:"Measured: mother and infant heart rhythms align during attuned play (Feldman and colleagues, 2011), heart rates synchronize between loved ones at a shared ritual (Konvalinka and colleagues, 2011), and the more closely a listener's body tracks another person's, the more accurately they read that person's feelings (Levenson and Ruef, 1992)."},
   {name:"Absorbed", tag:"Early evidence", feel:"Meditative stillness: attention steady without effort, then joy, tranquility, and equanimity. Samatha, and the jhānas.", ev:"Early evidence: long-term meditators show strong, synchronized brain rhythms (Lutz and colleagues, 2004), and advanced states are now being studied directly."},
   {name:"Unity", tag:"Mostly from contemplative traditions", feel:"The sense of a separate self softens into oneness. Samadhi, nondual awareness.", ev:"Mostly from contemplative traditions, with early research on changes in the brain's self-related networks (Newberg and colleagues, 2001; Brewer and colleagues, 2011) and on self-transcendent experience (Yaden and colleagues, 2017)."}];
 const COH_HEART={name:"Beyond words", tag:"Not measured", feel:"Where the traditions point and the science stops. Left open, a portal rather than a map.", ev:"Not measured."};
 function bodyCenter(g,L1){
-  const rc=R.core, r1=cohEdge(), r0=rc*0.72, step=(r1-r0)/COH_LAYERS.length;
+  const rc=R.core, r1=cohEdge(), r0=rc*0.72, step=(r1-r0)/COH_STEPS;
   // the field and its rings spread over the window, under the ring names; the heart and the words go above the field
   g=el("g",{id:"cohfield","pointer-events":"none"}); svg.insertBefore(g,document.getElementById("ringLabels"));
   // the whole center glows, brightest at the circle in the middle, like the gold nimbus of an icon
@@ -1727,7 +1734,8 @@ function bodyCenter(g,L1){
     [[0,"#FFFFFF",1],[0.3,"#FFFFFF",0.9],[0.65,"#FFF8E2",0.5],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ng));
     el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#nowglow)",id:"nowGlow",class:"now-centerglow","pointer-events":"none"},g);
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
-    COH_LAYERS.forEach((L,i)=>{ if(!i) return; el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(0.3+0.08*i)},g); }); }
+    // six rings: the outermost, new, sits where the glow ends, out in the window
+    for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(i?0.3+0.08*i:0.55)},g); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
@@ -1741,7 +1749,7 @@ function bodyCenter(g,L1){
   }
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
-  const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
+  const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_STEPS),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
   { const dimOn=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove();
       const r0=(R.rim?R.rim[1]:R.edge[1])+1, ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
       el("path",{id:"centerdim",d:`M${-VB} ${-VB} H${VB} V${VB} H${-VB} Z `+ringP(r0)+"Z","fill-rule":"evenodd",class:"center-dim"});
@@ -1926,12 +1934,16 @@ function showBody(user, focus){
       <p><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button> · <button type="button" class="linkbtn" data-pr="cohbuild">Practices: building coherence</button></p></div>
     <div class="ring" id="body-layers"><h3>As coherence deepens</h3>
       <p>At the center, mind, heart, and body move in step: coherence. The rings around the circle grow brighter toward the center, because coherence can deepen. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
-      <ul class="cohlist">${COH_LAYERS.slice(2).map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ul>
+      <ul class="cohlist">${COH_LAYERS.filter(L=>!["Regulated","Coherent"].includes(L.name)).map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ul>
+      <p><b>The vagus, and myelin.</b> Polyvagal theory links the safe, connected state to a myelinated branch of the vagus nerve. Myelin is wiring that grows early in life and does not change from moment to moment, and parts of that anatomy are debated. What changes as you move toward the center is how strongly the vagus is working: vagal tone, which shows up as a higher, more flexible heart rate variability (Porges, 2011; Thayer and Lane, 2009).</p>
       <p><b>Not a ladder.</b> People can touch a deeper quality without passing through the others, and states come and go. Depth here is about harmony, not worth.</p>
       <p><b>The evidence fades inward.</b> Coherence itself is measured in the body; the deeper qualities rest more on what contemplative traditions describe. Each says how well it is known.</p>
       <p class="note">Go gently. Deep meditative states can bring up strong energy, intense joy, or unsettling experiences, and research on meditation's challenging effects shows they are not rare (Lindahl and colleagues, 2017). Explore the deeper states with a trusted teacher, and come back to the body and the breath whenever you need to.</p></div>
     <div class="ring" id="body-inward"><h3>Connection grows inward</h3>
-      <p>On a wheel you might expect connection to grow as you move outward. Here it grows as you move in. To feel truly connected with others, the body first needs to feel safe and connected within itself. Warm connection and the heart's vagal tone build each other over time, an upward spiral (Kok and Fredrickson, 2010).</p></div>
+      <p>On a wheel you might expect connection to grow as you move outward. Here it grows as you move in. To feel truly connected with others, the body first needs to feel safe and connected within itself. Warm connection and the heart's vagal tone build each other over time, an upward spiral (Kok and Fredrickson, 2010).</p>
+      <p><b>Empathy and resonance.</b> Nearer the center, connection deepens. Empathy comes more easily: you can feel with someone and stay yourself. The body takes part. When people feel close, their heart rates, breathing, and other body signals can fall into step, and in one classic study, the more closely a listener's body tracked the other person's, the more accurately they read that person's feelings (Levenson and Ruef, 1992; Feldman and colleagues, 2011).</p>
+      <p><b>Beyond the social.</b> Deeper still, many people describe a bond that goes past words and manners: a quiet knowing of what another person feels or needs, a sense of being in tune with them on a subtler level. Part of this is the body reading very small signals, and body signals guide choices before we can explain them (Damasio, 1994; Dunn and colleagues, 2010). A settled state also widens what we notice (Fredrickson, 2001). Whether anything more is at work, a resonance between two people that science can measure directly, is not yet known. The mandala holds it as felt experience.</p>
+      <p><b>Regulation keeps empathy kind.</b> Empathy needs a steady base. When another person's distress floods your own system, feeling with them can tip into empathic distress and a pull to withdraw. When you stay regulated, the same feeling can become compassion and care, which warms you instead of wearing you down (Singer and Klimecki, 2014).</p></div>
     <div class="ring" id="body-receptive"><h3>Receptivity: when the body feels safe, it can listen</h3>
       <p>Near the center something else opens: receptivity. When the nervous system feels safe, it no longer needs to scan for danger, so attention can widen and soften. People describe feeling open, playful, and in tune: things make more sense, decisions come more clearly, and a quieter kind of knowing, intuition, can be heard.</p>
       <p><b>What the science suggests.</b> Part of intuition is the body's own signals. People who sense their own heartbeat more accurately make better use of gut feelings in uncertain decisions (Dunn and colleagues, 2010), and Antonio Damasio describes these body signals as markers that guide choices before we can explain them (Damasio, 1994). A settled, positive state makes sudden insight more likely (Subramaniam and colleagues, 2009) and widens what we notice (Fredrickson, 2001). Polyvagal theory adds that only in safety can the body turn toward play, curiosity, and connection (Porges, 2011).</p>
@@ -1974,7 +1986,7 @@ function showBody(user, focus){
       <p class="note">This is a reason for compassion, not alarm. The body is protecting you the only way it knows. What protects your health over time is coming back, again and again, toward the center.</p></div>
     <div class="ring"><h3>A note on the heart's field</h3>
       <p class="note">The heart's electrical rhythm is the strongest rhythmic signal in the body, and it can be measured a short distance outside the skin. Claims that this field heals, or brings other people into coherence, are not well established. What is well established is how coherence feels from the inside, and what it does for health.</p></div>
-    <p class="src">Lehrer &amp; Gevirtz (2014); Kok &amp; Fredrickson (2010); Dunn et al. (2010); Damasio (1994); Subramaniam et al. (2009); Fredrickson (2001); Porges (2011); Jung (1960); Dunsmoor &amp; Paz (2015); Schwarz &amp; Clore (1983); Barrett (2017); Arnsten (2009); Downey et al. (1998); Cooley (1902); Madon et al. (2004); Meins et al. (2001); Kisilevsky et al. (2003); Glover (2014); Gross (2002); Tedeschi &amp; Calhoun (2004); Kahneman &amp; Klein (2009); Feldman et al. (2011); Konvalinka et al. (2011); Lutz et al. (2004); Newberg et al. (2001); Brewer et al. (2011); Yaden et al. (2017); Lindahl et al. (2017); McEwen (1998); Thayer, Yamamoto &amp; Brosschot (2010); Thayer &amp; Lane (2009)</p>`;
+    <p class="src">Lehrer &amp; Gevirtz (2014); Kok &amp; Fredrickson (2010); Levenson &amp; Ruef (1992); Singer &amp; Klimecki (2014); Dunn et al. (2010); Damasio (1994); Subramaniam et al. (2009); Fredrickson (2001); Porges (2011); Jung (1960); Dunsmoor &amp; Paz (2015); Schwarz &amp; Clore (1983); Barrett (2017); Arnsten (2009); Downey et al. (1998); Cooley (1902); Madon et al. (2004); Meins et al. (2001); Kisilevsky et al. (2003); Glover (2014); Gross (2002); Tedeschi &amp; Calhoun (2004); Kahneman &amp; Klein (2009); Feldman et al. (2011); Konvalinka et al. (2011); Lutz et al. (2004); Newberg et al. (2001); Brewer et al. (2011); Yaden et al. (2017); Lindahl et al. (2017); McEwen (1998); Thayer, Yamamoto &amp; Brosschot (2010); Thayer &amp; Lane (2009)</p>`;
   wire(); if(user) bringPanel(focus?document.getElementById("body-"+focus):null);
 }
 // the wheel is always read through the body: coherence of mind, heart, and body at the center
@@ -2253,6 +2265,7 @@ function wire(){
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
   on("[data-lasts]",()=>showBody(true,"lasts"));
+  on("[data-bodyfocus]",b=>showBody(true,b.dataset.bodyfocus));
   on("[data-tabgo]",b=>{ const t=tabs.querySelector(`[data-tab="${b.dataset.tabgo}"]`), sec=b.dataset.sec; if(!t) return; t.click();
     // straight to the section, settling the tab's own scroll first
     if(sec) setTimeout(()=>{ const r=panel.querySelector(`.ring[data-nav="${sec}"]`); if(!r) return; r.style.scrollMarginTop=(secnav.offsetHeight+12)+"px"; r.scrollIntoView({block:"start"}); },60); });
@@ -2644,7 +2657,7 @@ function showDir(k, layer, user, focus){
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
   panel.innerHTML=dirIntro()+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
-    <div class="ring${hl("win")}" id="L-win" data-nav="Inside the window"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
+    <div class="ring${hl("win")}" id="L-win" data-nav="Inside the window"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p>${NERVE[k].deepen?`<p><b>As it deepens:</b> ${NERVE[k].deepen} <button type="button" class="linkbtn" data-bodyfocus="inward">Read more: empathy and resonance</button></p>`:""}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
     <div class="ring${hl("heart")}" id="L-heart" data-nav="The heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
     <div class="ring${hl("stem")}" id="L-stem" data-nav="The brainstem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
     <div class="ring${hl("edge")}" id="L-edge" data-nav="The alarm"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
