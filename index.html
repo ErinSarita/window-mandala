@@ -413,6 +413,8 @@ svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;strok
 .dirnav button[aria-current="true"]{color:var(--ink);border-color:var(--ink)}
 /* jump links to a tab's sections, kept in view while reading */
 .secnav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin-top:-14px;margin-bottom:-6px}
+#panel .ring[data-nav]{scroll-margin-top:60px}
+@media (max-width:900px){ .secnav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none} .secnav::-webkit-scrollbar{display:none} .secnav button{flex:none} }
 #panel{display:grid;gap:16px}
 .phasehead h2{font-family:var(--display);font-weight:500;font-size:32px;line-height:1.1;margin:0}
 .phasehead .meta{color:var(--muted);font-size:14px;margin-top:4px}
@@ -463,9 +465,6 @@ svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;strok
 .wp{border-left:3px solid var(--mc);padding:2px 0 2px 12px;display:grid;gap:3px;border-radius:0}
 .wp>b{font-family:var(--display);font-weight:500;font-size:19px}
 .wp p{margin:0}
-.dirsub{margin-top:-8px}
-.dirsub button{display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:6px 14px}
-.dirsub button[aria-pressed="true"]{border-color:var(--ink);background:var(--surface)}
 .backsteps{gap:10px}
 .notyet{background:color-mix(in srgb, var(--mc) 16%, var(--surface));border-radius:10px;padding:10px 12px;font-size:14.5px}
 .waychips button{display:inline-flex;align-items:center;gap:6px}
@@ -534,7 +533,6 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <div class="panel">
       <div class="tabs" role="tablist" id="tabs"></div>
       <div class="dirnav" id="dirnav" hidden></div>
-      <div class="chips dirsub" id="dirsub" role="group" aria-label="Show" hidden></div>
       <nav class="dirnav secnav" id="secnav" aria-label="Sections" hidden></nav>
       <div id="panel" aria-live="polite"></div>
     </div>
@@ -2211,21 +2209,13 @@ addTab("Where am I?","where",()=>showWhere(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
 addTab("Practices","practice",()=>showPractice(true));
-// inside The four directions, each direction has two pages: the direction itself, and its way back
-let DIRSUB="about";
-const dsub=document.getElementById("dirsub");
-function dirSub(k){
-  dsub.innerHTML=`<button type="button" data-dirsub="about" aria-pressed="${DIRSUB==="about"}">About ${DIRS[k].name.toLowerCase()}</button><button type="button" data-dirsub="back" aria-pressed="${DIRSUB==="back"}">${sw(DIRS[k].color)}The way back: practices</button>`;
-  dsub.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>b.dataset.dirsub==="back"?showBack(KEYS[k],true):showDir(k,null,true)));
-  return "";
-}
-DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${PATHS[k].name}`; b.title=PATHS[k].span; b.dataset.k=k; b.addEventListener("click",()=>DIRSUB==="back"?showBack(KEYS[k],true):showDir(k,null,true)); dnav.appendChild(b); });
+DIRS.forEach((d,k)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML=`${sw(d.color)}${PATHS[k].name}`; b.title=PATHS[k].span; b.dataset.k=k; b.addEventListener("click",()=>showDir(k,null,true)); dnav.appendChild(b); });
 function sw(v){ return `<span class="sw" style="background:var(${v})"></span>`; }
 function ul(items,cls){ return `<ul${cls?` class="${cls}"`:""}>`+items.map(i=>`<li>${i}</li>`).join("")+"</ul>"; }
 const isNarrow=()=>window.matchMedia("(max-width:900px)").matches;
 function markTabs(){
   [...tabs.children].forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===view?"true":"false"));
-  dnav.hidden=view!=="dir"; dsub.hidden=view!=="dir";
+  dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
 function setView(v,s){ if(FIND){ FIND=null; drawFind(); drawFlow(); markFind(); } if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); drawRes(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
@@ -2241,7 +2231,9 @@ new MutationObserver(buildSecnav).observe(panel,{childList:true});
 window.addEventListener("scroll",()=>{ if(secnav.hidden) return;
   const rings=[...panel.querySelectorAll(".ring[data-nav]")], edge=secnav.getBoundingClientRect().bottom+24;
   let cur=-1; rings.forEach((r,i)=>{ if(r.getBoundingClientRect().top<=edge) cur=i; });
-  [...secnav.children].forEach((b,i)=>b.setAttribute("aria-current",i===cur?"true":"false")); },{passive:true});
+  [...secnav.children].forEach((b,i)=>{ const was=b.getAttribute("aria-current")==="true"; b.setAttribute("aria-current",i===cur?"true":"false");
+    // on a phone the row scrolls sideways, so keep the marked one in view
+    if(i===cur&&!was&&secnav.scrollWidth>secnav.clientWidth) secnav.scrollTo({left:Math.max(0,b.offsetLeft-secnav.offsetLeft-16),behavior:"smooth"}); }); },{passive:true});
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -2410,29 +2402,26 @@ function showWay(k, scroll){
 }
 
 // The way back, on its own page: only the return from one survival state
-function showBack(k, user){
-  const d=["ff","fr","co","fa"].indexOf(k); DIRSUB="back"; setView("dir",{kind:"dir",k:d,layer:"out"});
-  const W=WAYS[k], B=BACK[k], c=wayColor(k), D=DIRS[d];
+// the way back from one survival state, as a section of its direction's card: practices first, then the steps,
+// completing the stress response, help from others, crossing the edge, and what can wait
+function backHTML(k){
+  const W=WAYS[k], B=BACK[k], c=wayColor(k), D=DIRS[["ff","fr","co","fa"].indexOf(k)];
   const wp=p=>`<div class="wp"><b>${p.name}</b><p>${p.how}</p><span class="why"><b>Why it helps here.</b> ${p.why}</span></div>`;
-  const practices=`<div class="ring way" data-nav="Practices" style="--mc:var(${c})"><h3>${sw(c)}Practices for the way back</h3>
-      <div class="wps">${[...W.practices,...B.more].map(wp).join("")}</div></div>`;
-  panel.innerHTML=dirSub(d)+`<div class="phasehead"><div class="eyebrow">The four directions · The way back</div><h2>From ${D.name.toLowerCase()}, back to the window</h2>
-      <p>${W.needs}</p></div>
-    ${practices}
-    <div class="ring way" data-nav="Step by step" style="--mc:var(${c})"><h3>${sw(c)}Step by step</h3>
-      <ol class="backsteps">${B.steps.map(([t,x])=>`<li><b>${t}.</b> ${x}</li>`).join("")}</ol>
-      <p class="about">Go at your own pace. Each step can take a minute or much longer, and you can come back to an earlier one whenever you need.</p></div>
-    ${STRESS[k]?`<div class="ring way" data-nav="Completing it" style="--mc:var(${c})"><h3>${sw(c)}Completing the stress response</h3><p class="about">${k==="ff"||k==="fr"?"Survival energy wants to finish. Let it move and sound, starting at about a fifth of your strength, and stop if it gets to be too much.":k==="co"?"Shutdown lifts slowly and gently. Go a little at a time, and rest between.":"Fawning set aside its own reach. These help the body practice wanting, and receiving."} Adapted from Linda Thai.</p>
-      <div class="wps">${STRESS[k].map(wp).join("")}</div></div>`:""}
-    <div class="ring way" data-nav="With others" style="--mc:var(${c})"><h3>${sw(c)}With someone who feels safe</h3><p>${B.withOthers}</p></div>
-    <div class="ring way" data-nav="Crossing the edge" style="--mc:var(${c})"><h3>${sw(c)}Crossing the edge on the way home</h3><p>${B.cross}</p></div>
-    <div class="ring way" data-nav="Not yet, then" style="--mc:var(${c})"><h3>${sw(c)}Not yet, and then</h3>
+  return `<div class="ring way" id="L-back" data-nav="The way back" style="--mc:var(${c})"><h3>${sw(c)}The way back from ${D.name.toLowerCase()}</h3>
+      <p>${W.needs}</p>
+      <h4>Practices</h4><div class="wps">${[...W.practices,...B.more].map(wp).join("")}</div>
+      <h4>Step by step</h4><ol class="backsteps">${B.steps.map(([t,x])=>`<li><b>${t}.</b> ${x}</li>`).join("")}</ol>
+      <p class="about">Go at your own pace. Each step can take a minute or much longer, and you can come back to an earlier one whenever you need.</p>
+      ${STRESS[k]?`<h4>Completing the stress response</h4><p class="about">${k==="ff"||k==="fr"?"Survival energy wants to finish. Let it move and sound, starting at about a fifth of your strength, and stop if it gets to be too much.":k==="co"?"Shutdown lifts slowly and gently. Go a little at a time, and rest between.":"Fawning set aside its own reach. These help the body practice wanting, and receiving."} Adapted from Linda Thai.</p>
+      <div class="wps">${STRESS[k].map(wp).join("")}</div>`:""}
+      <h4>With someone who feels safe</h4><p>${B.withOthers}</p>
+      <h4>Crossing the edge on the way home</h4><p>${B.cross}</p>
       <div class="notyet"><b>Not yet.</b> ${W.notyet}</div><p><b>Then.</b> ${W.then}</p>
-      ${W.care?`<p class="note">${W.care}</p>`:""}</div>
-    <p><button type="button" class="linkbtn" data-res="${k}">Add what helps to my resources map</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>
-    <p class="src">Levine (2010); Ogden, Minton &amp; Pain (2006); Dana (2018); Walker (2013); Balban et al. (2023); Artigas &amp; Jarero (2014); Linda Thai</p>`;
-  wire(); if(user) bringPanel();
+      ${W.care?`<p class="note">${W.care}</p>`:""}
+      <p><button type="button" class="linkbtn" data-res="${k}">Add what helps to my resources map</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p></div>`;
 }
+// the petals open their direction's card at the way back
+function showBack(k, user){ showDir(["ff","fr","co","fa"].indexOf(k),null,user,"L-back"); }
 function showWhere(user, focus, way){
   setView("where");
   panel.innerHTML=`<div class="phasehead"><h2>Where am I?</h2><div class="meta">Find where you are, and the way back from there</div>
@@ -2645,21 +2634,20 @@ const dirIntro=()=>`<details class="ring dirintro"${DIRINTRO_OPEN?" open":""}><s
 // opens fight or flight at the part on its two halves
 function showFFHalves(){ showDir(0,"out",true);
   setTimeout(()=>{ const h=document.getElementById("more-ff-0"); if(h){ h.style.scrollMarginTop="16px"; h.scrollIntoView({block:"start"}); } },60); }
-function showDir(k, layer, user){
+function showDir(k, layer, user, focus){
   setView("dir",{kind:"dir",k,layer});
   const d=DIRS[k], o=d.out, hl=x=>layer===x?" hl":"", Pt=PATHS[k], L=LAYERS[k];
   const nb=[(k+1)%4,(k+3)%4];
   const moves=[[k,nb[0]],[nb[0],k],[k,nb[1]],[nb[1],k]].map(([a,b])=>moveIndex(a,b));
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
-  DIRSUB="about";
-  panel.innerHTML=dirIntro()+dirSub(k)+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
+  panel.innerHTML=dirIntro()+`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
-    <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
-    <div class="ring${hl("stem")}" id="L-stem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
-    <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
-    <div class="ring${hl("brake")}" id="L-brake"><h3>${sw("--gold")}${step(5,"The brake: the prefrontal cortex")}</h3><p class="about">The rim of your window of capacity.</p><p>${L.brake}</p></div>
-    <div class="ring${hl("out")}" id="L-out"><h3>${sw(d.color)}${step(6,`The ring of survival: ${d.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p><p>${o.text}</p><p>${L.outside}</p><p class="src">${L.evidence}</p>
+    <div class="ring${hl("win")}" id="L-win" data-nav="Inside the window"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
+    <div class="ring${hl("heart")}" id="L-heart" data-nav="The heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
+    <div class="ring${hl("stem")}" id="L-stem" data-nav="The brainstem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
+    <div class="ring${hl("edge")}" id="L-edge" data-nav="The alarm"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
+    <div class="ring${hl("brake")}" id="L-brake" data-nav="The brake"><h3>${sw("--gold")}${step(5,"The brake: the prefrontal cortex")}</h3><p class="about">The rim of your window of capacity.</p><p>${L.brake}</p></div>
+    <div class="ring${hl("out")}" id="L-out" data-nav="Ring of survival"><h3>${sw(d.color)}${step(6,`The ring of survival: ${d.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].stateLong}.</p><p>${o.text}</p><p>${L.outside}</p><p class="src">${L.evidence}</p>
       <h4>How it can feel</h4>${ul(o.feels)}
       <h4>How the world looks from here</h4><p>${PERCEIVE[k].out}</p>
       <h4>The story it tells</h4>${storyLine(KEYS[k])}
@@ -2667,20 +2655,18 @@ function showDir(k, layer, user){
       <h4>Emotions that tend to arise here</h4><p>${emoList(FEEL[k].out)}.</p>
       <p class="voice">${o.voice}</p>
       <h4>What it protects</h4><p>${o.protects}</p></div>
-    <div class="ring" id="L-held"><h3>${HELD[k].emotion}, held or driving</h3><p>${FEEL[k].held}</p>
+    <div class="ring" id="L-held" data-nav="Held or driving"><h3>${HELD[k].emotion}, held or driving</h3><p>${FEEL[k].held}</p>
       <p><button type="button" class="btn" data-held="${k}" style="justify-self:start">See it on the wheel</button></p>
       <h4>What keeps it held</h4>${ul(KEEPS_HELD.map(t=>k===0?t:t.replace("I feel angry","I feel "+["angry","afraid","sad","longing"][k]).replace("I am anger","I am "+["anger","fear","sadness","longing"][k])))}
       <p class="about">Inside the window, a strong emotion is felt and held, not driving: the safe, connected state carries the extra energy, and you are not swept away by it. What tells you where you are is the body: how much energy there is, and whether you feel held.</p></div>
-    <div class="ring"><h3>Coming back from ${d.name.toLowerCase()}</h3><p>${WAYS[KEYS[k]].needs}</p><p>${WAYS[KEYS[k]].practices.map(p=>p.name).join(" · ")}</p><p class="about"><b>Completing the stress response:</b> ${STRESS[KEYS[k]].map(p=>p.name).join(" · ")}</p>
-      <p class="about"><b>Not yet.</b> ${WAYS[KEYS[k]].notyet}</p>
-      <p><button type="button" class="linkbtn" data-way="${KEYS[k]}">How to do each, and why it helps</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p></div>
-    <div class="ring"><h3>Questions to notice</h3>${ul(o.questions)}</div>
-    <div class="ring"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
-    <p class="src">${["Cannon (1915); Imai et al. (1994); Kreibig (2010); Arnsten (2009); Lieberman et al. (2007); Ochsner &amp; Gross (2005); Schauer &amp; Elbert (2010); Walker (2013)","Roelofs (2017); Schauer &amp; Elbert (2010)","Thayer &amp; Lane (2009); Lanius et al. (2010); Schauer &amp; Elbert (2010)","Kok &amp; Fredrickson (2010); Dickerson &amp; Kemeny (2004); Walker (2013); Taylor et al. (2000)"][k]}; Porges (2007); Thayer &amp; Lane (2000); Dana (2018); Siegel (1999); Levine (2010)</p>`;
+    ${backHTML(KEYS[k])}
+    <div class="ring" data-nav="Questions"><h3>Questions to notice</h3>${ul(o.questions)}</div>
+    <div class="ring" data-nav="Neighbors"><h3>Moving to and from its neighbors</h3><div class="chips">${moves.map(i=>`<button type="button" data-move="${i}">${MOVES[i].title.replace(/^From /,"")}</button>`).join("")}</div></div>
+    <p class="src">${["Cannon (1915); Imai et al. (1994); Kreibig (2010); Arnsten (2009); Lieberman et al. (2007); Ochsner &amp; Gross (2005); Schauer &amp; Elbert (2010); Walker (2013); Artigas &amp; Jarero (2014)","Roelofs (2017); Schauer &amp; Elbert (2010); Artigas &amp; Jarero (2014)","Thayer &amp; Lane (2009); Lanius et al. (2010); Schauer &amp; Elbert (2010)","Kok &amp; Fredrickson (2010); Dickerson &amp; Kemeny (2004); Walker (2013); Taylor et al. (2000)"][k]}; Porges (2007); Thayer &amp; Lane (2000); Dana (2018); Siegel (1999); Levine (2010)</p>`;
   const di=panel.querySelector(".dirintro"); if(di) di.addEventListener("toggle",()=>{ DIRINTRO_OPEN=di.open; });
   const hb=panel.querySelector("[data-held]"); if(hb) hb.addEventListener("click",()=>{ const on=TRACE&&TRACE.held===k; showTrace(on?null:{held:k}); hb.textContent=on?"See it on the wheel":"Hide it from the wheel"; });
   wire();
-  if(user) bringPanel(layer?document.getElementById("L-"+layer):null);
+  if(user) bringPanel(focus?document.getElementById(focus):layer?document.getElementById("L-"+layer):null);
 }
 
 function showMoves(i, user){
