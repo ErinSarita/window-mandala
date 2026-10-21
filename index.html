@@ -363,7 +363,10 @@ svg.rimfocus .rim-focus{opacity:1}
 .now-band{opacity:0;transition:opacity .35s}
 .now-band.on{opacity:1}
 .now-fill{fill:#FFFFFF;fill-opacity:.2}
+.now-band[data-zone="dz-win"] .now-fill{fill-opacity:0}
+.now-centerglow{transition:opacity .35s}
 .is-dark .now-fill{fill-opacity:.12}
+.is-dark .now-band[data-zone="dz-win"] .now-fill{fill-opacity:0}
 .now-line{fill:none;stroke:#FFEAA8;stroke-width:2.6;filter:drop-shadow(0 0 3px #FFD866) drop-shadow(0 0 7px rgba(255,214,102,.7))}
 .coh-ring,.tri-bloom,.petal .pf{transition:stroke-opacity .35s,fill-opacity .35s,filter .35s}
 svg.now-center .coh-ring{stroke-opacity:.62;filter:drop-shadow(0 0 2px #FFFFFF) drop-shadow(0 0 4px rgba(255,236,170,.8))}
@@ -1644,7 +1647,11 @@ function bodyCenter(g,L1){
   // one seamless glow: near white at the center, warming and fading out into the window, with no rings drawn across it
   { const cg=el("radialGradient",{id:"cohfieldglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
     [[0,"#FFFFFF",1],[r0/r1,"#FFFCF3",0.97],[0.48,"#FDF2D6",0.85],[0.76,"#F9E4A8",0.55],[1,"#F5D88A",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},cg));
-    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)","pointer-events":"none"},g);
+    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)",id:"cohField",class:"now-centerglow","pointer-events":"none"},g);
+    // Right now: in resonance the whole center shines its brightest, and the shine fades as the dial turns away from it
+    const ng=el("radialGradient",{id:"nowglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
+    [[0,"#FFFFFF",1],[0.3,"#FFFFFF",0.9],[0.65,"#FFF8E2",0.5],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ng));
+    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#nowglow)",id:"nowGlow",class:"now-centerglow","pointer-events":"none"},g);
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
     COH_LAYERS.forEach((L,i)=>{ if(!i) return; el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(0.3+0.08*i)},g); }); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
@@ -2093,7 +2100,12 @@ function drawNowRings(){
 }
 function markNow(){ const z=nowZone(NOWA).cls;
   document.querySelectorAll("#nowRingG .now-band").forEach(b=>b.classList.toggle("on",b.dataset.zone===z));
-  svg.classList.toggle("now-center",z==="dz-center"); svg.classList.toggle("now-return",z==="dz-return"); }
+  svg.classList.toggle("now-center",z==="dz-center"); svg.classList.toggle("now-return",z==="dz-return");
+  // the center's shine: full in resonance, easing off through the window, gone by the time the alarm is sounding
+  const sh=nowShine(), ng=document.getElementById("nowGlow"), cf=document.getElementById("cohField");
+  if(ng) ng.style.opacity=f(Math.pow(Math.max(0,(sh-0.45)/0.55),1.4));
+  // and the center's own glow dims too, deep in survival, and brightens again on the way home
+  if(cf) cf.style.opacity=f(0.35+0.65*Math.max(0,(sh-0.06)/0.94)); }
 // the way back runs beside the way out, from deep in survival across the edge and home
 function drawBack(phase,u,k){
   const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML="";
