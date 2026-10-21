@@ -256,6 +256,29 @@ svg.rimfocus .rim-focus{opacity:1}
 .t-held{fill:var(--ink);font-size:25px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
 .t-held-sub{font-style:italic;font-weight:500;font-size:20px}
 .mf .fopts button .sym{width:20px;height:20px;vertical-align:-5px}
+.res-zone .rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.res-zone .rcols{grid-template-columns:1fr}}
+.res-zone .rcol h4{display:flex;align-items:center;gap:6px;margin:0 0 4px}
+.res-zone .rcol h4 .sym{width:18px;height:14px}
+.res-zone ul.rlist{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.res-zone ul.rlist li{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--line);padding-bottom:3px}
+.res-zone ul.rlist li.empty{color:var(--muted);font-style:italic;border:0;font-size:14px}
+.res-zone .rx{font:inherit;font-size:16px;line-height:1;border:0;background:none;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:6px}
+.res-zone .rx:hover,.res-zone .rx:focus-visible{color:var(--ink);background:var(--bg);outline:none}
+.res-zone .radd{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.res-zone .radd input{flex:1 1 180px;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--bg);color:var(--ink)}
+.res-zone .chips button .sym,.res-anchors .chips button .sym{width:14px;height:11px;vertical-align:-1px;margin-right:3px}
+.res-zone .q{font-family:var(--display);font-style:italic;font-size:18px;margin:0}
+.petal{cursor:pointer;outline:none}
+.petal .pf{fill:var(--mc);fill-opacity:.3;stroke:var(--mc);stroke-width:1.4;transition:fill-opacity .2s}
+.is-dark .petal .pf{fill-opacity:.24}
+.petal:hover .pf,.petal:focus-visible .pf{fill-opacity:.45}
+.t-petal{fill:var(--ink);font-family:var(--display);font-style:italic;pointer-events:none}
+.t-petal .po{fill:var(--ink);font-style:normal;font-family:var(--body);font-weight:600}
+.t-petal .pw{fill:#B5658D;font-style:normal;font-family:var(--body);font-weight:600}
+.is-dark .t-petal .pw{fill:#E7A3C4}
+.t-petal.pempty{fill:var(--muted)}
+.t-res{fill:var(--ink);font-size:16px;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
 .mapkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
 .mapkey span{display:inline-flex;align-items:center;gap:5px}
 .mapkey .sym{width:20px;height:20px}
@@ -284,6 +307,9 @@ svg.rimfocus .rim-focus{opacity:1}
   #printsheet .ps-wheel svg{width:100%;height:auto;max-height:7.6in}
   #printsheet .ps-legend{break-before:page}
   #printsheet .ps-legend h2{font-family:var(--display);font-weight:500;font-size:24px;margin:0 0 10px}
+  #printsheet .ps-res{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px}
+  #printsheet .ps-res h3{font-family:var(--display);font-weight:500;font-size:19px;margin:0 0 4px}
+  #printsheet .ps-res p{margin:0 0 4px;font-size:13px}
   #printsheet .ps-foot{font-size:11px;color:#6F6578;margin-top:16px}
 }
 .witness-hit{fill:transparent;cursor:pointer;outline:none}
@@ -440,7 +466,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <div class="main">
     <div class="stage">
       <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
-      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-490 -490 980 980" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-562 -562 1124 1124" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
@@ -448,7 +474,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
         <div class="caprow arow"><label for="arousal">What's building</label><span class="arwrap"><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="armarks" id="armarks" role="group" aria-label="Jump to where each stage begins"></span></span><span class="capname" id="arousalname"></span></div>
         <div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
         <p class="arousalcap" id="arousalcap" aria-live="polite"></p>
-        <div class="maprow"><button type="button" class="btn" id="bodyswitch" aria-pressed="false">Body view</button><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
+        <div class="maprow"><button type="button" class="btn" id="bodyswitch" aria-pressed="false">Body view</button><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><button type="button" class="btn" id="resbtn">My resources</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
       <div class="legendkey" id="legendkey"></div>
     </div>
@@ -974,7 +1000,7 @@ const FINDER = [
 const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the Self and its parts (Richard Schwartz), contemplative practices of awareness, the neurovisceral integration model (Julian Thayer and Richard Lane), heart rhythm coherence (Paul Lehrer and Richard Gevirtz, and the HeartMath Institute), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
 
 /* ---------- Geometry ---------- */
-const VB = 490;
+const VB = 562, WHEEL = 490;
 const GAP = 1.2;
 // the rings change with capacity, t from 0 (narrow) to 1 (wide): the Self stays fixed, the window widens, the threshold at
 // the edge keeps the same width, and only the defenses thin, their outer edge staying where it is
@@ -1332,7 +1358,7 @@ function draw(){
     stops.forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a==null?1:a},g)); return g; };
   const rr=R.out[1]+16;
   // a halo just beyond the ring, so the wheel seems to give off light
-  grad("aura",{...U,r:VB},[[0.8,"var(--sun2)",0],[0.885,"var(--sun2)",isDark()?0.1:0.42],[0.985,"var(--sun2)",0]]);
+  grad("aura",{...U,r:WHEEL},[[0.8,"var(--sun2)",0],[0.885,"var(--sun2)",isDark()?0.1:0.42],[0.985,"var(--sun2)",0]]);
   grad("sheen",{...U,r:rr},[[R.out[0]/rr,"#fff",0.34],[(R.out[0]+R.out[1])/2/rr,"#fff",0.06],[R.out[1]/rr,"#000",0.02],[1,"#000",0.08]]);
   // the Self: a pale-gold disc, a bright heart, one ring of lotus petals, and a glow that spills into the window
   // one layer of eight lotus petals, large enough to reach out over the inner window, stopping short of its words
@@ -1351,7 +1377,8 @@ function draw(){
   el("path",{d:"M1 1 L9 5 L1 9 Z",class:"trace-head"},mk);
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
-  el("circle",{cx:0,cy:0,r:VB,fill:"url(#aura)","pointer-events":"none"});
+  el("circle",{cx:0,cy:0,r:WHEEL,fill:"url(#aura)","pointer-events":"none"});
+  el("g",{id:"petalG"}); drawPetals();
   // the halo between the defenses and the braid is the field of peripheral awareness, which holds every state
   { const r0=R.out[1]+2, r1=R.braid[0]-5;
     const ring=`M0 ${-r1} A${r1} ${r1} 0 1 1 0 ${r1} A${r1} ${r1} 0 1 1 0 ${-r1} M0 ${-r0} A${r0} ${r0} 0 1 0 0 ${r0} A${r0} ${r0} 0 1 0 0 ${-r0}Z`;
@@ -1494,6 +1521,7 @@ function draw(){
   el("g",{id:"loopG"});
   el("g",{id:"traceG"});
   el("g",{id:"mapG"});
+  el("g",{id:"resG"});
   el("g",{id:"layerHL"});
   // hovering the Self's ring lights the whole center, petals and Seed of Life, and dims everything around it
   { const sf=el("g",{class:"self-focus","pointer-events":"none"}), r0=CR.L1+3;
@@ -1506,7 +1534,7 @@ function draw(){
   el("g",{id:"lensG"});
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawFind(); drawFlow(); drawLens(); drawArousal();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); drawArousal();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1928,7 +1956,7 @@ function markTabs(){
   dnav.hidden=view!=="dir";
   [...dnav.children].forEach(b=>b.setAttribute("aria-current",view==="dir"&&+b.dataset.k===sel.k?"true":"false"));
 }
-function setView(v,s){ if(FIND){ FIND=null; drawFind(); drawFlow(); markFind(); } if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
+function setView(v,s){ if(FIND){ FIND=null; drawFind(); drawFlow(); markFind(); } if(v!=="lens"&&LENS){ LENS=null; drawLens(); markLens(); } if(v!=="patterns"&&TRACE){ TRACE=null; svg.classList.remove("heldview"); drawTrace(false); } if(v!=="map"){ MAP.draft=null; MAP.edit=null; } view=v; drawMap(); drawRes(); sel=s||{kind:null,k:null,layer:null}; applySel(); markTabs(); }
 function bringPanel(target){ const t=target||panel, r=t.getBoundingClientRect(); if(isNarrow()||r.top<0||r.top>window.innerHeight*0.7) t.scrollIntoView({behavior:"smooth",block:"start"}); }
 function wire(){
   // each control is bound once, even when part of the panel is redrawn and wire runs again
@@ -1943,6 +1971,7 @@ function wire(){
   on("[data-practice]",()=>showPractice(true));
   on("[data-aware]",()=>showAware(true));
   on("[data-pr]",b=>showPractice(true,b.dataset.pr));
+  on("[data-res]",b=>showResources(true,b.dataset.res||null));
   on("[data-patterns]",()=>showPatterns(true));
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
@@ -1988,6 +2017,7 @@ function showIntro(){
       <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short.</div></li>
       <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. The deeper gold band around it is the border of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
+      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with the Self at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
@@ -2019,7 +2049,8 @@ function showIntro(){
 function wayHTML(k){
   const W=WAYS[k], c=wayColor(k);
   if(k==="win") return `<div class="ring way" id="way-win" style="--mc:var(${c})"><h3>${sw(c)}Inside the window</h3><p>${W.needs}</p><h4>The story it tells</h4>${storyLine("win")}
-    <div class="chips">${PRACTICES.map(p=>`<button type="button" data-pr="${p.key}">${p.name}</button>`).join("")}</div></div>`;
+    <div class="chips">${PRACTICES.map(p=>`<button type="button" data-pr="${p.key}">${p.name}</button>`).join("")}</div>
+    <p><button type="button" class="linkbtn" data-res="win">Add what keeps me here to my resources map</button></p></div>`;
   return `<div class="ring way" id="way-${k}" style="--mc:var(${c})"><h3>${sw(c)}${wayName(k)}</h3>
     <h4>How to recognize it</h4>${ul(W.traits)}
     <h4>What it needs</h4><p>${W.needs}</p>
@@ -2029,7 +2060,7 @@ function wayHTML(k){
     <div class="notyet"><b>Not yet.</b> ${W.notyet}</div>
     <p><b>Then.</b> ${W.then}</p>
     ${W.care?`<p class="note">${W.care}</p>`:""}
-    ${k!=="edge"?`<p><button type="button" class="linkbtn" data-dir="${["ff","fr","co","fa"].indexOf(k)}" data-layer="out">Read about ${wayName(k).toLowerCase()}</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>`:`<p><button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>`}</div>`;
+    ${k!=="edge"?`<p><button type="button" class="linkbtn" data-dir="${["ff","fr","co","fa"].indexOf(k)}" data-layer="out">Read about ${wayName(k).toLowerCase()}</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button> · <button type="button" class="linkbtn" data-res="${k}">Add what helps to my resources map</button></p>`:`<p><button type="button" class="linkbtn" data-home>Orienting, and coming home</button> · <button type="button" class="linkbtn" data-res="win">Add what helps to my resources map</button></p>`}</div>`;
 }
 function showWay(k, scroll){
   panel.querySelectorAll("[data-wk]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.wk===k?"true":"false"));
@@ -2453,7 +2484,7 @@ function showPractice(user, focus){
   panel.innerHTML=`<div class="phasehead"><h2>Practices</h2><div class="meta">For inside the window: cultivating the Self, and widening the window</div>
       <p>Practice these when you are steady enough to learn. Over time, they are how the window widens around the center. Some of them, especially the still and quiet ones, can feel unsettling when you are outside your window. If you are outside it right now, begin with the way back that fits where you are.</p>
       <p><b>Think in doses.</b> Any practice can be taken a little at a time: a few minutes, sitting up, eyes open if you like, with a clear way to stop. A short dose of a still practice can help where a long one would be too much, and each dose that stays inside your window widens it a little. You can always do more next time.</p>
-      <p><button type="button" class="btn" data-way="">Find the way back for where I am</button></p></div>
+      <p><button type="button" class="btn" data-way="">Find the way back for where I am</button> <button type="button" class="btn" data-res="win">Make my resources map</button></p></div>
     ${PRACTICES.map(p=>`<div class="ring${focus===p.key?" hl":""}" id="pr-${p.key}"><h3>${p.name}</h3>${p.caution?`<p class="note">${p.caution}</p>`:""}<p>${p.how}</p><span class="why"><b>Why it helps.</b> ${p.why}</span>
 </div>`).join("")}
     <div class="ring"><h3>Building resilience</h3>${ul(REG.resilience)}<p class="about">From the Harvard Center on the Developing Child: resilience is built from relationships, skills, and good experiences, and can be strengthened at any age.</p></div>
@@ -2546,9 +2577,9 @@ function wrapName(name){
 }
 function drawMap(){
   const g=document.getElementById("mapG"); if(!g) return; g.innerHTML="";
-  const show=MAP.on||view==="map"||MAP.force;
+  const show=(MAP.on||view==="map"||MAP.force)&&!RES.force;
   // while mapping, and on the printout, the rings' smaller lines of text step aside to make room for names
-  svg.classList.toggle("mapview",show);
+  svg.classList.toggle("mapview",show||resShown());
   if(!show) return;
   const all=[...MAP.items, ...(MAP.draft?[MAP.draft]:[])];
   // first the markers, then each name, placed where it clears the ring names, the petals' words, the arrows, the other markers,
@@ -2685,12 +2716,12 @@ function showMap(user, focusForm){
 }
 
 // print and download use the light theme, with the map showing, whatever the screen is set to
-function asLight(fn){
+function asLight(fn,res){
   const was=root.getAttribute("data-theme"), dark=isDark();
-  MAP.force=true; MAP.draft=null;
+  if(res) RES.force=true; else MAP.force=true; MAP.draft=null;
   if(dark){ root.setAttribute("data-theme","light"); syncTheme(); }
   draw();
-  const undo=()=>{ MAP.force=false; if(dark){ if(was) root.setAttribute("data-theme",was); else root.removeAttribute("data-theme"); syncTheme(); } draw(); };
+  const undo=()=>{ MAP.force=false; RES.force=false; if(dark){ if(was) root.setAttribute("data-theme",was); else root.removeAttribute("data-theme"); syncTheme(); } draw(); };
   return fn(undo);
 }
 const mapTitle=()=>MAP.title.trim()||"My Window Mandala";
@@ -2786,6 +2817,247 @@ async function downloadMap(){
     }catch(e){ if(st) st.textContent="The image could not be made in this browser. Try Print my wheel, and choose Save as PDF."; }
     undo();
   });
+}
+
+/* ---------- My resources map ----------
+   Adapted from Linda Thai's Regulating Resources Map: what helps me stay in my window, and what helps me come back
+   from each survival state, each in two columns, things I can do on my own and things I can do with others. Her map has
+   three zones (the window, fight-flight-freeze, and collapse); this wheel gives each of its four directions its own.
+   Kept in memory only, like My map: nothing is saved. */
+const RES_ZONES=[
+  {key:"win", name:"Staying in my window", q:"What helps me stay here, safe and connected?",
+   note:"These keep you resourced from day to day. Small things count: a cup of tea is a resource. So is awe, play, and delight, the moments that make the window wider.",
+   own:["Regular sleep","A cup of tea","Music I love","Making art","Time in the garden","Morning light outside","A walk in nature","Awe and wonder","Play","Curiosity","Delight in small things"],
+   others:["A call with someone I love","Nurturing touch","A meal with friends","Singing with others","Laughing together","Time with an animal"]},
+  {key:"ff", name:"Coming back from fight or flight", q:"What helps this energy move through, and finish?",
+   note:"This is sympathetic energy, ready to act. It eases when it gets to finish: move it, push, shake, run, sing. When the body completes what it started, it can feel that the danger has passed.",
+   own:["A brisk walk or run","Shaking it out","Dancing hard","Splitting firewood","Pushing against a wall","Singing loudly outdoors","Cold water on my face","Tearing up cardboard"],
+   others:["A vigorous walk with the dog","Moving with a friend","Telling someone who can listen","A long, firm hug","A game played hard"]},
+  {key:"fr", name:"Coming back from freeze", q:"What helps me thaw, a little at a time?",
+   note:"Linda Thai groups freeze with fight and flight: the charge is there, held still. Start small, with the eyes and the fingers, and let the charge move as it thaws.",
+   own:["Letting my eyes look around slowly","Wiggling fingers and toes","Pressing my feet into the floor","Humming","Rocking","Naming five things I can see"],
+   others:["A calm voice nearby","Someone sitting beside me","A hand on my back, if I want it","Being asked what I need, with time to answer"]},
+  {key:"co", name:"Coming back from collapse", q:"What helps me lift, slowly and gently?",
+   note:"Collapse lifts slowly. Warmth, light, a little movement, one kind presence. Going too fast can stir the charge underneath, so take it in small doses.",
+   own:["A weighted blanket","A warm drink","A bright light lamp","A rocking chair","Gentle stretching","Opening a window","A warm shower","One small task"],
+   others:["Quiet company","Texting one person","Being read to","An animal curled up nearby","A slow walk with someone"]},
+  {key:"fa", name:"Coming back from fawn", q:"What helps me come back to myself?",
+   note:"Linda Thai's map has three zones. This wheel adds fawn, so each direction has its own way back. Coming home from fawn often begins with finding your own wants again.",
+   own:["Noticing what I want","Pausing before I say yes","A hand on my heart","Writing what I really think","Time alone to come back to myself"],
+   others:["Someone safe I can say no to","A friend who remembers who I am","People who want nothing from me"]}
+];
+// connection reaches wider than people: Linda Thai's expanded, decolonized view of attachment
+const RES_ANCHORS=["Land and nature","Plants and trees","Animals","Rocks and water","My ancestors","My language","Food from my culture","Music from my culture","Rituals and stories","Song","Movement","Silence","My own body","Deep time: stars and stones"];
+let RES={title:"", items:{win:[],ff:[],fr:[],co:[],fa:[]}, force:false}, resSeq=1;
+const resCount=()=>Object.values(RES.items).reduce((a,l)=>a+l.length,0);
+const resShown=()=>(view==="resources"||RES.force)&&!MAP.force;
+// on my own: one small circle; with others: two, overlapping
+const RES_COLOR={own:"#B98428", others:"#B5658D"};
+function resIcon(who,x,y){
+  return who==="own"?`<circle cx="${f(x)}" cy="${f(y)}" r="4.6" fill="${RES_COLOR.own}" stroke="#fff" stroke-width="1.2"/>`
+    :`<circle cx="${f(x-3.4)}" cy="${f(y)}" r="4.2" fill="${RES_COLOR.others}" stroke="#fff" stroke-width="1.2"/><circle cx="${f(x+3.4)}" cy="${f(y)}" r="4.2" fill="${RES_COLOR.others}" stroke="#fff" stroke-width="1.2"/>`;
+}
+const resSym=who=>`<svg class="sym" viewBox="-9 -6 18 12" aria-hidden="true">${resIcon(who,0,0)}</svg>`;
+// what helps you stay is written into the window, placed where it clears the ring names and the entries already written;
+// what helps you come back from each direction goes in that direction's petal
+function drawRes(){
+  const g=document.getElementById("resG"); if(!g) return; g.innerHTML="";
+  drawPetals();
+  if(!resShown()) return;
+  svg.classList.add("mapview");
+  const pad=(b,p)=>({x:b.x-p,y:b.y-p,w:b.width+2*p,h:b.height+2*p});
+  // steer clear of every word already on the wheel, and the arrows; a word set along an arc is measured in short pieces,
+  // so its boxes hug the curve, a letter at a time
+  // a rotated word is measured by its box on screen, brought back into the wheel's own units
+  const inv=svg.getScreenCTM().inverse(), userBox=t=>{ const r=t.getBoundingClientRect(), pt=svg.createSVGPoint();
+    const cs=[[r.left,r.top],[r.right,r.bottom]].map(([x,y])=>{ pt.x=x; pt.y=y; return pt.matrixTransform(inv); });
+    return {x:cs[0].x,y:cs[0].y,width:cs[1].x-cs[0].x,height:cs[1].y-cs[0].y}; };
+  const vis=n=>{ for(let e=n;e&&e!==svg;e=e.parentNode) if(getComputedStyle(e).display==="none"||e.id==="resG"||e.id==="mapG") return false; return true; };
+  const boxes=[];
+  svg.querySelectorAll("text").forEach(t=>{ if(!vis(t)) return;
+    try{ if(t.querySelector("textPath")){ const n=t.getNumberOfChars(); for(let i=0;i<n;i++){ const b=t.getExtentOfChar(i); if(b.width>0) boxes.push(pad(b,1)); } }
+      else { const b=userBox(t); if(b.width>4) boxes.push(pad(b,2)); } }catch(e){} });
+  svg.querySelectorAll(".mv").forEach(m=>{ if(vis(m)) try{ boxes.push(pad(m.getBBox(),2)); }catch(e){} });
+  const over=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
+  const LH=18;
+  { const list=RES.items.win, C=[], band=[CR.L1+4,R.win[1]-2];
+    const rs=[0.5,0.3,0.7,0.15,0.85].map(t=>band[0]+(band[1]-band[0])*t);
+    for(let a=20;a<380;a+=8) rs.forEach(r=>C.push([r,a%360]));
+    list.forEach(it=>{
+      const lines=wrapName(it.text), n=lines.length;
+      const grp=el("g",{},g), t=el("text",{class:"lbl t-res","text-anchor":"middle"},grp);
+      lines.forEach((l,k)=>{ const ts=el("tspan",{x:0,dy:k?LH:0},t); ts.textContent=l; });
+      const tb=t.getBBox(), iw=12, w=tb.width+iw, h=tb.height;
+      t.setAttribute("y",f(-(n-1)*LH/2+5)); t.querySelectorAll("tspan").forEach(ts=>ts.setAttribute("x",f(iw/2)));
+      grp.insertAdjacentHTML("afterbegin",resIcon(it.who,-tb.width/2-2,-(n-1)*LH/2));
+      let best=null;
+      for(const [r,a] of C){
+        const [x,y]=P(r,a), b={x:x-w/2-4,y:y-h/2-2,w:w+8,h:h+4};
+        const far=Math.max(Math.hypot(b.x,b.y),Math.hypot(b.x+b.w,b.y),Math.hypot(b.x,b.y+b.h),Math.hypot(b.x+b.w,b.y+b.h)), near=Math.hypot(x,y)-h/2;
+        const outside=(far>band[1]+6?(far-band[1])*400:0)+(near<band[0]-6?(band[0]-near)*400:0);
+        const cost=boxes.reduce((s,o)=>s+over(b,o)*(o.res?6:1),0)+outside;
+        if(!best||cost<best.cost) best={cost,x,y,b};
+        if(cost===0) break;
+      }
+      grp.setAttribute("transform",`translate(${f(best.x)} ${f(best.y)})`); boxes.push({...best.b,res:1});
+    });
+  }
+}
+function resZoneHTML(Z){
+  const list=RES.items[Z.key], c=Z.key==="win"?"--win":DIRS[KEYS.indexOf(Z.key)].color, have=new Set(list.map(i=>i.text.toLowerCase()));
+  const col=who=>{ const L=list.filter(i=>i.who===who);
+    return `<div class="rcol"><h4>${resSym(who)}${who==="own"?"On my own":"With others"}</h4><ul class="rlist">${L.length?L.map(i=>`<li>${esc(i.text)}<button type="button" class="rx" data-rdel="${Z.key}:${i.id}" aria-label="Remove ${esc(i.text)}">×</button></li>`).join(""):`<li class="empty">Nothing yet</li>`}</ul></div>`; };
+  const ideas=[...Z.own.map(t=>["own",t]),...Z.others.map(t=>["others",t])].filter(([w,t])=>!have.has(t.toLowerCase()));
+  return `<div class="ring res-zone" id="rz-${Z.key}" style="--mc:var(${c})"><h3>${sw(c)}${Z.name}</h3><p class="q">${Z.q}</p><p class="about">${Z.note}</p>
+    <div class="rcols">${col("own")}${col("others")}</div>
+    <div class="radd"><input id="ri-${Z.key}" maxlength="40" placeholder="Something that helps" aria-label="${Z.name}: something that helps"><button type="button" class="btn" data-radd="${Z.key}:own">Add: on my own</button><button type="button" class="btn" data-radd="${Z.key}:others">Add: with others</button></div>
+    ${ideas.length?`<div><span class="about">Ideas, tap to add</span><div class="chips">${ideas.map(([w,t])=>`<button type="button" data-ridea="${Z.key}:${w}">${resSym(w)}${esc(t)}</button>`).join("")}</div></div>`:""}</div>`;
+}
+function showResources(user, focus){
+  if(MAP.on) setMapMode(false);
+  setView("resources");
+  const n=resCount(), haveWin=new Set(RES.items.win.map(i=>i.text.toLowerCase()));
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">Adapted from Linda Thai</div><h2>My resources map</h2><div class="meta">What helps me stay in my window, and what helps me come back</div>
+      <p>A map of what already helps you, in your own words. For each part of the wheel, list what you can do on your own and what you can do with others. As you add them, they are written into the wheel: what keeps you steady goes inside the window, and what brings you back from each survival state fills the petal beyond it. Your own things show in dark type, and the things you do with others in rose.</p>
+      <p><b>Meet yourself where you are.</b> There is no right answer and nothing to judge. Start with what you already do, even the smallest things. Different states need different help: the charge of fight or flight wants to move and finish, and the heaviness of collapse lifts slowly and gently.</p>
+      <p class="note">Your resources map is not saved. It disappears when you close or reload the page, so print or download it before you go. Nothing you type leaves this page.</p>
+      ${isNarrow()?`<p><button type="button" class="linkbtn" id="rs-see">See it on the wheel</button></p>`:""}</div>
+    ${RES_ZONES.map(resZoneHTML).join("")}
+    <div class="ring res-anchors"><h3>Wider than people</h3><p>Connection can come from more than people. Linda Thai widens attachment to include the land and nature, plants, animals, and rocks; ancestors of blood, of spirit, and of calling; culture, in language, food, music, ritual, and story; your own body; and deep time. Song, story, movement, and silence belong here too.</p>
+      <div><span class="about">Tap to add to staying in my window, with others</span><div class="chips">${RES_ANCHORS.filter(t=>!haveWin.has(t.toLowerCase())).map(t=>`<button type="button" data-ranchor="${esc(t)}">${resSym("others")}${esc(t)}</button>`).join("")}</div></div></div>
+    <div class="ring"><h3>Your map</h3><label class="mf" style="margin-bottom:6px"><span class="about">Title for your map</span><input id="rs-title" maxlength="60" value="${esc(RES.title)}" placeholder="My Resources Map"></label>
+      ${n?`<p><button type="button" class="btn" id="rs-print">Print my resources</button> <button type="button" class="btn" id="rs-dl">Download my resources</button> <button type="button" class="linkbtn" id="rs-clear">Clear my resources</button></p><p class="about" id="rs-status"></p>`:`<p class="hint">Add a few things above, and you can print it or download it as an image.</p>`}
+      <p class="about">Keep it somewhere you will see it: on the fridge, by the bed, in your bag. When you are outside your window, it is hard to remember what helps, and the map remembers for you.</p></div>
+    <p class="src">Thai (2023); Dana (2018)</p>`;
+  const $=id=>document.getElementById(id);
+  const add=(zk,who,text)=>{ text=text.trim(); if(!text) return false;
+    if(RES.items[zk].some(i=>i.text.toLowerCase()===text.toLowerCase())) return false;
+    RES.items[zk].push({id:resSeq++,who,text}); return true; };
+  const redo=zk=>{ const y=window.scrollY; showResources(false); drawRes(); window.scrollTo(0,y); const inp=$("ri-"+zk); if(inp&&!isNarrow()) inp.focus({preventScroll:true}); };
+  panel.querySelectorAll("[data-radd]").forEach(b=>b.addEventListener("click",()=>{ const [zk,who]=b.dataset.radd.split(":"), inp=$("ri-"+zk); if(add(zk,who,inp.value)) redo(zk); else inp.focus(); }));
+  RES_ZONES.forEach(Z=>$("ri-"+Z.key).addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); if(add(Z.key,"own",e.target.value)) redo(Z.key); } }));
+  panel.querySelectorAll("[data-ridea]").forEach(b=>b.addEventListener("click",()=>{ const [zk,who]=b.dataset.ridea.split(":"); add(zk,who,b.textContent); redo(zk); }));
+  panel.querySelectorAll("[data-ranchor]").forEach(b=>b.addEventListener("click",()=>{ add("win","others",b.dataset.ranchor); redo("win"); }));
+  panel.querySelectorAll("[data-rdel]").forEach(b=>b.addEventListener("click",()=>{ const [zk,id]=b.dataset.rdel.split(":"); RES.items[zk]=RES.items[zk].filter(i=>String(i.id)!==id); redo(zk); }));
+  $("rs-title").addEventListener("input",e=>{ RES.title=e.target.value; });
+  if($("rs-see")) $("rs-see").addEventListener("click",()=>svgbox.scrollIntoView({behavior:"smooth",block:"center"}));
+  if(n){
+    $("rs-print").addEventListener("click",printRes);
+    $("rs-dl").addEventListener("click",downloadRes);
+    $("rs-clear").addEventListener("click",()=>{ if(confirm("Clear your whole resources map? This cannot be undone.")){ Object.keys(RES.items).forEach(k=>RES.items[k]=[]); showResources(false); drawRes(); } });
+  }
+  drawRes(); wire();
+  if(user) bringPanel(focus?$("rz-"+focus):null);
+}
+document.getElementById("resbtn").addEventListener("click",()=>showResources(true));
+const resTitle=()=>RES.title.trim()||"My Resources Map";
+const resFoot="Made with The Window Mandala, erinsarita.github.io/window-mandala. Adapted from Linda Thai's Regulating Resources Map. A model for reflection, not diagnosis or therapy.";
+function printRes(){
+  asLight(undo=>{
+    const ps=document.getElementById("printsheet");
+    ps.innerHTML=`<h1>${esc(resTitle())}</h1><p class="ps-date">${today()}</p><div class="ps-wheel"></div>
+      <div class="ps-legend"><h2>${esc(resTitle())}</h2><div class="ps-res">${RES_ZONES.filter(Z=>RES.items[Z.key].length).map(Z=>`<div><h3>${Z.name}</h3>${["own","others"].map(w=>{ const L=RES.items[Z.key].filter(i=>i.who===w); return L.length?`<p><b>${w==="own"?"On my own":"With others"}:</b> ${L.map(i=>esc(i.text)).join(", ")}</p>`:""; }).join("")}</div>`).join("")}</div><p class="ps-foot">${resFoot}</p></div>`;
+    ps.querySelector(".ps-wheel").appendChild(svg.cloneNode(true));
+    const done=()=>{ window.removeEventListener("afterprint",done); ps.innerHTML=""; undo(); };
+    window.addEventListener("afterprint",done);
+    window.print();
+  },true);
+}
+async function downloadRes(){
+  const st=document.getElementById("rs-status"); if(st) st.textContent="Making your image…";
+  const fonts=await embeddedFonts();
+  await asLight(async undo=>{
+    try{
+      const c=inlineSVG(svg), W=2550, M=170, WH=2210;
+      c.setAttribute("width",WH); c.setAttribute("height",WH);
+      if(fonts){ const sty=document.createElementNS(NS,"style"); sty.textContent=fonts; c.insertBefore(sty,c.firstChild); }
+      const img=new Image(); img.decoding="sync";
+      await new Promise((ok,no)=>{ img.onload=ok; img.onerror=no; img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(c)); });
+      const meas=document.createElement("canvas").getContext("2d"), colW=(W-2*M-80)/2;
+      const wrap=(txt,font,w)=>{ meas.font=font; const out=[]; let line=""; txt.split(" ").forEach(word=>{ const t=line?line+" "+word:word; if(meas.measureText(t).width>w&&line){ out.push(line); line=word; } else line=t; }); if(line) out.push(line); return out; };
+      const HF="500 46px 'Cormorant Garamond', Georgia, serif", NF="700 32px Mulish, sans-serif", SF="400 32px Mulish, sans-serif";
+      // each zone is one block: its name, then a line of what helps on my own, and a line of what helps with others
+      const blocks=RES_ZONES.filter(Z=>RES.items[Z.key].length).map(Z=>{ const L=[{t:"head",s:Z.name,h:70}];
+        ["own","others"].forEach(w=>{ const its=RES.items[Z.key].filter(i=>i.who===w); if(!its.length) return;
+          L.push({t:"sub",w,h:48}); wrap(its.map(i=>i.text).join(", "),SF,colW-40).forEach(l=>L.push({t:"line",s:l,h:42})); L.push({t:"gap",h:10}); });
+        L.push({t:"gap",h:26}); return L; });
+      const bh=blocks.map(L=>L.reduce((a,l)=>a+l.h,0)), total=bh.reduce((a,b)=>a+b,0);
+      let acc=0, split=blocks.length; for(let i=0;i<blocks.length;i++){ if(acc>0&&acc+bh[i]/2>total/2){ split=i; break; } acc+=bh[i]; }
+      const colH=Math.max(acc,total-acc)+40, lines=[];
+      blocks.forEach((L,i)=>{ if(i===split) lines.push({t:"col"}); L.forEach(l=>lines.push(l)); });
+      const H=Math.max(3300, M+150+WH+110+colH+140);
+      const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const x=cv.getContext("2d");
+      x.fillStyle="#FFFDF8"; x.fillRect(0,0,W,H);
+      x.fillStyle="#2C2433"; x.textAlign="center"; x.font="500 92px 'Cormorant Garamond', Georgia, serif"; x.fillText(resTitle(),W/2,M+60);
+      x.fillStyle="#6F6578"; x.font="400 34px Mulish, sans-serif"; x.fillText(today(),W/2,M+120);
+      x.drawImage(img,(W-WH)/2,M+150,WH,WH);
+      const dot=(w,cx,cy,s)=>{ const pts=w==="own"?[[0,4.6]]:[[-3.4,4.2],[3.4,4.2]]; pts.forEach(([dx,r])=>{ x.beginPath(); x.arc(cx+dx*s,cy,r*s,0,Math.PI*2); x.fillStyle=RES_COLOR[w]; x.fill(); x.lineWidth=1.2*s; x.strokeStyle="#fff"; x.stroke(); }); };
+      let col=0, y0=M+150+WH+110, y=y0; x.textAlign="left";
+      lines.forEach(l=>{
+        if(l.t==="col"){ col=1; y=y0; return; }
+        const cx=M+col*(colW+80);
+        if(l.t==="head"){ x.fillStyle="#2C2433"; x.font=HF; x.fillText(l.s,cx,y+46); }
+        if(l.t==="sub"){ dot(l.w,cx+18,y+22,2.6); x.fillStyle="#2C2433"; x.font=NF; x.fillText(l.w==="own"?"On my own":"With others",cx+52,y+34); }
+        if(l.t==="line"){ x.fillStyle="#4A4152"; x.font=SF; x.fillText(l.s,cx+52,y+30); }
+        y+=l.h;
+      });
+      x.fillStyle="#6F6578"; x.font="400 26px Mulish, sans-serif"; x.textAlign="center";
+      x.fillText(resFoot,W/2,H-70);
+      await new Promise(ok=>cv.toBlob(bl=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(bl); a.download=(resTitle().replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"my-resources-map")+".png"; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); ok(); },"image/png"));
+      if(st) st.textContent="Downloaded. It prints well on letter or A4 paper.";
+    }catch(e){ if(st) st.textContent="The image could not be made in this browser. Try Print my resources, and choose Save as PDF."; }
+    undo();
+  },true);
+}
+
+/* The petals: four broad petals beyond the braid, one at each direction, holding the ways back from it. On My resources
+   map they hold the visitor's own entries instead, what helps on their own and what helps with others. */
+const PETAL={r0:458, rb:470, r1:558, half:34, lines:[489,504,519,533], size:12.5};
+// the petal's half-width, in degrees, at a radius: the tip of a lotus petal rising from behind the braid, its sides
+// curving in to a point
+const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.rb)/(PETAL.r1-PETAL.rb))); return PETAL.half*(1-Math.pow(u,1.5)); };
+function petalPath(a){
+  const N=28, L=[], Rr=[];
+  for(let i=0;i<=N;i++){ const r=PETAL.r0+(PETAL.r1-PETAL.r0)*i/N, h=petalHalf(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
+  return "M"+[...L,...Rr].map(([x,y])=>f(x)+" "+f(y)).join(" L")+"Z";
+}
+function drawPetals(){
+  const g=document.getElementById("petalG"); if(!g) return; g.innerHTML="";
+  const mine=resShown(), meas=el("text",{class:"lbl t-petal","font-size":PETAL.size,visibility:"hidden"},g);
+  const width=parts=>{ meas.innerHTML=""; parts.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},meas); ts.textContent=(i?"  ·  ":"")+p.t; }); return meas.getComputedTextLength(); };
+  DIRS.forEach((d,k)=>{
+    const key=KEYS[k], a=d.angle;
+    const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`Ways back from ${d.name.toLowerCase()}. Read them`},g);
+    el("path",{d:petalPath(a),class:"pf"},pg);
+    // what goes in it: the ways back, or on My resources map, what you have added
+    let items;
+    if(mine){ const L=RES.items[key]; items=[...L.filter(i=>i.who==="own"),...L.filter(i=>i.who==="others")].map(i=>({t:i.text,c:i.who==="own"?"po":"pw"})); }
+    else items=WAYS[key].practices.map(p=>({t:p.name,c:""}));
+    const empty=mine&&!items.length;
+    // on screen an empty petal asks; on the printout it stays blank, room to write by hand
+    if(empty) items=RES.force?[]:[{t:"What helps you come back from here?",c:""}];
+    const [tx,ty]=P(PETAL.r1-30,a);
+    hookTip(pg,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">Beyond the survival ring</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
+      :`<span class="ringtag">Beyond the survival ring</span><b>Ways back from ${d.name.toLowerCase()}</b><span class="tl">What helps the body come back from here, toward the window.</span><span>Tap to read more.</span>`}),
+      ()=>mine?showResources(true,key):showWhere(true,null,key));
+    // fill the lines from the base of the petal outward, each holding what fits inside the petal at that radius;
+    // a few ways back spread evenly over three lines, and a long list packs each line full
+    let n=0; const out=[]; if(!items.length) return;
+    const per=items.length<=9?Math.ceil(items.length/3):99;
+    PETAL.lines.forEach(r=>{ if(n>=items.length) return;
+      const h=petalHalf(r+PETAL.size*0.4)-12*180/(Math.PI*r), cap=r*2*h*Math.PI/180, row=[];
+      while(n<items.length&&row.length<per&&width([...row,items[n]])<=cap) row.push(items[n++]);
+      out.push({r,h,cap,row}); });
+    // whatever does not fit is counted at the end of the last line, and the full list is a tap away
+    if(n<items.length){ const last=out[out.length-1]; let more=items.length-n;
+      while(last.row.length&&width([...last.row,{t:`+${more} more`}])>last.cap){ last.row.pop(); more++; }
+      last.row.push({t:`+${more} more`,c:""}); }
+    out.filter(o=>o.row.length).forEach(({r,h,row})=>{
+      const t=arcText(r,a-h,a+h,"","lbl t-petal"+(empty?" pempty":""),PETAL.size,0.2,pg), tp=t.querySelector("textPath"); tp.textContent="";
+      row.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},tp); ts.textContent=(i?"  ·  ":"")+p.t; });
+    });
+  });
+  meas.remove();
 }
 
 /* light and dark */
