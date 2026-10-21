@@ -104,11 +104,10 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .t-flow{fill:#B4561E;font-style:italic;font-weight:700}
 .is-dark .t-flow{fill:#7A3A10}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
-.coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
+.coh-line{fill:none;stroke:#F3D27A;stroke-width:1.3;stroke-opacity:.85;pointer-events:none;filter:drop-shadow(0 0 3px #FFE9A8)}
 .tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFC94D) drop-shadow(0 0 32px #FFD978)}
 .tri-bloom{filter:blur(8px)}
 .tri-line{fill:none;stroke:#E0AE42;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
-.t-one{fill:#7A4D10;font-size:20px;font-style:italic;font-weight:600;letter-spacing:.08em;pointer-events:none}
 .coh-core{filter:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
 svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
@@ -1595,20 +1594,21 @@ function bodyCenter(g,L1){
   // the whole center glows, brightest at the circle in the middle, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
-  const mix=(t)=>{ const A=[0xF2,0xCF,0x73], B=[0xF6,0xDC,0x94]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
-  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.62+i*0.06),"pointer-events":"none"},g); });
-  el("circle",{cx:0,cy:0,r:f(r0),fill:"#F7DF9C","pointer-events":"none",class:"coh-core"},g);
+  const mix=(t)=>{ const A=[0xF2,0xCF,0x73], B=[0xFF,0xF9,0xEA]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
+  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(Math.pow(i/(COH_LAYERS.length-1),1.3)),"fill-opacity":f(0.6+i*0.07),"pointer-events":"none"},g); });
+  el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFBF0","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
-  // one circle of light at the center: coherence, mind, heart, and body in step, glowing out into its field
+  // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
+  // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
-  { const cr=rc*1.25, BL=cr+34, tg="cohone", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
+  { const cr=rc*0.5, BL=cr+48, tg="cohone", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
     [[0,"#FFFFFF",1],[0.62,"#FFFFFF",0.92],[1,"#FFF3CC",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
     const bf=el("radialGradient",{id:"cohbloom",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
     [[0,"#FFFFFF",1],[cr/BL*0.8,"#FFFFFF",0.9],[cr/BL,"#FFD65C",0.8],[1,"#FFC93C",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
     el("circle",{cx:0,cy:0,r:f(BL),fill:"url(#cohbloom)","pointer-events":"none",class:"tri-bloom"},g);
     el("circle",{cx:0,cy:0,r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g);
     el("circle",{cx:0,cy:0,r:f(cr),class:"tri-line"},g);
-    const t=el("text",{x:0,y:5,class:"lbl t-one","text-anchor":"middle"},g); t.textContent="coherence"; }
+  }
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
   const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);

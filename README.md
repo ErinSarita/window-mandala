@@ -98,3 +98,5 @@ The Right now dial is mirrored left and right (`nowZones`: `wEnd`, `aEnd`, `sEnd
 The brake line in the simpler wheel now glows, light gold with a soft halo, instead of a dark line, and "window of capacity" is written along it at the top and bottom (`.t-wincap`).
 
 **The ring of survival, named.** What the cards called "outside the window" is now the ring of survival, in its tags, headings, and My map regions, and "ring of survival" is written along the rim above each direction's name. The window of capacity's border is a wider band of light (17 units), its name in plain dark gold. The petals' hover reads "The way back", then "From fight or flight, back to the window". Hovering the center dims everything beyond the window's border, so only the center and the window stand out (`#centerdim`).
+
+The center is now a small circle of light with no word in it; the rings of coherence around it brighten toward it, from warm gold at the outside to near white, with soft glowing lines and a bloom of light. "Coherence" comes up on hover.
