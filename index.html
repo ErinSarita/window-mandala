@@ -359,7 +359,15 @@ svg.rimfocus .rim-focus{opacity:1}
 .dial-knob{fill:var(--surface);stroke:var(--ink);stroke-width:2.5}
 .dial-mini{pointer-events:none}
 .shell-ray{stroke:#FFE7A0;stroke-width:2;stroke-linecap:round}
-.now-glow{fill:#FFE9A8;stroke:#E8B84A;stroke-width:1.5;pointer-events:none}
+/* Right now: the ring you are in, lit all the way round */
+.now-band{opacity:0;transition:opacity .35s}
+.now-band.on{opacity:1}
+.now-fill{fill:#FFFFFF;fill-opacity:.2}
+.is-dark .now-fill{fill-opacity:.12}
+.now-line{fill:none;stroke:#FFEAA8;stroke-width:2.6;filter:drop-shadow(0 0 3px #FFD866) drop-shadow(0 0 7px rgba(255,214,102,.7))}
+.coh-ring,.tri-bloom,.petal .pf{transition:stroke-opacity .35s,fill-opacity .35s,filter .35s}
+svg.now-center .coh-ring{stroke-opacity:.62;filter:drop-shadow(0 0 2px #FFFFFF) drop-shadow(0 0 4px rgba(255,236,170,.8))}
+svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;stroke-width:2.4;filter:drop-shadow(0 0 4px #FFD866) drop-shadow(0 0 10px rgba(255,214,102,.75))}
 
 .arousalcap{margin:0;min-height:2.6em}
 .arpaths{display:flex;flex-wrap:wrap;gap:6px}
@@ -1564,6 +1572,7 @@ function draw(){
   el("g",{id:"flowG"});
   el("g",{id:"findPinG"});
   el("g",{id:"lensG"});
+  el("g",{id:"nowRingG"}); drawNowRings();
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
   applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); renderNow();
@@ -2057,7 +2066,7 @@ nowDial=makeDial(document.getElementById("dialNow"),{
 // the way out is the load building, drawn by drawArousal; at the center and on the way back the wheel shows where you are
 function renderNow(){
   if(nowDial) nowDial.redraw();
-  drawRays();
+  drawRays(); markNow();
   const Z=nowZones(), b=NOWA>=330?NOWA-360:NOWA, S=arousalMarks(), k=ARPATH===4?2:ARPATH;
   if(b<30){ AROUSAL=0; drawArousal(); arousalname.textContent="At the center";
     arousalcap.innerHTML="Resonance: coherent, connected, at home in yourself.<small>Turn the dial clockwise to follow the way out, and on round for the way back.</small>";
@@ -2070,14 +2079,29 @@ function renderNow(){
   AROUSAL=0; drawArousal();
   drawBack(b<Z.rEnd?"edge":"window",b<Z.rEnd?(b-Z.sEnd)/(Z.rEnd-Z.sEnd):(b-Z.rEnd)/(330-Z.rEnd),k);
 }
+// Right now lights the whole ring you are in, all the way round: the center and its rings in resonance, the window,
+// the alarm at the edge, the ring of survival, the petals of the way back on the return, and the window again
+function drawNowRings(){
+  const g=document.getElementById("nowRingG"); if(!g) return; g.innerHTML="";
+  const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+  const band=(z,r0,r1)=>{ const b=el("g",{class:"now-band","data-zone":z,"pointer-events":"none","aria-hidden":"true"},g);
+    el("path",{d:ringP(r1)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"now-fill"},b);
+    [r0,r1].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),class:"now-line"},b)); };
+  band("dz-win",R.win[0],R.win[1]);
+  band("dz-alarm",R.edge[0],R.edge[1]);
+  band("dz-surv",R.out[0],R.out[1]);
+}
+function markNow(){ const z=nowZone(NOWA).cls;
+  document.querySelectorAll("#nowRingG .now-band").forEach(b=>b.classList.toggle("on",b.dataset.zone===z));
+  svg.classList.toggle("now-center",z==="dz-center"); svg.classList.toggle("now-return",z==="dz-return"); }
 // the way back runs beside the way out, from deep in survival across the edge and home
 function drawBack(phase,u,k){
   const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML="";
   const d=DIRS[k], base=d.angle, A=base-12, E=R.edge, lerp=(x,y,t)=>x+(y-x)*Math.max(0,Math.min(1,t));
   const deep=R.out[0]+(R.out[1]-R.out[0])*0.42;
   let r;
-  if(phase==="edge"){ el("path",{d:sector(E[0],E[1],base-45,base+45,1,0),class:"now-glow","fill-opacity":f(0.3+0.35*Math.sin(u*Math.PI))},g); r=lerp(deep,E[0]+4,u); }
-  else { el("path",{d:sector(R.win[0],R.win[1],base-45,base+45,1,0),class:"now-glow","fill-opacity":f(0.32*(1-u)+0.08)},g); r=lerp(E[0]-2,CR.L1+8,u); }
+  if(phase==="edge") r=lerp(deep,E[0]+4,u);
+  else r=lerp(E[0]-2,CR.L1+8,u);
   const [x0,y0]=P(deep,A), [x,y]=P(r,A);
   el("path",{d:`M${f(x0)} ${f(y0)} L${f(x)} ${f(y)}`,class:"ar-trail"},g);
   el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot",fill:"var(--sun4)"},g);
