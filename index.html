@@ -105,12 +105,10 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .is-dark .t-flow{fill:#7A3A10}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
-.tri-field{fill:none;stroke:#E8BF52;stroke-width:1;stroke-dasharray:1.5 3;pointer-events:none}
 .tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFC94D) drop-shadow(0 0 32px #FFD978)}
 .tri-bloom{filter:blur(8px)}
 .tri-line{fill:none;stroke:#E0AE42;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
-.tri-heart{fill:#FFFFFF;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFD866) drop-shadow(0 0 28px #FFE9A8)}
-.t-tri{fill:#7A4D10;font-size:13px;font-style:italic;font-weight:700;letter-spacing:.04em;pointer-events:none}
+.t-one{fill:#7A4D10;font-size:20px;font-style:italic;font-weight:600;letter-spacing:.08em;pointer-events:none}
 .coh-core{filter:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
 svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
@@ -1510,7 +1508,7 @@ function draw(){
     const hit=el("path",{d:ring(r1)+" "+ring(r0)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"Held emotions: any emotion can be felt inside the window"});
     hookTip(hit,()=>({x:0,y:-hr,html:`<span class="ringtag">Just inside the window's edge</span><b>Every feeling can be held here</b><span class="tl">Inside the window, even hard feelings are felt and held, not driving: anger as a clear no, grief as love that moves, fear as alert attention. You can breathe, stay in your body, and choose.</span><span>Tap to read more.</span>`}),()=>{ showIntro(); bringPanel(document.getElementById("lg-held")); }); }
   svg.appendChild(labels);
-  // the center: three circles, mind, heart, and body, in a field of coherence; a clear ground beneath takes the taps
+  // the center: one circle of coherence, in its field; a clear ground beneath takes the taps
   const sunG=el("g",{id:"core"});
   const selfBg=el("circle",{cx:0,cy:0,r:f(L1+15),fill:"transparent",class:"self-bg",role:"presentation"},sunG);
   bodyCenter(sunG,L1); selfBg.addEventListener("click",e=>{ e.stopPropagation(); showBody(true); });
@@ -1575,7 +1573,7 @@ function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); syncLately(); capname
 // felt in the body, and the halo carries the long-term cost of living out in the survival states.
 const BODY_WIN=[["warm, strong, quick","heart up, still flexible"],["steady, alert, watching","heart slows to take things in"],["heavy, warm, digesting","heart slow and soft"],["soft face, warm voice","heart warmed by closeness"]];
 const BODY_LASTS=["if it lasts: high blood pressure, poor sleep, inflammation","if it lasts: tension, pain, exhaustion","if it lasts: fatigue, low mood, aches","if it lasts: burnout, losing yourself"];
-// layers of coherence, from the window inward to the three circles at the center: each with how it feels and how well it is measured
+// layers of coherence, from the window inward to the circle at the center: each with how it feels and how well it is measured
 const COH_LAYERS=[
   {name:"Regulated", tag:"Well measured", feel:"Inside the window: safe, flexible, and able to choose.", ev:"Well measured: a flexible heart rate variability, and the brake holding."},
   {name:"Coherent", tag:"Well measured", feel:"Heart, breath, and brain in step through the vagus nerve: a smooth, wave-like rhythm near six breaths a minute.", ev:"Well measured: heart rhythm coherence can be scored from low to high (Lehrer and Gevirtz, 2014)."},
@@ -1588,34 +1586,26 @@ function bodyCenter(g,L1){
   const rc=R.core, r1=cohEdge(), r0=rc*0.72, step=(r1-r0)/COH_LAYERS.length;
   // the field and its rings spread over the window, under the ring names; the heart and the words go above the field
   g=el("g",{id:"cohfield","pointer-events":"none"}); svg.insertBefore(g,document.getElementById("ringLabels"));
-  // the whole center glows, brightest where the three circles meet, like the gold nimbus of an icon
+  // the whole center glows, brightest at the circle in the middle, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
   const mix=(t)=>{ const A=[0xF2,0xCF,0x73], B=[0xF6,0xDC,0x94]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.62+i*0.06),"pointer-events":"none"},g); });
   el("circle",{cx:0,cy:0,r:f(r0),fill:"#F7DF9C","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
-  // one name for the whole center: coherence, deepening toward the center
+  // one circle of light at the center: coherence, mind, heart, and body in step, glowing out into its field
   g=el("g",{id:"cohtop"});
-  // close around the three circles at the center, so they stay put, and clear of the window's names, as the field spreads
-  { const rm=rc*1.45*1.02+24; arcText(rm,-34,34,"coherence","lbl t-coh",14,2,g); arcText(rm,140,220,"deepening toward the center","lbl t-coh",11.5,0.6,g); }
-  // three circles at the center: mind, heart, and body with its nervous system. Each has its own electrical rhythm,
-  // drawn as faint rings around it; in coherence they fall into step, and the brightest point is where all three overlap
-  { const T=rc*1.45, cr=T*0.56, dd=T*0.46, tg="cohtri", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
-    [[0,"#FFFFFF",0.95],[0.7,"#FFFFFF",0.85],[1,"#FFF8E4",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
-    const TRI=[["mind",0],["heart",120],["body",240]], BL=dd+cr+34, bg="cohbloom", bf=el("radialGradient",{id:bg,gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
-    [[0,"#FFFFFF",1],[(dd+cr)/BL*0.8,"#FFFFFF",0.9],[(dd+cr)/BL,"#FFD65C",0.8],[1,"#FFC93C",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
-    el("circle",{cx:0,cy:0,r:f(BL),fill:`url(#${bg})`,"pointer-events":"none",class:"tri-bloom"},g);
-    TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); [6,12].forEach((w,k)=>el("circle",{cx:f(x),cy:f(y),r:f(cr+w),class:"tri-field","stroke-opacity":f(0.55-k*0.22)},g)); });
-    TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g); });
-    TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),class:"tri-line"},g); });
-    el("circle",{cx:0,cy:0,r:f(cr*0.32),class:"tri-heart"},g);
-    TRI.forEach(([n,a])=>{ const [x,y]=P(dd+cr*0.42,a), t=el("text",{x:f(x),y:f(y+4.5),class:"lbl t-tri","text-anchor":"middle"},g); t.textContent=n; });
-    // the words around the circles sit over their glow
-    g.querySelectorAll(".t-coh").forEach(t=>g.appendChild(t)); }
+  { const cr=rc*1.25, BL=cr+34, tg="cohone", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
+    [[0,"#FFFFFF",1],[0.62,"#FFFFFF",0.92],[1,"#FFF3CC",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
+    const bf=el("radialGradient",{id:"cohbloom",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
+    [[0,"#FFFFFF",1],[cr/BL*0.8,"#FFFFFF",0.9],[cr/BL,"#FFD65C",0.8],[1,"#FFC93C",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
+    el("circle",{cx:0,cy:0,r:f(BL),fill:"url(#cohbloom)","pointer-events":"none",class:"tri-bloom"},g);
+    el("circle",{cx:0,cy:0,r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g);
+    el("circle",{cx:0,cy:0,r:f(cr),class:"tri-line"},g);
+    const t=el("text",{x:0,y:5,class:"lbl t-one","text-anchor":"middle"},g); t.textContent="coherence"; }
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
-  const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, deepening toward the center"},g);
+  const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
   hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center, in the Body view</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
   // connection grows inward: soft chevrons on the window's diagonals, pointing in
   [45,135,225,315].forEach(a=>{ [0,1,2].forEach(i=>{ const r=R.win[1]-12-i*13, w=5.5; el("path",{d:`M${f(P(r,a-w)[0])} ${f(P(r,a-w)[1])} L${f(P(r-8,a)[0])} ${f(P(r-8,a)[1])} L${f(P(r,a+w)[0])} ${f(P(r,a+w)[1])}`,class:"body-chev","stroke-opacity":f(0.35+i*0.25)},g); });
@@ -1790,13 +1780,13 @@ function showBody(user, focus){
       <p>The wheel is read through the body. At the center is coherence: the heart's rhythm, the breath, and the brain moving in step. Moving outward, the body leaves that harmony, ring by ring.</p></div>
     <div class="ring" id="body-center"><h3>At the center: coherence</h3>
       <p>When you feel safe, the heart's rhythm becomes smooth and wave-like, quickening a little on each in-breath and slowing on each out-breath. Heart, breath, and brain fall into step through the vagus nerve. Researchers can measure this as heart rhythm coherence, and slow breathing near six breaths a minute brings it on reliably (Lehrer and Gevirtz, 2014).</p>
-      <p><b>Three circles.</b> At the very center, three circles overlap: mind, heart, and body with its nervous system. Each has its own electrical rhythm, and each can be measured: brain waves, the heartbeat, and the signals running through the nerves and muscles. The faint rings around each circle stand for that rhythm. In coherence the three fall into step, and where all three overlap is the brightest point of the wheel.</p>
+      <p><b>One circle of light.</b> At the very center is one circle: coherence. It holds three rhythms in step: the mind, the heart, and the body with its nervous system. Each has its own electrical rhythm, and each can be measured: brain waves, the heartbeat, and the signals running through the nerves and muscles. In coherence they move as one, and that is the brightest point of the wheel.</p>
       <p>From the inside it feels like peace: safe, whole, warm, at home in yourself. Many people also feel more open and connected, to others and to something greater.</p>
       <p><b>Awareness and presence.</b> Coherence and resonance go hand in hand with awareness and presence: noticing, kindly, what is here. The nearer the center, the clearer awareness becomes. And here the qualities many traditions call Self come forward on their own: calm, curiosity, compassion, clarity, confidence, courage, creativity, and connection, with a deeper connection with Self.</p>
       <p class="note">What is measured, and what is a model. Brain, heart, and breath rhythms falling into step is well measured. Of the body's electrical rhythms the heart's is the strongest, and its magnetic field can be picked up by sensitive instruments a short way from the body. The idea that this field carries feeling between people comes mostly from the HeartMath Institute and is still early and debated.</p>
       <p><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button> · <button type="button" class="linkbtn" data-pr="cohbuild">Practices: building coherence</button></p></div>
     <div class="ring" id="body-layers"><h3>As coherence deepens</h3>
-      <p>At the center, mind, heart, and body move in step: coherence. The rings around the three circles grow brighter toward the center, because coherence can deepen. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
+      <p>At the center, mind, heart, and body move in step: coherence. The rings around the circle grow brighter toward the center, because coherence can deepen. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
       <ul class="cohlist">${COH_LAYERS.slice(2).map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ul>
       <p><b>Not a ladder.</b> People can touch a deeper quality without passing through the others, and states come and go. Depth here is about harmony, not worth.</p>
       <p><b>The evidence fades inward.</b> Coherence itself is measured in the body; the deeper qualities rest more on what contemplative traditions describe. Each says how well it is known.</p>
@@ -2121,7 +2111,7 @@ function showIntro(){
   panel.innerHTML=PURPOSE_HTML+`<div class="intro">
     <h2>Reading the wheel</h2>
     <ul class="legend">
-      <li>${sw("--sun3")}<div><b>The center: coherence</b>Three circles, mind, heart, and body, overlapping in light. The closer to the center, the more fully they move in step, and the clearer awareness becomes. Further out, protection takes the lead, but the center is always there to return to.</div></li>
+      <li>${sw("--sun3")}<div><b>The center: coherence</b>One circle of light: mind, heart, and body in step. The closer to the center, the more fully they move in step, and the clearer awareness becomes. Further out, protection takes the lead, but the center is always there to return to.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction, each the safe root of the defense beyond it. Inside your window of capacity the qualities many call Self come forward, calm, curiosity, compassion, and clarity, and the connection with Self is easier to feel.</div></li>
       <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>Just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
       <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window, shown when you turn the loop on: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
@@ -2129,7 +2119,7 @@ function showIntro(){
       <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. In the simpler wheel it is one gold line, right beside the window's glowing border; with the loop turned on, it is a band, with a deeper gold border around it. Either way it marks the edge of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
       <li>${sw("--sun2")}<div><b>The braid, and the golden rays</b>The braid weaves the three nervous systems together round the whole mandala. Outside it, short golden rays show resonance: they lengthen as the Lately dial turns toward the center, and run longest where the wheel's lines cross.</div></li>
-      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it, and two small petals at each diagonal hold the way back from each movement between neighbors, one for each arrow. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
+      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it, Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with coherence at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
@@ -2280,9 +2270,9 @@ const LENSES=[
   {key:"resonance", tab:"Coherence and resonance: mind, heart, and body", icon:`<circle cx="8" cy="5.4" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5.7" cy="9.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="10.3" cy="9.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.4"/>`,
    spans:()=>[[0,cohEdge()]], dim:.5,
    title:"Coherence and resonance: mind, heart, and body", meta:"Paul Lehrer and Richard Gevirtz, the HeartMath Institute, and others", name:"coherence and resonance",
-   short:"At the center of the wheel, mind, heart, and body fall into step. Each has its own electrical rhythm, and in coherence they move together: the heart's rhythm smooth and wave-like, the breath slow, the brain steady. The mandala draws this as three overlapping circles of light at the center, a field of coherence that spreads into the window, and golden rays around the whole wheel that lengthen as resonance grows.",
+   short:"At the center of the wheel, mind, heart, and body fall into step. Each has its own electrical rhythm, and in coherence they move together: the heart's rhythm smooth and wave-like, the breath slow, the brain steady. The mandala draws this as one circle of light at the center, a field of coherence that spreads into the window, and golden rays around the whole wheel that lengthen as resonance grows.",
    intro:"Every heartbeat is an electrical wave, and so is the activity of the brain and the movement of every muscle. Researchers studying heart rate variability found that when breathing slows to about six breaths a minute, the heart's rhythm, the breath, and the pulse of blood pressure fall into step and amplify each other. They called this resonance, and the pace your resonance frequency (Vaschillo and colleagues, 2006; Lehrer and Gevirtz, 2014). The HeartMath Institute calls the smooth, ordered heart rhythm that comes with it coherence (McCraty and colleagues, 2009).",
-   lit:[["The three circles", "Mind, heart, and body with its nervous system, overlapping at the center, brightest where all three meet."], ["The field of coherence", "The light that spreads from the center into the window, wider as the Lately dial turns toward the center."], ["The golden rays", "Outside the braid, all round the wheel: short rays that lengthen as resonance grows, longest where the wheel's lines cross."]],
+   lit:[["The circle of coherence", "One circle of light at the center: mind, heart, and body with its nervous system, moving in step."], ["The field of coherence", "The light that spreads from the center into the window, wider as the Lately dial turns toward the center."], ["The golden rays", "Outside the braid, all round the wheel: short rays that lengthen as resonance grows, longest where the wheel's lines cross."]],
    brings:["<b>Rhythms that fall into step.</b> At rest the heart speeds a little on each in-breath and slows on each out-breath. Breathing near six times a minute makes this wave large and smooth, and the heart, the breath, and blood pressure begin to move as one system. This is well measured, and it is the best-supported way to raise heart rate variability.", "<b>The heart's field.</b> The heart's electrical rhythm is the strongest in the body, and its magnetic field can be picked up by sensitive instruments a short way from the skin. In coherence its rhythm becomes smoother and more ordered: what changes is the pattern of the signal, not how far it reaches.", "<b>Feeling and rhythm.</b> Warm feelings like care and appreciation tend to bring the heart's rhythm into coherence, while frustration and fear tend to make it jagged. This is why the coherence practices pair slow breathing with a warm feeling."],
    reimagined:["<b>The center of the wheel.</b> Coherence sits at the center: where you are most at home, where awareness is clearest, and where the qualities of the window come forward most fully.", "<b>Resonance radiates.</b> The golden rays are a picture of a state, not of a physical field growing: the more you live from the center, the more the whole system resonates.", "<b>Two timescales.</b> In the moment, coherence comes and goes, and the Right now dial follows it. Practiced over time, it raises resting vagal tone, and the Lately dial shows the window widening."],
    note:"Resonance and coherence in heart rhythm are well measured. Drawing them as light and rays is this mandala's picture. Claims that the heart's field carries feeling between people, or heals at a distance, come mostly from the HeartMath Institute and are still early and debated.",
@@ -3011,11 +3001,10 @@ async function downloadRes(){
   },true);
 }
 
-/* The petals: a ring of twelve round the survival ring, edge to edge, drawn the way The Pregnancy and Birth Mandala draws
-   its practice petals. The four at the directions stand a little larger and hold the ways back from each state; the two
-   at each diagonal hold the way back from each movement between neighbors, one for each arrow. On My resources map the
-   four large petals hold the visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:446, r1:544, w:32, small:{r1:530, w:27}, lines:[469,484,499,513], size:12.5};
+/* The petals: four round the survival ring, one centered on each direction, drawn the way The Pregnancy and Birth Mandala
+   draws its practice petals. Each holds the ways back from its survival state; on My resources map they hold the
+   visitor's own entries instead, what helps on their own and what helps with others. */
+const PETAL={r0:446, r1:544, w:40, lines:[469,484,499,513], size:12.5};
 // from the ring, each edge swells gently out past the petal's own width and meets the other in a soft point
 function petalD(r0,r1,a0,a1){
   const m=(a0+a1)/2, w=a1-a0, q=(r,a)=>{ const [x,y]=P(r,a); return f(x)+" "+f(y); };
@@ -3067,14 +3056,6 @@ function drawPetals(){
       row.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},tp); ts.textContent=(i?"  ·  ":"")+p.t; });
     });
   });
-  // two petals at each diagonal, one for each arrow between neighbors: the way back from that movement, each on the
-  // side its arrow points toward
-  DIRS.forEach((d,k)=>{ const n=(k+1)%4;
-    [[k,n,d.angle+60],[n,k,d.angle+30]].forEach(([from,to,a])=>{ const i=moveIndex(from,to), m=MOVES[i];
-      const sg=el("g",{class:"petal petal-s",style:`--mc:var(${DIRS[to].color})`,tabindex:"0",role:"button","aria-label":`The way back: ${m.title.toLowerCase()}`},g);
-      el("path",{d:petalD(PETAL.r0,PETAL.small.r1,a-PETAL.small.w/2,a+PETAL.small.w/2),class:"pf"},sg);
-      const [tx,ty]=P(510,a);
-      hookTip(sg,()=>({x:tx,y:ty,html:`<span class="ringtag">The way back</span><b>${m.title}</b><span class="tl">${m.helps}</span><span>Tap to read more.</span>`}),()=>showMoves(i,true)); }); });
   meas.remove();
 }
 
