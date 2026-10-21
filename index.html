@@ -335,18 +335,29 @@ svg.rimfocus .rim-focus{opacity:1}
 .caprow label{font-size:14px;font-weight:700}
 .caprow input{flex:1;min-width:160px;accent-color:var(--self)}
 .capname{font-family:var(--display);font-size:17px;min-width:12ch}
-.caprow input.arousal{accent-color:var(--ff)}
-.caprow.arow{margin-top:8px;padding-top:10px;border-top:1px solid var(--line);align-items:flex-start}
-.caprow.arow label,.caprow.arow .capname{padding-top:1px}
-.arwrap{flex:1;min-width:160px;position:relative;display:block;padding-bottom:36px}
-.arwrap input{width:100%;margin:0}
-.armarks{position:absolute;left:0;right:0;top:24px;height:34px}
-.armark{position:absolute;top:2px;transform:translateX(-50%);font:inherit;font-size:11.5px;font-weight:600;color:var(--muted);background:none;border:0;padding:0 2px;cursor:pointer;white-space:nowrap;line-height:1.15}
-.armark::before{content:"";position:absolute;left:50%;top:-7px;width:1.5px;height:7px;background:currentColor;opacity:.7}
-.armark.r2{top:18px}
-.armark.r2::before{top:-23px;height:23px}
-.armark:hover,.armark:focus-visible{color:var(--ink)}
-@media (max-width:560px){ .caprow.arow .arwrap{flex-basis:100%;order:3;min-width:0} }
+.dials{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"dl dn" "tl tn";gap:6px 18px;align-items:start}
+.dl-l{grid-area:dl} .dl-n{grid-area:dn} .dt-l{grid-area:tl} .dt-n{grid-area:tn}
+@media (max-width:560px){ .dials{grid-template-areas:"dl dn" "tl tl" "tn tn";gap:6px 10px} }
+.dialcard{display:grid;justify-items:center;text-align:center;gap:2px}
+.dialhead{display:grid;line-height:1.2}
+.dialeyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.dialhead b{font-family:var(--display);font-size:19px;font-weight:500}
+.dialcard .capname{min-width:0;text-align:center}
+.dial{width:100%;max-width:210px;height:auto;touch-action:none;cursor:grab;outline:none;border-radius:50%}
+.dial:focus-visible{box-shadow:0 0 0 2px var(--ink)}
+.dialtext{display:grid;gap:8px;align-content:start}
+.dialcap{margin:0}
+.dialcap small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.dz{fill:none;stroke-width:13}
+.dz-rise{stroke:var(--sun2)} .dz-fall{stroke:#8E7FB8} .dz-center{stroke:var(--sun3)} .dz-win{stroke:#EBD08A} .dz-alarm{stroke:#A9A096} .dz-return{stroke:#CBBFA8}
+.dz-lbl{font-family:var(--body);font-size:12.5px;font-weight:700;fill:var(--muted);text-anchor:middle}
+.dz-arrow{fill:var(--muted)}
+.dial-hand{stroke:var(--muted);stroke-width:1.5}
+.dial-knob{fill:var(--surface);stroke:var(--ink);stroke-width:2.5}
+.dial-mini{pointer-events:none}
+.shell-ray{stroke:#FFE7A0;stroke-width:2;stroke-linecap:round}
+.now-glow{fill:#FFE9A8;stroke:#E8B84A;stroke-width:1.5;pointer-events:none}
+.now-here{fill:none;stroke:#FFFFFF;stroke-width:3;pointer-events:none;filter:drop-shadow(0 0 6px #FFD866)}
 .arousalcap{margin:0;min-height:2.6em}
 .arpaths{display:flex;flex-wrap:wrap;gap:6px}
 .arpaths button{font:inherit;font-size:13px;font-weight:600;padding:4px 11px 4px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -476,11 +487,18 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><div class="coretip" id="coretip" aria-hidden="true"><b>The Self</b>Self, with a capital S: the calm, clear, compassionate center every part can come home to.<span>Tap to read more.</span></div><svg id="m" viewBox="-562 -562 1124 1124" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
-        <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <p>Drag to see the window widen as awareness widens: the Self stays at the center, coherence spreads out from it, the window grows around it, and the ring of survival thins. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button> · <button type="button" class="linkbtn" id="capcoh">Building coherence</button></p>
-        <div class="caprow arow"><label for="arousal">What's building</label><span class="arwrap"><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="armarks" id="armarks" role="group" aria-label="Jump to where each stage begins"></span></span><span class="capname" id="arousalname"></span></div>
-        <div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
-        <p class="arousalcap" id="arousalcap" aria-live="polite"></p>
+        <div class="dials">
+          <div class="dialcard dl-l"><div class="dialhead"><span class="dialeyebrow">Lately</span><b>Your window</b></div>
+            <svg class="dial" id="dialLately" viewBox="-100 -100 200 200" role="slider" tabindex="0" aria-label="Lately, your window: turn toward the top for living from the center, toward the bottom for living in protection" aria-valuemin="0" aria-valuemax="100"></svg>
+            <span class="capname" id="capname"></span></div>
+          <div class="dialcard dl-n"><div class="dialhead"><span class="dialeyebrow">Right now</span><b>Where you are</b></div>
+            <svg class="dial" id="dialNow" viewBox="-100 -100 200 200" role="slider" tabindex="0" aria-label="Right now, where you are: turn clockwise for the way out through the alarm into survival, and on round for the way back" aria-valuemin="0" aria-valuemax="359" aria-describedby="arousalcap"></svg>
+            <span class="capname" id="arousalname"></span></div>
+          <div class="dialtext dt-l"><p class="dialcap" id="latelycap" aria-live="polite"></p>
+            <p class="dialcap"><button type="button" class="linkbtn" id="capfind">How wide is mine?</button> · <button type="button" class="linkbtn" id="capcoh">Building coherence</button></p></div>
+          <div class="dialtext dt-n"><div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
+            <p class="arousalcap" id="arousalcap" aria-live="polite"></p></div>
+        </div>
         <div class="maprow"><button type="button" class="btn" id="bodyswitch" aria-pressed="false">Body view</button><button type="button" class="btn" id="loopswitch" aria-pressed="false">Show the simpler wheel</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><button type="button" class="btn" id="resbtn">My resources</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
       <div class="legendkey" id="legendkey"></div>
@@ -499,7 +517,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <h3>A model, made from models</h3>
     <p id="modelnote"></p>
     <h3>How it is built</h3>
-    <p>How to read names each ring. Two things move. Drag "Your window" and the window grows around a steady center while the threat rings thin, the way practice, support, and safety can widen a window over time. And the braid round the edge weaves the three nervous systems together: gold for ventral, red for sympathetic, and blue for dorsal.</p>
+    <p>How to read names each ring. Two dials turn. "Lately" is your window over weeks and months: toward the top, coherence spreads and the window widens while the ring of survival thins and lets the light through; toward the bottom, the ring thickens into a dense shell and the window narrows. "Right now" is where you are this moment: the rings hold their size, and you follow the way out through the alarm into survival, and the way back across the edge and home. And the braid round the edge weaves the three nervous systems together: gold for ventral, red for sympathetic, and blue for dorsal.</p>
     <h3>An evolutionary view</h3>
     <p>Each state on this wheel is an inheritance. Collapse is the oldest, shared with reptiles and fish: playing dead. Fight and flight belong to every mammal. The social, connected state, and the ability to calm one another with a face and a voice, is the newest. Polyvagal theory orders them this way; some physiologists dispute its anatomy and its evolutionary story, but the picture of defenses as survival strategies, each wise in its time, is widely shared. Nothing on the outer ring is a flaw. Each is the body trying to keep you alive.</p>
     <h3>An injury, not an illness</h3>
@@ -1422,6 +1440,14 @@ function draw(){
   grad("outglow",{...U,r:oR},[[R.out[0]/oR,"var(--sun2)",isDark()?0.1:0.16],[1,"var(--sun2)",0]]);
   el("circle",{cx:0,cy:0,r:f((R.edge[0]+R.edge[1])/2),fill:"none",stroke:"url(#edgeglow)","stroke-width":f(et),"pointer-events":"none"});
   el("circle",{cx:0,cy:0,r:f(R.out[0]+8),fill:"none",stroke:"url(#outglow)","stroke-width":16,"pointer-events":"none"});
+  // lately: the ring of survival is a shell, denser as the window narrows; as the window widens, the Self's light shines
+  // out through it
+  { const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    el("path",{d:ringP(R.out[1])+" "+ringP(R.out[0])+"Z","fill-rule":"evenodd",fill:"#2E3550","fill-opacity":f((1-CAP)*0.24),"pointer-events":"none"});
+    const lit=Math.max(0,(CAP-0.55)/0.45);
+    if(lit>0){ const rg=el("g",{"pointer-events":"none","stroke-opacity":f(lit*0.6)});
+      for(let a=0;a<360;a+=7.5){ const off=((a%90)+90)%90; if(off<16||off>74||Math.abs(off-45)<10) continue;
+        const [x0,y0]=P(R.out[0]+3,a), [x1,y1]=P(R.out[1]-3,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),class:"shell-ray"},rg); } } }
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
     ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
@@ -1570,7 +1596,7 @@ function draw(){
   el("g",{id:"lensG"});
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); drawArousal();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); renderNow();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1613,10 +1639,9 @@ window.addEventListener("resize",()=>moonTip(null));
 
 
 /* ---------- Capacity ---------- */
-const cap=document.getElementById("cap"), capname=document.getElementById("capname");
+const capname=document.getElementById("capname");
 function bandOf(t){ return WIDTH.bands.find(b=>t<b.upto); }
-function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); cap.value=Math.round(CAP*100); capname.textContent=bandOf(CAP).name; if(redraw!==false) draw(); }
-cap.addEventListener("input",()=>setCap(cap.value/100));
+function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); syncLately(); capname.textContent=bandOf(CAP).name; if(redraw!==false) draw(); }
 // The Body view: the same wheel read through the body. Heart-brain coherence sits at the center, the window states are
 // felt in the body, and the halo carries the long-term cost of living out in the survival states.
 const BODY_WIN=[["warm, strong, quick","heart up, still flexible"],["steady, alert, watching","heart slows to take things in"],["heavy, warm, digesting","heart slow and soft"],["soft face, warm voice","heart warmed by closeness"]];
@@ -1908,7 +1933,7 @@ bodyswitch.addEventListener("click",()=>setBody(!BODY));
 // the body shuts down (collapse), or keeps a friendly face over the fear (fawn). A fifth path follows one common sequence, the defense cascade. The breakpoint sits at the
 // window's border, so a wider window holds more before the rim is crossed.
 let AROUSAL=0, ARPATH=0;
-const arousal=document.getElementById("arousal"), arousalname=document.getElementById("arousalname"), arousalcap=document.getElementById("arousalcap"), arpaths=document.getElementById("arpaths");
+const arousalname=document.getElementById("arousalname"), arousalcap=document.getElementById("arousalcap"), arpaths=document.getElementById("arpaths");
 function arousalMarks(){ const b=0.45+0.25*CAP; return {on:b-0.22, strain:b-0.07, b, freeze:Math.min(0.92,b+0.2)}; }
 // per direction: held, the edge, the brake straining, past the rim, and deeper in
 const BUILD_TEXT=[["Energy is rising, held by your window: alive, focused, and still able to choose. The heart speeds up but keeps its flexible rhythm.", "Revving at the edge: restless, irritable, a sense of urgency, a tight jaw. You are still inside your window, with a way back.", "Near your capacity: the urge to snap or bolt is strong, but you can still choose. This is the moment to turn back toward center.", "Past the breakpoint, the brake gives way, like brakes failing on a hill. The thinking brain goes quiet and the body takes over to fight or run: the heart pounds, the breath comes fast, and it is hard to think or listen.", "Deeper in, the whole body is mobilized: rage, panic, or a strong urge to run. The way back starts with moving the energy, like walking fast, shaking it out, or pushing against a wall, then slowing the breath."], ["Alert and still, held by your window: watching, listening, and able to move whenever you choose.", "Bracing at the edge: holding your breath, scanning, going still. You are still inside your window, with a way back.", "Near your capacity: very still and on high alert, but you can still move and choose. Turn back toward center now.", "Past the breakpoint, it is like pressing the accelerator and the brake at the same time. The body is fully charged, heart pounding or slowing, muscles tense, yet it cannot move or speak: a deer in headlights.", "Deeper in: stuck, unable to move or speak even when you want to. The way back starts with tiny movements, like wiggling your fingers or turning your head, and a long out-breath."], ["Slowing down, held by your window: rest that still feels safe and present.", "Sinking at the edge: heavy, foggy, wanting to pull away. You are still inside your window, with a way back.", "Near your capacity: the heaviness is growing and it is harder to stay present, but it is still manageable. Warmth and gentle movement help here.", "Past the breakpoint, the brake clamps down too hard, like braking so hard the engine stalls. Instead of revving up, the body shuts down: energy drains, the heart and blood pressure can drop, and feelings go numb or far away, as if behind glass. It is the body's oldest way of protecting you from what feels like too much.", "Deeper in: very far away. You may feel numb, heavy, unable to think or move, or as if watching yourself from outside. The way back starts with warmth, gentle movement, and safety, not more calm."], ["Reaching toward others, held by your window: warm, connected, and still yourself.", "Over-tuning at the edge: scanning other people's moods, a yes that is not yours. You are still inside your window, with a way back.", "Near your capacity: your own needs are slipping from view, but it is still manageable. Turn back toward center now.", "Past the breakpoint, you keep smiling and agreeing on the outside while fear runs underneath. The face stays friendly, but you lose touch with what you feel, need, or want.", "Deeper in: pleasing, apologizing, saying yes to everything, disappearing into what others want. The way back starts with feeling safe, then finding one small no."]];
@@ -1925,7 +1950,7 @@ const NOTE_CASCADE="One common sequence, the defense cascade; many people skip s
 [["Toward fight or flight",0],["Toward freeze",1],["Toward collapse",2],["Toward fawn",3],["If it keeps building",4]].forEach(([t,k])=>{
   const b=document.createElement("button"); b.type="button"; b.dataset.k=k; b.setAttribute("aria-pressed",k===ARPATH?"true":"false");
   b.innerHTML=(k<4?sw(DIRS[k].color):`<span class="sw" style="background:linear-gradient(90deg,var(--ff),var(--fr),var(--co))"></span>`)+t;
-  b.addEventListener("click",()=>{ ARPATH=k; arpaths.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.k===k?"true":"false")); drawArousal(); });
+  b.addEventListener("click",()=>{ ARPATH=k; arpaths.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.k===k?"true":"false")); renderNow(); });
   arpaths.appendChild(b); });
 function buildStage(a){ const S=arousalMarks();
   if(a<=0) return "rest"; if(a<S.on) return "held"; if(a<S.strain) return "alarm"; if(a<S.b) return "strain";
@@ -1935,16 +1960,10 @@ function drawArousal(){
   const a=AROUSAL, st=buildStage(a), casc=ARPATH===4, k=casc?0:ARPATH, d=DIRS[k];
   const idx={held:0,alarm:1,strain:2,past:3,deep:4}[st];
   let nm, tx;
-  if(st==="rest"){ nm="At rest"; tx="Choose which way it tends to go, then drag to watch the load build: the edge signals, the brake straining, and what happens at the rim."; }
+  if(st==="rest"){ nm="At rest"; tx="Choose which way it tends to go, then turn the dial to watch the load build: the edge signals, the brake straining, and what happens at the rim."; }
   else if(casc){ [nm,tx]=CASCADE_TEXT[st]; }
   else { nm=[ "Building, held", d.edge.name, "The brake strains", d.name, d.name ][idx]; tx=BUILD_TEXT[k][idx]; }
   arousalname.textContent=nm;
-  // marks under the slider: where each stage begins for this window, a tap jumps there
-  { const S=arousalMarks(), marks=casc?[["edge",S.on],["brake",S.strain],["breakpoint",S.b],["freeze",S.freeze],["collapse",S.freeze+(1-S.freeze)*0.45]]
-      :[[d.edge.name.toLowerCase(),S.on],["brake",S.strain],["breakpoint",S.b],["deeper",S.b+(1-S.b)*0.45]];
-    const am=document.getElementById("armarks");
-    am.innerHTML=marks.map(([t,v],i)=>`<button type="button" class="armark${i%2?" r2":""}" data-v="${v.toFixed(3)}" style="left:calc(8px + (100% - 16px) * ${v.toFixed(3)})" title="Jump to where ${t} begins">${t}</button>`).join("");
-    am.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ AROUSAL=Math.min(1,+b.dataset.v+0.01); arousal.value=Math.round(AROUSAL*100); drawArousal(); })); }
   arousalcap.innerHTML=tx+(a>0?`<small>${casc?NOTE_CASCADE:NOTE_DIR}</small>`:"");
   const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML=""; if(a<=0) return;
   const S=arousalMarks(), base=d.angle, A=base+12, E=R.edge, rimIn=R.rim?R.rim[0]:R.edge[1]-6, rimOut=R.rim?R.rim[1]:R.edge[1];
@@ -1985,7 +2004,126 @@ function drawArousal(){
   const [x,y]=P(r,ang);
   el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot",fill:st==="held"?"var(--sun4)":`var(${DIRS[dk].color})`},g);
 }
-arousal.addEventListener("input",()=>{ AROUSAL=arousal.value/100; drawArousal(); });
+/* ---------- The two dials ----------
+   Lately: where you tend to live, over weeks and months. Toward the top you live from the center: coherence spreads,
+   the window widens, and the shell of survival thins and lets the light through. Toward the bottom you live in
+   protection: the shell thickens and the window narrows. Up the right side is resonance growing, down the left
+   protection building. Right now: where you are this moment, with the rings holding their size. Clockwise from the top:
+   through the window, into the alarm, down into survival, then back through the edge, which can feel like alarm again,
+   and home. A wider window gives more room before the alarm. */
+var latelyDialRef=null, nowDial=null, NOWA=0;
+const DNS="http://www.w3.org/2000/svg", DR=78;
+const dP=(r,a)=>[Math.sin(a*Math.PI/180)*r,-Math.cos(a*Math.PI/180)*r];
+function dArc(r,a0,a1){ const [x0,y0]=dP(r,a0),[x1,y1]=dP(r,a1); return `M${f(x0)} ${f(y0)} A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${f(x1)} ${f(y1)}`; }
+function makeDial(svgEl, opts){
+  let ang=opts.start||0;
+  const draw=()=>{
+    svgEl.innerHTML="";
+    const mk=(t,a,p)=>{ const e=document.createElementNS(DNS,t); for(const k in a) e.setAttribute(k,a[k]); (p||svgEl).appendChild(e); return e; };
+    opts.zones().forEach(z=>{ const pa=mk("path",{d:dArc(DR,z.a0+0.8,z.a1-0.8),class:"dz "+z.cls}); if(z.style) pa.setAttribute("style",z.style); });
+    (typeof opts.labels==="function"?opts.labels():opts.labels).forEach(([t,a,r])=>{ const [x,y]=dP(r||54,a); const tx=mk("text",{x:f(x),y:f(y+4),class:"dz-lbl"}); tx.textContent=t; });
+    // arrows on the track show which way each side runs
+    (opts.arrows||[]).forEach(([a,dir])=>{ const [x,y]=dP(DR,a); mk("path",{d:"M-5 -4.5 L5 0 L-5 4.5 Z",class:"dz-arrow",transform:`translate(${f(x)} ${f(y)}) rotate(${f(dir>0?a:a+180)})`}); });
+    if(opts.mini) opts.mini(mk,ang);
+    const [kx,ky]=dP(DR,ang);
+    mk("line",{x1:0,y1:0,x2:f(kx),y2:f(ky),class:"dial-hand"});
+    mk("circle",{cx:f(kx),cy:f(ky),r:10,class:"dial-knob"});
+    svgEl.setAttribute("aria-valuenow",Math.round(opts.value?opts.value(ang):ang));
+    if(opts.valuetext) svgEl.setAttribute("aria-valuetext",opts.valuetext(ang));
+  };
+  const turn=a=>{ ang=((a%360)+360)%360; draw(); opts.onTurn(ang); };
+  const fromPoint=e=>{ const r=svgEl.getBoundingClientRect(), x=e.clientX-(r.left+r.width/2), y=e.clientY-(r.top+r.height/2); turn(Math.atan2(x,-y)*180/Math.PI); };
+  let drag=false;
+  svgEl.addEventListener("pointerdown",e=>{ drag=true; try{ svgEl.setPointerCapture(e.pointerId); }catch(err){} fromPoint(e); e.preventDefault(); });
+  svgEl.addEventListener("pointermove",e=>{ if(drag) fromPoint(e); });
+  ["pointerup","pointercancel"].forEach(ev=>svgEl.addEventListener(ev,()=>{ drag=false; }));
+  svgEl.addEventListener("keydown",e=>{ const st={ArrowRight:5,ArrowUp:5,ArrowLeft:-5,ArrowDown:-5}[e.key];
+    if(st){ turn(ang+st); e.preventDefault(); } else if(e.key==="Home"){ turn(0); e.preventDefault(); } });
+  draw();
+  return {get:()=>ang, set:a=>{ ang=((a%360)+360)%360; draw(); }, redraw:draw};
+}
+
+// Lately: the height of the knob is how centered you live, from the bottom (in protection) to the top (from the center)
+const capOf=a=>(1+Math.cos(a*Math.PI/180))/2;
+function latelyText(a){
+  const c=capOf(a), rising=a>0.5&&a<179.5;
+  const t=c>0.88?"Living from the center: the light at the center shines out through a thin shell, and the window is wide."
+    :c<0.12?"Living in protection: the ring of survival is a thick, dense shell. It keeps you alive, and it holds the light in. The window is narrow."
+    :rising?"Resonance growing: coherence spreads, the shell of survival thins, and over time the window widens."
+    :"Protection building: fear of danger, of losing connection, of not having enough. The shell thickens, the light dims, and over time the window narrows.";
+  return t+"<small>Where you tend to live, over weeks and months. A hard moment moves the Right now dial; living there a long time is what moves this one.</small>";
+}
+function syncLately(){
+  if(!latelyDialRef) return;
+  if(Math.abs(capOf(latelyDialRef.get())-CAP)>0.005) latelyDialRef.set(Math.acos(Math.max(-1,Math.min(1,2*CAP-1)))*180/Math.PI);
+  document.getElementById("latelycap").innerHTML=latelyText(latelyDialRef.get());
+}
+latelyDialRef=makeDial(document.getElementById("dialLately"),{
+  start:90,
+  zones:()=>[{a0:0,a1:180,cls:"dz-rise"},{a0:180,a1:360,cls:"dz-fall"}],
+  labels:[["center",0],["protection",180]],
+  arrows:[[90,-1],[270,-1]],
+  // a small sphere: the light at the center grows as the shell around it thins
+  mini:(mk,a)=>{ const c=capOf(a);
+    mk("circle",{cx:0,cy:0,r:30,class:"dial-mini",fill:"#8E7FB8","fill-opacity":f(0.3+0.45*(1-c))});
+    mk("circle",{cx:0,cy:0,r:f(10+17*c),class:"dial-mini",fill:"var(--sun2)"});
+    mk("circle",{cx:0,cy:0,r:f(3+5*c),class:"dial-mini",fill:"#FFFFFF"}); },
+  value:a=>capOf(a)*100,
+  valuetext:a=>bandOf(capOf(a)).name,
+  onTurn:a=>setCap(capOf(a))
+});
+
+// Right now: the zones round the dial, with the window's share set by the Lately dial
+function nowZones(){ const wEnd=55+45*CAP, aEnd=wEnd+40;
+  return {wEnd,aEnd,list:[{a0:-30,a1:30,cls:"dz-center",k:"c",nm:"At the center"},{a0:30,a1:wEnd,cls:"dz-win",k:"w",nm:"In the window"},{a0:wEnd,a1:aEnd,cls:"dz-alarm",k:"e",nm:"Alarm"},
+    {a0:aEnd,a1:225,cls:"dz-surv",k:"s",nm:"Survival"},{a0:225,a1:270,cls:"dz-return",k:"e",nm:"The way back"},{a0:270,a1:330,cls:"dz-win",k:"w",nm:"Back in the window"}]}; }
+const nowZone=a=>{ const b=a>=330?a-360:a; return nowZones().list.find(z=>b>=z.a0&&b<z.a1)||nowZones().list[0]; };
+const nowColor=()=>ARPATH===4?"--ff":DIRS[ARPATH].color;
+nowDial=makeDial(document.getElementById("dialNow"),{
+  start:0,
+  zones:()=>nowZones().list.map(z=>z.k==="s"?{...z,style:`stroke:var(${nowColor()})`}:z),
+  labels:()=>{ const Z=nowZones(); return [["resonance",0],["alarm",(Z.wEnd+Z.aEnd)/2],["survival",180],["return",247.5]]; },
+  arrows:[[42,1],[300,1]],
+  // small rings: the one you are in is lit
+  mini:(mk,a)=>{ const k=nowZone(a).k;
+    [["c",0,7,"var(--sun3)"],["w",7,15,"#EBD08A"],["e",15,21,"#A9A096"],["s",21,29,`var(${nowColor()})`]].forEach(([z,r0,r1,c])=>
+      mk("circle",{cx:0,cy:0,r:f(r0?(r0+r1)/2:3.5),fill:"none",stroke:c,"stroke-width":f(r0?r1-r0:7),"stroke-opacity":z===k?1:0.22,class:"dial-mini"})); },
+  valuetext:a=>nowZone(a).nm,
+  onTurn:a=>{ NOWA=a; renderNow(); }
+});
+// the way out is the load building, drawn by drawArousal; at the center and on the way back the wheel shows where you are
+function renderNow(){
+  if(nowDial) nowDial.redraw();
+  const Z=nowZones(), b=NOWA>=330?NOWA-360:NOWA, S=arousalMarks(), k=ARPATH===4?2:ARPATH;
+  if(b<30){ AROUSAL=0; drawArousal(); arousalname.textContent="At the center";
+    arousalcap.innerHTML="Resonance: coherent, connected, at home in yourself.<small>Turn the dial clockwise to follow the way out, and on round for the way back.</small>";
+    const g=document.getElementById("arousalG"); if(g&&CR) el("circle",{cx:0,cy:0,r:f(CR.L1+5),class:"now-here"},g); return; }
+  if(b<225){ let v;
+    if(b<Z.wEnd) v=0.01+(S.on-0.01)*(b-30)/(Z.wEnd-30);
+    else if(b<Z.aEnd) v=S.on+(S.b-S.on)*(b-Z.wEnd)/(Z.aEnd-Z.wEnd);
+    else v=S.b+(1-S.b)*(b-Z.aEnd)/(225-Z.aEnd);
+    AROUSAL=Math.min(1,v); drawArousal(); return; }
+  AROUSAL=0; drawArousal();
+  drawBack(b<270?"edge":"window",b<270?(b-225)/45:(b-270)/60,k);
+}
+// the way back runs beside the way out, from deep in survival across the edge and home
+function drawBack(phase,u,k){
+  const g=document.getElementById("arousalG"); if(!g) return; g.innerHTML="";
+  const d=DIRS[k], base=d.angle, A=base-12, E=R.edge, lerp=(x,y,t)=>x+(y-x)*Math.max(0,Math.min(1,t));
+  const deep=R.out[0]+(R.out[1]-R.out[0])*0.42;
+  let r;
+  if(phase==="edge"){ el("path",{d:sector(E[0],E[1],base-45,base+45,1,0),class:"now-glow","fill-opacity":f(0.3+0.35*Math.sin(u*Math.PI))},g); r=lerp(deep,E[0]+4,u); }
+  else { el("path",{d:sector(R.win[0],R.win[1],base-45,base+45,1,0),class:"now-glow","fill-opacity":f(0.32*(1-u)+0.08)},g); r=lerp(E[0]-2,CR.L1+8,u); }
+  const [x0,y0]=P(deep,A), [x,y]=P(r,A);
+  el("path",{d:`M${f(x0)} ${f(y0)} L${f(x)} ${f(y)}`,class:"ar-trail"},g);
+  el("circle",{cx:f(x),cy:f(y),r:12,class:"ar-dot",fill:"var(--sun4)"},g);
+  const helps=WAYS[KEYS[k]].practices.slice(0,2).map(p=>p.name.toLowerCase()).join(", or ");
+  if(phase==="edge"){ arousalname.textContent="The way back";
+    arousalcap.innerHTML=`Crossing the edge again, on the way home. It can feel like alarm: shaking, heat, tears, or a rush of energy. That is the body finishing what it started, and it passes.<small>${k===2?"Coming back from collapse often passes through a little fight or flight energy first. ":""}What helps here: ${helps}.</small>`; }
+  else { arousalname.textContent="Back in the window";
+    arousalcap.innerHTML="Settling, orienting, coming home. Each return is practice, and practiced over time, it widens your window.<small>Turn on to the top to rest at the center.</small>"; }
+}
+
 document.getElementById("capfind").addEventListener("click",()=>showWhere(true,"width"));
 document.getElementById("capcoh").addEventListener("click",()=>showPractice(true,"cohbuild"));
 
@@ -2208,7 +2346,7 @@ function showAware(user){
       <p><b>Intuition, or an old alarm?</b> The same lens shapes our gut feelings. Outside the window, an old, conditioned fear can feel as certain as intuition: a warning that is really a memory of past danger. Feelings that remain once you are settled, safe, and connected tend to be more trustworthy than ones that arrive with a racing heart and a braced body (Dunsmoor and Paz, 2015; Kahneman and Klein, 2009). <button type="button" class="linkbtn" data-discern>See the comparison in the Body view</button></p>
       <p class="note">A caution. "We create our own reality" can slide into blaming people for what happened to them. Trauma, illness, loss, and injustice are not caused by how someone sees the world. What the science supports is something gentler: our state shapes what we notice and how we respond, and those responses can loop back. Coming back toward the center widens the lens. Popular teachers such as Joe Dispenza draw on real findings about mental rehearsal and expectation; claims that thought reshapes outside events through quantum fields are not supported.</p></div>
     <div class="ring"><h3>On the wheel</h3>
-      <p>The soft halo around the whole wheel is the field of awareness: it holds every state, the window and the defenses alike. The slider shows it widening: the window grows around a steady center, and the rings of threat thin.</p>
+      <p>The soft halo around the whole wheel is the field of awareness: it holds every state, the window and the defenses alike. The Lately dial shows it widening: the window grows around a steady center, and the rings of threat thin.</p>
       <button type="button" class="linkbtn" data-practice>Try opening peripheral awareness</button></div>
     <p class="src">Tang, Hölzel &amp; Posner (2015); Siegel (1999); Schwartz (2021); Barrett (2017); Fredrickson (2001); Downey et al. (1998); Cooley (1902); Madon et al. (2004); Meins et al. (2001); Kisilevsky et al. (2003); Glover (2014); Gross (2002); Tedeschi &amp; Calhoun (2004)</p>`;
   wire(); if(user) bringPanel();
@@ -2227,7 +2365,7 @@ const LENSES=[
         ["Outside the window","The four survival states: fight or flight, freeze, collapse, and fawn."]],
    brings:[`<b>The window of tolerance</b> comes from psychiatrist Dan Siegel (1999): a zone of arousal in which we can take in what is happening and respond. Above it lies hyperarousal, too much charge; below it, hypoarousal, too little. Pat Ogden and colleagues (2006) carried it into body-based trauma therapy. Many now call it the window of capacity, because it can widen.`,
      `<b>Polyvagal theory</b> comes from neuroscientist Stephen Porges (2007, 2011): three states in an evolutionary order. The ventral vagal state is safe and social; the sympathetic mobilizes for fight or flight; the dorsal vagal immobilizes and shuts down. Therapist Deb Dana (2018) turned it into a ladder people can climb, and named its blends: play, mobilization held by safety, and stillness, rest held by safety.`],
-   reimagined:["Siegel's window is a band, with too much charge above it and too little below. Polyvagal theory is a ladder, climbed down under threat and back up with safety. Both are drawn in straight lines. Here they bend into a circle, and the circle shows what straight lines cannot: movement, and a center.", "<b>A continuous flow.</b> Around the outer ring the survival states lead into one another: fight or flight can tip into freeze, freeze can drop into collapse, collapse can surface through fawn, and fawn can flare back into fight. The arrows between them run both ways, because the nervous system moves back and forth between sympathetic charge and dorsal shutdown, sometimes many times in a day. On a ladder that looks like jumping between rungs. On a circle it is one flowing movement around the edge.", "<b>A clear border.</b> The deep gold band is the edge of your window of capacity. Inside it you can feel a great deal, even anger or fear, and still think, connect, and choose. Beyond it, survival takes over.", "<b>Ventral, held as the center.</b> In polyvagal theory the ventral state is the top rung. Here it is the whole window, holding the Self at its heart. Each of the four window states is the safe, held form of the defense beyond it: Energized beneath fight or flight, Still beneath freeze, Settled beneath collapse, Connected beneath fawn. Even the defenses have a healthy root near the center.", "<b>As the window widens, the center holds steady.</b> Drag the slider: the Self stays where it is, the window spreads out around it, and the rings of survival thin. They stay: they are still there for when they are truly needed. What grows is the room to feel, and the ease of coming back.", "<b>Always a way toward the center.</b> Because it is a circle, every place on the outer ring faces the center. From fight or flight, freeze, collapse, or fawn, there is a path inward: back through the edge, into the healthy root of that same direction, and home. The ladder still teaches something true about the route: from collapse, a little gentle movement often comes before calm.", "Freeze and fawn are read as blends: freeze holds accelerator and brake at once, and fawn uses the social system for defense, a response Pete Walker (2013) named."],
+   reimagined:["Siegel's window is a band, with too much charge above it and too little below. Polyvagal theory is a ladder, climbed down under threat and back up with safety. Both are drawn in straight lines. Here they bend into a circle, and the circle shows what straight lines cannot: movement, and a center.", "<b>A continuous flow.</b> Around the outer ring the survival states lead into one another: fight or flight can tip into freeze, freeze can drop into collapse, collapse can surface through fawn, and fawn can flare back into fight. The arrows between them run both ways, because the nervous system moves back and forth between sympathetic charge and dorsal shutdown, sometimes many times in a day. On a ladder that looks like jumping between rungs. On a circle it is one flowing movement around the edge.", "<b>A clear border.</b> The deep gold band is the edge of your window of capacity. Inside it you can feel a great deal, even anger or fear, and still think, connect, and choose. Beyond it, survival takes over.", "<b>Ventral, held as the center.</b> In polyvagal theory the ventral state is the top rung. Here it is the whole window, holding the Self at its heart. Each of the four window states is the safe, held form of the defense beyond it: Energized beneath fight or flight, Still beneath freeze, Settled beneath collapse, Connected beneath fawn. Even the defenses have a healthy root near the center.", "<b>As the window widens, the center holds steady.</b> Turn the Lately dial: the Self stays where it is, the window spreads out around it, and the rings of survival thin. They stay: they are still there for when they are truly needed. What grows is the room to feel, and the ease of coming back.", "<b>Always a way toward the center.</b> Because it is a circle, every place on the outer ring faces the center. From fight or flight, freeze, collapse, or fawn, there is a path inward: back through the edge, into the healthy root of that same direction, and home. The ladder still teaches something true about the route: from collapse, a little gentle movement often comes before calm.", "Freeze and fawn are read as blends: freeze holds accelerator and brake at once, and fawn uses the social system for defense, a response Pete Walker (2013) named."],
    note:"Bending the window into a circle, and reading freeze and fawn as blends, are this mandala's synthesis. Parts of polyvagal theory's anatomy are disputed by physiologists; its three states remain a widely used clinical map.",
    basicsAbout:"A few terms this model uses. The tabs build on one another, so this is the place to start.",
    basics:[["The nervous system", "The brain, the spinal cord, and the nerves that reach every part of the body. Much of it runs without you having to think about it."], ["The autonomic nervous system", "The automatic part, running heartbeat, breath, and digestion. It has two main branches: the <b>sympathetic</b>, the accelerator, which readies you for action, and the <b>parasympathetic</b>, the brake, which slows you for rest and repair."], ["The vagus nerve", "The main nerve of the parasympathetic branch, wandering from the brainstem down to the heart, lungs, and gut. Most of its fibers, about four in five, carry news from the body up to the brain; the rest carry calming signals down."], ["Neuroception", "Stephen Porges's word for the nervous system's constant scan for safety and danger, below awareness. The body decides before the mind knows why."], ["The social engagement system", "Five cranial nerves work together in the face, throat, and neck: the vagus, trigeminal, facial, glossopharyngeal, and accessory nerves. They shape facial expression and eye contact, tune the middle ear to human voices, and move the voice, chewing and swallowing, and the turn and tilt of the head. Porges calls this the face-heart connection: a soft face and a warm voice help steady the heart, and a steady heart softens the face."], ["Ventral vagal, sympathetic, dorsal vagal", "Polyvagal theory's three states. <b>Ventral vagal</b>: safe and social, face and voice alive. <b>Sympathetic</b>: mobilized, ready to fight or run. <b>Dorsal vagal</b>: the oldest brake, which slows everything down into shutdown or collapse."], ["Hyperarousal and hypoarousal", "Siegel's words for the two ways out of the window: too much charge, racing, flooded, and reactive; or too little, numb, flat, and far away."], ["The window of capacity", "The range in which you can feel a great deal and still think, connect, and choose. Also called the window of tolerance. Here you can think and feel at once without being overwhelmed, reflect and see other points of view, be patient and compassionate, connect with yourself and others, and feel curiosity, wonder, and awe. It can widen."], ["Two ways out of the window", "Think of a car on a hill. Under-regulation is the brake giving way: the body revs up, into fight or flight. Over-regulation is braking so hard the engine stalls: the body shuts down, into collapse, and feelings go numb or far away. Freeze is a foot on both pedals at once."]],
