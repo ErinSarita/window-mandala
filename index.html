@@ -110,11 +110,12 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .is-dark .t-flow{fill:#7A3A10}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
-.tri-field{fill:none;stroke:#E2B544;stroke-width:1;stroke-dasharray:1.5 3;pointer-events:none}
-.tri-circle{stroke:#D7A83A;stroke-width:1.3;pointer-events:none;mix-blend-mode:multiply}
+.tri-field{fill:none;stroke:#E8BF52;stroke-width:1;stroke-dasharray:1.5 3;pointer-events:none}
+.tri-circle{stroke:none;pointer-events:none;mix-blend-mode:screen;filter:drop-shadow(0 0 7px #FFF6DA)}
+.tri-line{fill:none;stroke:#D2A03A;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
 .tri-heart{fill:#FFFFFF;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 12px #FFD866)}
 .t-tri{fill:#7A4D10;font-size:13px;font-style:italic;font-weight:700;letter-spacing:.04em;pointer-events:none}
-.coh-core{filter:drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px #FFE9A8)}
+.coh-core{filter:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
 svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
@@ -1500,7 +1501,8 @@ function draw(){
   // the Self's own ground: the lightest gold on the wheel, glowing out past the petal tips and fading into the window, with no border
   { const gR=L1+15, k=isDark()?0.68:1;
     grad("selfground",{...U,r:f(gR)},[[0,"#FFFDF4",k],[(L1-8)/gR,"#FFF8E0",0.97*k],[(L1+2)/gR,"#FFF3CC",0.75*k],[1,"#FFEFBA",0]]); }
-  const selfBg=el("circle",{cx:0,cy:0,r:f(L1+15),fill:"url(#selfground)",class:"self-bg",role:"presentation"},sunG);
+  // in the Body view the ground stays for taps but lets the layers of coherence show through
+  const selfBg=el("circle",{cx:0,cy:0,r:f(L1+15),fill:BODY?"transparent":"url(#selfground)",class:"self-bg",role:"presentation"},sunG);
   if(BODY){ bodyCenter(sunG,L1); selfBg.addEventListener("click",e=>{ e.stopPropagation(); showBody(true); }); } else {
   const q=(r,a)=>`${f(P(r,a)[0])} ${f(P(r,a)[1])}`;
   const lotus=(r0,r1,m,hw,hb)=>{ const h=r1-r0;
@@ -1634,9 +1636,9 @@ function bodyCenter(g,L1){
   // the whole center glows, brightest where the three circles meet, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
-  const mix=(t)=>{ const A=[0xF2,0xC9,0x62], B=[0xFF,0xFD,0xF2]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
-  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.72+i*0.05),"pointer-events":"none"},g); });
-  el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFFFF","pointer-events":"none",class:"coh-core"},g);
+  const mix=(t)=>{ const A=[0xF5,0xD8,0x86], B=[0xFB,0xE8,0xB4]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
+  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.62+i*0.06),"pointer-events":"none"},g); });
+  el("circle",{cx:0,cy:0,r:f(r0),fill:"#FCEDC2","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
   // one name for the whole center: coherence, deepening toward the center
   g=el("g",{id:"cohtop"});
@@ -1645,10 +1647,11 @@ function bodyCenter(g,L1){
   // three circles at the center: mind, heart, and body with its nervous system. Each has its own electrical rhythm,
   // drawn as faint rings around it; in coherence they fall into step, and the brightest point is where all three overlap
   { const T=rc*1.45, cr=T*0.56, dd=T*0.46, tg="cohtri", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
-    [[0,"#FFFFFF",0.95],[0.6,"#FFF6D6",0.8],[1,"#F3CF6E",0.55]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
+    [[0,"#FFFFFF",0.7],[0.7,"#FFFFFF",0.5],[1,"#FFF4D0",0.85]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
     const TRI=[["mind",0],["heart",120],["body",240]];
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); [6,12].forEach((w,k)=>el("circle",{cx:f(x),cy:f(y),r:f(cr+w),class:"tri-field","stroke-opacity":f(0.55-k*0.22)},g)); });
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g); });
+    TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),class:"tri-line"},g); });
     el("circle",{cx:0,cy:0,r:f(cr*0.32),class:"tri-heart"},g);
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd+cr*0.42,a), t=el("text",{x:f(x),y:f(y+4.5),class:"lbl t-tri","text-anchor":"middle"},g); t.textContent=n; }); }
   // one hover for the whole center
