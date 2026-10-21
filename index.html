@@ -463,6 +463,10 @@ svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;strok
 .wp{border-left:3px solid var(--mc);padding:2px 0 2px 12px;display:grid;gap:3px;border-radius:0}
 .wp>b{font-family:var(--display);font-weight:500;font-size:19px}
 .wp p{margin:0}
+.backchips{margin-top:12px}
+.backchips button{display:inline-flex;align-items:center;gap:6px}
+.backchips button[aria-pressed="true"]{border-color:var(--ink);background:var(--surface)}
+.backsteps{gap:10px}
 .notyet{background:color-mix(in srgb, var(--mc) 16%, var(--surface));border-radius:10px;padding:10px 12px;font-size:14.5px}
 .waychips button{display:inline-flex;align-items:center;gap:6px}
 .purpose{display:grid;gap:10px;background:color-mix(in srgb, var(--sun2) 24%, var(--surface));border:1px solid color-mix(in srgb, var(--sun4) 45%, var(--line));border-radius:16px;padding:16px 18px;margin-bottom:22px}
@@ -553,6 +557,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <ol class="refs">
       <li>Andersson, U., &amp; Tracey, K. J. (2012). Neural reflexes in inflammation and immunity. <i>Journal of Experimental Medicine, 209</i>(6), 1057–1068.</li>
       <li>Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. <i>Nature Reviews Neuroscience, 10</i>(6), 410–422.</li>
+      <li>Artigas, L., &amp; Jarero, I. (2014). The butterfly hug. In M. Luber (Ed.), <i>Implementing EMDR Early Mental Health Interventions for Man-Made and Natural Disasters</i> (pp. 127&ndash;130). Springer.</li>
       <li>Baird, B., Smallwood, J., Mrazek, M. D., Kam, J. W. Y., Franklin, M. S., &amp; Schooler, J. W. (2012). Inspired by distraction: Mind wandering facilitates creative incubation. <i>Psychological Science, 23</i>(10), 1117–1122.</li>
       <li>Balban, M. Y., Neri, E., Kogon, M. M., Weed, L., Nouriani, B., Jo, B., Holl, G., Zeitzer, J. M., Spiegel, D., &amp; Huberman, A. D. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. <i>Cell Reports Medicine, 4</i>(1), 100895.</li>
       <li>Barrett, L. F. (2017). <i>How Emotions Are Made: The Secret Life of the Brain</i>. Houghton Mifflin Harcourt.</li>
@@ -802,6 +807,51 @@ const WAYS = {
 };
 WAYS.edge.traits=DIRS.map(d=>`<b>${d.edge.name}</b>, toward ${d.name.toLowerCase()}: ${d.edge.words}`);
 const WAY_KEYS=["ff","fr","co","fa","edge","win"];
+/* The way back, on its own: only the return from each survival state, in the order the body tends to need it.
+   The steps, a few more practices, how others can help, and what crossing the edge on the way home can feel like. */
+const BACK={
+  ff:{
+    steps:[["Find the way out","Look around and notice the doors, the windows, the open space. Knowing you could leave lets the body stop bracing for a fight or a run."],
+      ["Let the energy move","Use the big muscles for a minute or three: walk fast, climb stairs, shake, push into a wall. The body mobilized for action, and action is how it finishes."],
+      ["Slow it down, a little at a time","Let the movement get slower and smaller: a slower walk, a stretch, swaying. Stopping all at once can leave the charge stuck."],
+      ["Lengthen the breath out","Once you have moved, let the out-breath grow longer than the in-breath. This is when breathing practices start to work."],
+      ["Come back to connection","A kind voice, a face, or your own hand on your chest. When you are ready, ask what the anger or fear was protecting."]],
+    more:[{name:"Count backward",how:"Count back from one hundred by sevens, or name five blue things around you, then four red ones.",why:"A small task for the thinking brain brings it back online, and with it the brake on the alarm."},
+      {name:"The butterfly hug",how:"Cross your arms over your chest, hands resting below the collarbones, and tap left and right slowly, like wings, while you breathe out long.",why:"Slow, alternating tapping is a calming tool from trauma work, and it gives restless hands a steady rhythm to follow."}],
+    withOthers:"A calm, steady person nearby, not too close, who does not argue or match your energy. Walking side by side often works better than sitting face to face. You might ask, \"Can we walk?\" or \"Give me a few minutes, then stay with me.\" If you are the one helping, lower and slow your voice, keep a little distance, and make sure the way out stays open.",
+    cross:"As the charge eases, you may feel shaky, hot, teary, or suddenly tired, and sometimes a wave of grief or shame comes after anger. These pass. Keep the out-breath long and your feet on the ground, and let the body finish before going back to the conversation or the task."},
+  fr:{
+    steps:[["Notice the hold, gently","Name it without fighting it: \"Something in me is bracing.\" Being told to relax often makes freeze hold tighter; being noticed kindly helps it soften."],
+      ["Let the eyes move first","Move your eyes slowly to the edges of the room, then let your head follow. Find the door, and a steady place to rest your gaze."],
+      ["Tiny movements that grow","Wiggle the fingers and toes, roll the shoulders, turn the head. Small, chosen movements tell the body it is free again."],
+      ["Let the charge leave","A sigh, a hum, or a low \"voo\" on the out-breath. If trembling, yawning, or tears come, let them, slowly."],
+      ["Stand, stretch, and walk","As movement returns, let it get bigger: stand, stretch, walk slowly. Then rest, with your eyes open."]],
+    more:[{name:"The butterfly hug",how:"Cross your arms over your chest and tap left and right, slowly, as you breathe out.",why:"Gentle, alternating rhythm gives a frozen body something safe and steady to follow, so the brake can ease."},
+      {name:"Weight from foot to foot",how:"Standing with soft knees, shift your weight slowly from one foot to the other. Feel the floor press back.",why:"Small movement through the legs, the body's own way out, shows the system it can move without flooding it."}],
+    withOthers:"Someone who stays near and stays quiet, with a soft face and a slow voice, and no pressure to talk or move. You might ask them to tell you where you are, and that you can move when you are ready. A hand on the back, if welcome, can give the body clear edges. If you are the one helping, ask before touching, move slowly, and name the room and the door.",
+    cross:"Thawing often brings trembling, shaking, yawning, tears, tingling, or a rush of fear or anger as the brake lets go. Go slowly. If it gets to be too much, pause, open your eyes, look around, and press your feet into the floor, then carry on with a smaller step."},
+  co:{
+    steps:[["Warmth, and a kind voice","A blanket, a warm drink, a warm hand on your chest, and a slow, low, kind voice, your own or someone else's."],
+      ["One clear sensation","Something cold, sour, or strongly scented; fresh air on your face. Clear sensation calls you back when you feel far away."],
+      ["Sit up, and add rhythm","Lengthen the spine a little, lift your gaze, and rock, sway, or tap a slow beat. Energy comes back a little at a time."],
+      ["A face, or a voice","Call someone kind, hum, sing along to a song, or spend a few minutes with a pet. Connection is often the bridge back from shutdown."],
+      ["One small step","Drink a glass of water, stand up, or step outside. Then notice that you did it."]],
+    more:[{name:"Something to drink, something to eat",how:"Drink water, and eat something small with a little protein or salt.",why:"Collapse often skips the basics, and a body low on fuel has a harder time lifting its energy."},
+      {name:"Find the light",how:"Open the curtains, step outside, or sit by a window for a few minutes, and let your eyes take in the light and color.",why:"Daylight is one of the body's clearest signals to wake and rise, and looking out gently invites the senses back."}],
+    withOthers:"A warm voice and a kind face are often the strongest medicine here. You might ask someone to sit with you, talk about anything at all, or bring you a warm drink. A voice on the phone or a pet can help too. If you are the one helping, come close slowly, speak low and warm, offer small choices, \"Water or tea?\", and stay.",
+    cross:"Coming up from collapse usually passes through some fight or flight energy: restlessness, irritation, a faster heart, or feelings that were numb coming back. That is the system waking, and a good sign. Keep each step small and steady, and rest between them."},
+  fa:{
+    steps:[["Pause, and make a little space","\"Let me get back to you.\" Step away, even for a few minutes. Fawn answers instantly; space lets your own answer arrive."],
+      ["Come back into your body","Feel your feet, the chair beneath you, and your breath. Your attention has been out on someone else; bring it home."],
+      ["Ask what you feel, and want","\"What do I feel? What do I want? What is my limit here?\" Then wait for the answer, without rushing."],
+      ["Let anger speak, privately first","Irritation and resentment under the smile mark the limits fawn swallowed. Write them down, or say them out loud to yourself."],
+      ["Reach for what you want","Practice a small, safe no, and a small yes to something you want. Then let yourself have it."]],
+    more:[{name:"Take up space",how:"Stand with your feet wide and your arms out, and turn slowly. Notice the space around you that is yours.",why:"Fawn makes the body small and accommodating. Taking up space lets it feel room for your own needs."},
+      {name:"\"I want, I do not want\"",how:"Write two short lists: what you want, and what you do not want, today or in one relationship.",why:"Putting your own wants into words, privately, rebuilds the voice fawn set aside."}],
+    withOthers:"Here, being with others often begins with less: time alone, or with someone who needs nothing from you. Choose people who welcome your no and ask what you want. If you are the one helping, ask what they would like, wait for the answer, and let them know their no is welcome.",
+    cross:"As you turn toward yourself, guilt, fear of upsetting someone, or anger you had swallowed may rise. These are signs your own needs are coming back into the room. Let them be there, without acting on them right away."}
+};
+
 // The loop that holds the window: Thayer and Lane's neurovisceral integration model, simplified. The prefrontal cortex
 // brakes the amygdala; through the vagus nerve the same brake steadies the heart; the heart's rhythm feeds back up.
 // Heart rate variability is the loop's readout. Outside the window the brake has given way and the loop is broken.
@@ -2192,7 +2242,8 @@ function wire(){
   on("[data-moves]",()=>showMoves(null,true));
   on("[data-home]",()=>showHome(true));
   on("[data-where]",b=>showWhere(true,b.dataset.where||null));
-  on("[data-way]",b=>showWhere(true,null,b.dataset.way||null));
+  on("[data-way]",b=>{ const w=b.dataset.way; if(BACK[w]) showBack(w,true); else showWhere(true,null,w||null); });
+  on("[data-back]",b=>showBack(b.dataset.back,true));
   on("[data-practice]",()=>showPractice(true));
   on("[data-pr]",b=>showPractice(true,b.dataset.pr));
   on("[data-res]",b=>showResources(true,b.dataset.res||null));
@@ -2348,6 +2399,31 @@ function showWay(k, scroll){
   const d=["ff","fr","co","fa"].indexOf(k);
   if(d>=0){ sel={kind:"dir",k:d,layer:"out"}; applySel(); }
   if(k&&scroll) bringPanel(document.getElementById("way-"+k));
+}
+
+// The way back, on its own page: only the return from one survival state
+function showBack(k, user){
+  setView("back"); const W=WAYS[k], B=BACK[k], c=wayColor(k), d=["ff","fr","co","fa"].indexOf(k), D=DIRS[d];
+  const wp=p=>`<div class="wp"><b>${p.name}</b><p>${p.how}</p><span class="why"><b>Why it helps here.</b> ${p.why}</span></div>`;
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The way back</div><h2>From ${D.name.toLowerCase()}, back to the window</h2><div class="meta">Step by step, in the order the body tends to need</div>
+      <p>${W.needs}</p>
+      <div class="chips backchips">${["ff","fr","co","fa"].map((x,i)=>`<button type="button" data-back="${x}" aria-pressed="${x===k}">${sw(DIRS[i].color)}From ${DIRS[i].name.toLowerCase()}</button>`).join("")}</div></div>
+    <div class="ring way" data-nav="Step by step" style="--mc:var(${c})"><h3>${sw(c)}Step by step</h3>
+      <ol class="backsteps">${B.steps.map(([t,x])=>`<li><b>${t}.</b> ${x}</li>`).join("")}</ol>
+      <p class="about">Go at your own pace. Each step can take a minute or much longer, and you can come back to an earlier one whenever you need.</p></div>
+    <div class="ring way" data-nav="Practices" style="--mc:var(${c})"><h3>${sw(c)}Practices for the way back</h3>
+      <div class="wps">${[...W.practices,...B.more].map(wp).join("")}</div></div>
+    ${STRESS[k]?`<div class="ring way" data-nav="Completing it" style="--mc:var(${c})"><h3>${sw(c)}Completing the stress response</h3><p class="about">${k==="ff"||k==="fr"?"Survival energy wants to finish. Let it move and sound, starting at about a fifth of your strength, and stop if it gets to be too much.":k==="co"?"Shutdown lifts slowly and gently. Go a little at a time, and rest between.":"Fawning set aside its own reach. These help the body practice wanting, and receiving."} Adapted from Linda Thai.</p>
+      <div class="wps">${STRESS[k].map(wp).join("")}</div></div>`:""}
+    <div class="ring way" data-nav="With others" style="--mc:var(${c})"><h3>${sw(c)}With someone who feels safe</h3><p>${B.withOthers}</p></div>
+    <div class="ring way" data-nav="Crossing the edge" style="--mc:var(${c})"><h3>${sw(c)}Crossing the edge on the way home</h3><p>${B.cross}</p></div>
+    <div class="ring way" data-nav="Not yet, then" style="--mc:var(${c})"><h3>${sw(c)}Not yet, and then</h3>
+      <div class="notyet"><b>Not yet.</b> ${W.notyet}</div><p><b>Then.</b> ${W.then}</p>
+      ${W.care?`<p class="note">${W.care}</p>`:""}</div>
+    <p><button type="button" class="linkbtn" data-res="${k}">Add what helps to my resources map</button> · <button type="button" class="linkbtn" data-home>Orienting, and coming home</button></p>
+    <p class="src">Levine (2010); Ogden, Minton &amp; Pain (2006); Dana (2018); Walker (2013); Balban et al. (2023); Artigas &amp; Jarero (2014); Linda Thai</p>`;
+  sel={kind:"dir",k:d,layer:"out"}; applySel();
+  wire(); if(user) bringPanel();
 }
 function showWhere(user, focus, way){
   setView("where");
@@ -3228,7 +3304,7 @@ function drawPetals(){
     const [tx,ty]=P(PETAL.r1-30,a);
     hookTip(hit,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">The way back</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
       :`<span class="ringtag">The way back</span><b>From ${d.name.toLowerCase()}, back to the window</b><span class="tl">What helps the body come back from here, toward the window.</span><span>Tap to read more.</span>`}),
-      ()=>mine?showResources(true,key):showWhere(true,null,key));
+      ()=>mine?showResources(true,key):showBack(key,true));
     // fill the lines from the base of the petal outward, each holding what fits inside the petal at that radius;
     // a few ways back spread evenly over three lines, and a long list packs each line full
     let n=0; const out=[]; if(!items.length) return;
