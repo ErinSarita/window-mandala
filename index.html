@@ -112,6 +112,8 @@ svg.bodyview .t-aware{fill:var(--muted)}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
 .coh-core{filter:drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px #FFE9A8)}
+.coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
+svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
 .moontip .coh-ev{font-size:12px;color:var(--muted)}
 .cohlist{margin:0;padding-left:20px;display:grid;gap:8px}
@@ -470,7 +472,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
         <div class="caprow"><label for="cap">Your window</label><input type="range" id="cap" min="0" max="100" value="50"><span class="capname" id="capname"></span></div>
-        <p>Drag to see the window widen as awareness widens: the Self stays at the center, the window grows around it, and the rings of threat thin. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
+        <p>Drag to see the window widen as awareness widens: the Self stays at the center, coherence spreads out from it, the window grows around it, and the ring of survival thins. <button type="button" class="linkbtn" id="capfind">How wide is mine?</button></p>
         <div class="caprow arow"><label for="arousal">What's building</label><span class="arwrap"><input type="range" id="arousal" class="arousal" min="0" max="100" value="0" aria-describedby="arousalcap"><span class="armarks" id="armarks" role="group" aria-label="Jump to where each stage begins"></span></span><span class="capname" id="arousalname"></span></div>
         <div class="arpaths" id="arpaths" role="group" aria-label="Which way it tends to go"></div>
         <p class="arousalcap" id="arousalcap" aria-live="polite"></p>
@@ -1016,6 +1018,9 @@ function radii(t){
   return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
 let LOOPON=true, LOOPGEO=true, BODY=false, CAP=0.5, R=radii(CAP);
+// the field of coherence spreads from the Self into the window as the window widens, and draws back as it narrows;
+// the Self itself stays where it is
+const cohEdge=()=>CR.L1+2+(R.win[1]-CR.L1-2)*(0.2+0.55*CAP);
 const NS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById("m");
 const rad = d => (d-90)*Math.PI/180;
@@ -1362,8 +1367,9 @@ function draw(){
   grad("sheen",{...U,r:rr},[[R.out[0]/rr,"#fff",0.34],[(R.out[0]+R.out[1])/2/rr,"#fff",0.06],[R.out[1]/rr,"#000",0.02],[1,"#000",0.08]]);
   // the Self: a pale-gold disc, a bright heart, one ring of lotus petals, and a glow that spills into the window
   // one layer of eight lotus petals, large enough to reach out over the inner window, stopping short of its words
-  const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=R.self+(LOOPGEO?20.2:31.5), sr=R.core*0.42, GL=R.self+60;
+  const wmid=(R.win[0]+R.win[1])/2, L0=R.core*0.55, L1=R.self+(LOOPGEO?20.2:31.5), sr=R.core*0.42;
   CR={sr,L1,dot:Math.max(3.2,sr*0.16)};
+  const GL=cohEdge();
   // the center is the brightest part of the Self: white at the heart, pale gold to the rim; the petals carry the deeper gold
   grad("sun",{...U,r:R.core},[[0,"#fff"],[0.42,"#fff"],[0.62,"var(--sun1)"],[1,"var(--sun2)"]]);
   // a glow of light from the center that spills softly over the inner petals
@@ -1372,7 +1378,7 @@ function draw(){
   // the six-petaled flower in the central circle is the brightest place of all
   grad("heart",{...U,r:sr},[[0,"#fff",1],[1,"#fff",1]]);
   grad("petal",{...U,r:L1},[[R.core/L1,"var(--sun2)"],[0.72,"var(--sun3)"],[1,"var(--sun4)"]]);
-  grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[(R.self+24)/GL,"var(--sun2)",0.32],[1,"var(--sun2)",0]]);
+  grad("glow",{...U,r:GL},[[0,"var(--sun3)",0.9],[R.self/GL,"var(--sun3)",0.75],[Math.min(0.9,(R.self+24)/GL),"var(--sun2)",0.34],[Math.max(Math.min(0.92,(R.self+24)/GL),(GL-22)/GL),"var(--sun2)",0.24],[1,"var(--sun2)",0]]);
   const mk=el("marker",{id:"trace-arrow",viewBox:"0 0 10 10",refX:"7",refY:"5",markerWidth:"5",markerHeight:"5",orient:"auto-start-reverse",markerUnits:"strokeWidth"},wdefs);
   el("path",{d:"M1 1 L9 5 L1 9 Z",class:"trace-head"},mk);
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
@@ -1450,7 +1456,14 @@ function draw(){
       hookTip(hit,()=>{ const [x,y]=P(r,(x0+x1)/2); return {x,y,html:`<b>${MOVES[i].title}</b>${MOVES[i].signs}<span>Tap to read more.</span>`,color:DIRS[to].color}; },()=>showMoves(i,true));
     });
   });
-  el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#glow)","pointer-events":"none"});
+  // the field of coherence sits under the ring names, so they read clearly over it; in the Body view its layers take its place
+  if(!BODY){ const cf=el("g",{id:"cohfield","pointer-events":"none"});
+    el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#glow)"},cf);
+    // a soft white light across the whole field, so its reach shows against the pale window
+    grad("cohlight",{...U,r:GL},[[0,"#fff",0.55],[0.7,"#fff",0.42],[0.93,"#fff",0.3],[1,"#fff",0]]);
+    el("circle",{cx:0,cy:0,r:f(GL),fill:"url(#cohlight)"},cf);
+    el("circle",{cx:0,cy:0,r:f(GL-6),class:"coh-edge"},cf);
+    arcText(Math.max(GL-12,L1+21),26,64,"coherence","lbl t-cohedge",14,1.6,labels); }
   if(BODY) BODY_LASTS.forEach((t,k)=>arcText((R.out[1]+R.braid[0])/2+1,DIRS[k].angle-44,DIRS[k].angle+44,t,"lbl t-aware t-lasts",12,0.6,labels));
   else arcText((R.out[1]+R.braid[0])/2+1,-34,34,"the field of awareness","lbl t-aware",13,1.2,labels);
   // held emotions: a ring just inside the window's edge. Any emotion can be felt here, in any direction, so the ring
@@ -1595,7 +1608,9 @@ const COH_LAYERS=[
   {name:"Unity", tag:"Mostly from contemplative traditions", feel:"The sense of a separate self softens into oneness. Samadhi, nondual awareness.", ev:"Mostly from contemplative traditions, with early research on changes in the brain's self-related networks (Newberg and colleagues, 2001; Brewer and colleagues, 2011) and on self-transcendent experience (Yaden and colleagues, 2017)."}];
 const COH_HEART={name:"Beyond words", tag:"Not measured", feel:"Where the traditions point and the science stops. Left open, a portal rather than a map.", ev:"Not measured."};
 function bodyCenter(g,L1){
-  const rc=R.core, r1=L1+2, r0=rc*0.72, step=(r1-r0)/COH_LAYERS.length;
+  const rc=R.core, r1=cohEdge(), r0=rc*0.72, step=(r1-r0)/COH_LAYERS.length;
+  // the field and its rings spread over the window, under the ring names; the heart and the words go above the field
+  g=el("g",{id:"cohfield","pointer-events":"none"}); svg.insertBefore(g,document.getElementById("ringLabels"));
   // the whole center glows, brightest at the heart, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
@@ -1604,14 +1619,17 @@ function bodyCenter(g,L1){
   el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFFFF","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
   // one name for the whole center: coherence, deepening toward the heart
-  { const rm=r1-step*1.5; arcText(rm,-40,40,"coherence","lbl t-coh",14,2,g); arcText(rm,140,220,"deepening toward the heart","lbl t-coh",11.5,0.6,g); }
+  g=el("g",{id:"cohtop"});
+  // set on the diagonals, just inside the field's edge, clear of the window's names as the field spreads
+  { const rm=r1-step*0.6; arcText(rm,24,66,"coherence","lbl t-coh",14,2,g); arcText(rm,188,262,"deepening toward the heart","lbl t-coh",11.5,0.6,g); }
   // the heart, white at its center, warming to gold at its edges
   const s=rc*0.62, hh="bodyheartfill", hf=el("radialGradient",{id:hh,gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(s)},g);
   [[0,"#FFFFFF",1],[0.55,"#FFF6D6",1],[1,"#F3CF6E",1]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},hf));
   const hp=`M0 ${f(0.72*s)} C${f(-0.92*s)} ${f(0.05*s)} ${f(-1.06*s)} ${f(-0.56*s)} ${f(-0.56*s)} ${f(-0.86*s)} C${f(-0.26*s)} ${f(-1.03*s)} 0 ${f(-0.86*s)} 0 ${f(-0.6*s)} C0 ${f(-0.86*s)} ${f(0.26*s)} ${f(-1.03*s)} ${f(0.56*s)} ${f(-0.86*s)} C${f(1.06*s)} ${f(-0.56*s)} ${f(0.92*s)} ${f(0.05*s)} 0 ${f(0.72*s)}Z`;
   el("path",{d:hp,class:"body-heart",fill:`url(#${hh})`,transform:`translate(0 ${f(0.12*s)}) scale(0.82)`},g);
   // one hover for the whole center
-  const hc=el("circle",{cx:0,cy:0,r:f(r1-step),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, deepening toward the heart"},g);
+  // the tap for the whole center keeps to the Self's own size, so the window around it stays tappable
+  const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, deepening toward the heart"},g);
   hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center, in the Body view</span><b>Coherence</b><span class="tl">Heart, breath, and brain in step. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
   // connection grows inward: soft chevrons on the window's diagonals, pointing in
   [45,135,225,315].forEach(a=>{ [0,1,2].forEach(i=>{ const r=R.win[1]-12-i*13, w=5.5; el("path",{d:`M${f(P(r,a-w)[0])} ${f(P(r,a-w)[1])} L${f(P(r-8,a)[0])} ${f(P(r-8,a)[1])} L${f(P(r,a+w)[0])} ${f(P(r,a+w)[1])}`,class:"body-chev","stroke-opacity":f(0.35+i*0.25)},g); });
@@ -1649,7 +1667,7 @@ function drawFlow(){
   if(FIND==="monkey") monkeyLine(g);
 }
 // Find on the map: the foundation stays clean, and each idea lights up where it usually lives, with a short pin
-const cohR=i=>{ const r1=CR.L1+2, r0=R.core*0.72, st=(r1-r0)/6; return [r1-(i+1)*st, r1-i*st]; };
+const cohR=i=>{ const r1=cohEdge(), r0=R.core*0.72, st=(r1-r0)/6; return [r1-(i+1)*st, r1-i*st]; };
 const midR=sp=>(sp[0]+sp[1])/2, omR=()=>(R.out[0]+R.out[1])/2, winMid=()=>(CR.L1+3+R.win[1])/2;
 function pin(g,r,a,t,sz){ sz=sz||12.5; const sp=Math.min(80,(t.length*sz*0.56/2)/r*57.3+3); arcText(r,a-sp,a+sp,t,"lbl t-pin",sz,0.3,g); }
 const toLoop=u=>{ showIntro(); if(u){ const t=document.getElementById("loop"); if(t) bringPanel(t); } };
