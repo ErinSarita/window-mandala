@@ -111,9 +111,10 @@ svg.bodyview .t-aware{fill:var(--muted)}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .coh-line{fill:none;stroke:#E2B544;stroke-width:1.2;stroke-opacity:.75;pointer-events:none}
 .tri-field{fill:none;stroke:#E8BF52;stroke-width:1;stroke-dasharray:1.5 3;pointer-events:none}
-.tri-circle{stroke:none;pointer-events:none;mix-blend-mode:screen;filter:drop-shadow(0 0 7px #FFF6DA)}
-.tri-line{fill:none;stroke:#D2A03A;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
-.tri-heart{fill:#FFFFFF;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 12px #FFD866)}
+.tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFC94D) drop-shadow(0 0 32px #FFD978)}
+.tri-bloom{filter:blur(8px)}
+.tri-line{fill:none;stroke:#E0AE42;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
+.tri-heart{fill:#FFFFFF;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFD866) drop-shadow(0 0 28px #FFE9A8)}
 .t-tri{fill:#7A4D10;font-size:13px;font-style:italic;font-weight:700;letter-spacing:.04em;pointer-events:none}
 .coh-core{filter:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
@@ -1636,9 +1637,9 @@ function bodyCenter(g,L1){
   // the whole center glows, brightest where the three circles meet, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
-  const mix=(t)=>{ const A=[0xF5,0xD8,0x86], B=[0xFB,0xE8,0xB4]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
+  const mix=(t)=>{ const A=[0xF2,0xCF,0x73], B=[0xF6,0xDC,0x94]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(i/(COH_LAYERS.length)),"fill-opacity":f(0.62+i*0.06),"pointer-events":"none"},g); });
-  el("circle",{cx:0,cy:0,r:f(r0),fill:"#FCEDC2","pointer-events":"none",class:"coh-core"},g);
+  el("circle",{cx:0,cy:0,r:f(r0),fill:"#F7DF9C","pointer-events":"none",class:"coh-core"},g);
   COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
   // one name for the whole center: coherence, deepening toward the center
   g=el("g",{id:"cohtop"});
@@ -1647,13 +1648,17 @@ function bodyCenter(g,L1){
   // three circles at the center: mind, heart, and body with its nervous system. Each has its own electrical rhythm,
   // drawn as faint rings around it; in coherence they fall into step, and the brightest point is where all three overlap
   { const T=rc*1.45, cr=T*0.56, dd=T*0.46, tg="cohtri", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
-    [[0,"#FFFFFF",0.7],[0.7,"#FFFFFF",0.5],[1,"#FFF4D0",0.85]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
-    const TRI=[["mind",0],["heart",120],["body",240]];
+    [[0,"#FFFFFF",0.95],[0.7,"#FFFFFF",0.85],[1,"#FFF8E4",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
+    const TRI=[["mind",0],["heart",120],["body",240]], BL=dd+cr+34, bg="cohbloom", bf=el("radialGradient",{id:bg,gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
+    [[0,"#FFFFFF",1],[(dd+cr)/BL*0.8,"#FFFFFF",0.9],[(dd+cr)/BL,"#FFD65C",0.8],[1,"#FFC93C",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
+    el("circle",{cx:0,cy:0,r:f(BL),fill:`url(#${bg})`,"pointer-events":"none",class:"tri-bloom"},g);
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); [6,12].forEach((w,k)=>el("circle",{cx:f(x),cy:f(y),r:f(cr+w),class:"tri-field","stroke-opacity":f(0.55-k*0.22)},g)); });
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g); });
     TRI.forEach(([n,a])=>{ const [x,y]=P(dd,a); el("circle",{cx:f(x),cy:f(y),r:f(cr),class:"tri-line"},g); });
     el("circle",{cx:0,cy:0,r:f(cr*0.32),class:"tri-heart"},g);
-    TRI.forEach(([n,a])=>{ const [x,y]=P(dd+cr*0.42,a), t=el("text",{x:f(x),y:f(y+4.5),class:"lbl t-tri","text-anchor":"middle"},g); t.textContent=n; }); }
+    TRI.forEach(([n,a])=>{ const [x,y]=P(dd+cr*0.42,a), t=el("text",{x:f(x),y:f(y+4.5),class:"lbl t-tri","text-anchor":"middle"},g); t.textContent=n; });
+    // the words around the circles sit over their glow
+    g.querySelectorAll(".t-coh").forEach(t=>g.appendChild(t)); }
   // one hover for the whole center
   // the tap for the whole center keeps to the Self's own size, so the window around it stays tappable
   const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, deepening toward the center"},g);
