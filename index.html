@@ -217,7 +217,9 @@ svg.rimfocus .rim-focus{opacity:1}
 .fig .fi{font-family:var(--display);font-style:italic;font-size:14px}
 .fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);text-align:center;margin:6px auto 0;max-width:46ch}
 .brake-ring{fill-opacity:.9;pointer-events:none}
-.brake-line{fill:none;stroke:#A9781F;stroke-width:2.6;stroke-opacity:.95;pointer-events:none}
+.brake-line{fill:none;stroke:#FFE7A0;stroke-width:3.2;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 3px #FFD866) drop-shadow(0 0 7px rgba(255,214,102,.75))}
+.t-wincap{fill:#8A5A12;font-style:italic;font-weight:700;letter-spacing:.12em;paint-order:stroke;stroke:#FFF6DC;stroke-width:4px;stroke-linejoin:round}
+.is-dark .t-wincap{fill:#FFE7A0;stroke:#3A2E1C}
 .t-brakeline{fill:#7A4D10;font-style:italic;font-weight:600}
 .is-dark .t-brakeline{fill:#F3D58A}
 .window-rim{fill-opacity:1;pointer-events:none}
@@ -1460,6 +1462,8 @@ function draw(){
   if(!LOOPGEO){ const br=(R.rim[0]+R.rim[1])/2+0.5;
     el("circle",{cx:0,cy:0,r:f(br),class:"brake-line"});
     [37,143,217,323].forEach(a=>arcText(R.out[0]+11,a-9,a+9,"the brake","lbl t-brakeline",11.5,0.4,labels));
+    // the window of capacity, named along its glowing border, top and bottom
+    [0,180].forEach(a=>arcText(br+3,a-20,a+20,"window of capacity","lbl t-wincap",14,1.2,labels));
     const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     const hit=el("path",{d:ringP(br+5)+" "+ringP(br-5)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"The brake, at the border of your window. Read about the loop"});
     hookTip(hit,()=>({x:0,y:-br,html:`<span class="ringtag">At the border of your window</span><b>The brake</b><span class="tl">The thinking brain holds the alarm in check and keeps the vagal brake on the heart. While it holds, you are inside your window, even with the alarm sounding. When it gives way, you go into fight or flight; when it clamps down, into shutdown.</span><span>Tap to read about the loop.</span>`}),

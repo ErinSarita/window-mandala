@@ -94,3 +94,5 @@ The three circles now glow: white light with a fine gold outline, each radiating
 The Right now dial is mirrored left and right (`nowZones`: `wEnd`, `aEnd`, `sEnd`, `rEnd`): the Lately dial widens or narrows the window on both sides at once, the way back (return) mirrors the alarm, and survival fills what is left at the bottom, so a wider window means more room before the alarm and an earlier return.
 
 **One circle at the center.** The three overlapping circles gave way to one glowing circle labeled "coherence": mind, heart, and body in step, with the three rhythms explained in the coherence card and the Coherence and resonance lens rather than drawn separately. The petals are back to four, centered on the directions, each 90 degrees wide so they meet one another at the diagonals, rising straight from the survival ring and drawn along the circle (`petalHalf`, `petalD`). The chevrons on the window's diagonals are gone; the idea, connection grows inward, stays in the coherence card.
+
+The brake line in the simpler wheel now glows, light gold with a soft halo, instead of a dark line, and "window of capacity" is written along it at the top and bottom (`.t-wincap`).
