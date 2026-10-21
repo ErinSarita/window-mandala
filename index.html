@@ -115,7 +115,6 @@ svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
 .tri-heart{fill:#FFFFFF;pointer-events:none;filter:drop-shadow(0 0 5px #FFFFFF) drop-shadow(0 0 12px #FFD866)}
 .t-tri{fill:#7A4D10;font-size:13px;font-style:italic;font-weight:700;letter-spacing:.04em;pointer-events:none}
 .coh-core{filter:drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px #FFE9A8)}
-.soft-edge{fill:none;stroke:#A9781F;stroke-width:2;stroke-opacity:.95;stroke-dasharray:7 5;pointer-events:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
 svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
@@ -1029,9 +1028,9 @@ function radii(t){
     const heart=[w1,w1+25], stem=[w1+25,w1+50], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
     return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[450,476]};
   }
-  // the alarm begins at a soft line from the window's steady center, and the window ends at a gold border beyond it
-  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+14], o0=rim[1];
-  return {core, self, win:[w0,w1], edge:[e0,e1], rim, out:[o0,428], braid:[450,476]};
+  // the alarm runs straight on from the window's steady center, inside the window's glow, and the window ends beyond it
+  const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, o0=e1+6;
+  return {core, self, win:[w0,w1], edge:[e0,e1], out:[o0,428], braid:[450,476]};
 }
 let LOOPON=true, LOOPGEO=true, BODY=false, CAP=0.5, R=radii(CAP);
 // the field of coherence spreads from the Self into the window as the window widens, and draws back as it narrows;
@@ -1139,8 +1138,7 @@ function drawLoop(){
     // heart and brainstem: gold, brightest nearest the center
     el("path",{d:band(H[0],H[1]),"fill-rule":"evenodd",fill:"#F6DE9F",class:"loop-ring"},g);
     el("path",{d:band(S[0],S[1]),"fill-rule":"evenodd",fill:"#F1D388",class:"loop-ring"},g);
-    [[H[0],"#C9962E"],[H[1],"#C9962E"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
-    el("circle",{cx:0,cy:0,r:f(S[1]),class:"soft-edge"},g);
+    [[H[0],"#C9962E"],[H[1],"#C9962E"],[S[1],"#B98428"]].forEach(([r,c])=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:c,"stroke-width":.9,"stroke-opacity":.7,"pointer-events":"none"},g));
     const fs=w=>Math.min(14,w*0.62);
     // the ring names sit on the four diagonals, between the directions, so each line out from the center reads
     // heart, brainstem, alarm, brake in order
@@ -1422,12 +1420,6 @@ function draw(){
   grad("outglow",{...U,r:oR},[[R.out[0]/oR,"var(--sun2)",isDark()?0.1:0.16],[1,"var(--sun2)",0]]);
   el("circle",{cx:0,cy:0,r:f((R.edge[0]+R.edge[1])/2),fill:"none",stroke:"url(#edgeglow)","stroke-width":f(et),"pointer-events":"none"});
   el("circle",{cx:0,cy:0,r:f(R.out[0]+8),fill:"none",stroke:"url(#outglow)","stroke-width":16,"pointer-events":"none"});
-  // in the simple wheel: a solid gold border beyond the alarm, where the window ends, with a dashed line (drawn with the
-  // window's edge, below) where the alarm begins (Linda Thai, adapting Dan Siegel, draws the window the same way)
-  if(!LOOPGEO){ const ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`, B=R.rim;
-    el("path",{d:ringP(B[1])+" "+ringP(B[0])+"Z","fill-rule":"evenodd",fill:"#CF9A32",class:"window-rim","pointer-events":"none"});
-    [B[0],B[1]].forEach(r=>el("circle",{cx:0,cy:0,r:f(r),fill:"none",stroke:"#A9781F","stroke-width":1,"pointer-events":"none"}));
-    [0,180].forEach(a=>arcText((B[0]+B[1])/2,a-24,a+24,"window of capacity","lbl t-ring t-rim",11.5,0.8,labels)); }
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
     ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
@@ -1453,12 +1445,15 @@ function draw(){
       arcText(mid-sg*h3,b0+3,b1-3,BODY?BODY_WIN[k][1]:BLEND_NAMES[k],"lbl t-win t-sub t-blend",s3,0.5,labels); }
     else twoLine(wr,b0+3,b1-3,d.win.name,showWords?(BODY?BODY_WIN[k][0]:d.win.words):"","lbl t-win","lbl t-win t-sub",LOOPGEO?22:24,LOOPGEO?15:16,LOOPGEO?24:27,labels);
   });
-  // the window's edge, marked by a soft band of light, with four doorways where orienting brings you back in
-  el("circle",{cx:0,cy:0,r:f(R.win[1]+3),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
-  // in the simple wheel the edge of the window's steady center is a dashed line: soft, and easy to cross back over
-  if(!LOOPGEO) el("circle",{cx:0,cy:0,r:f(R.win[1]+3),class:"soft-edge"});
+  // the window's edge, marked by a band of light, with four doorways where orienting brings you back in. In the simple
+  // wheel the light widens out over the alarm, which is still inside the window, and is brightest where the window ends
+  const WB=LOOPGEO?R.win[1]+3:R.edge[1]-3;
+  if(!LOOPGEO){ const g0=R.win[1], g1=R.edge[1];
+    grad("winglow",{...U,r:g1},[[g0/g1,"var(--sun2)",isDark()?0.34:0.42],[(g0+(g1-g0)*0.55)/g1,"var(--sun2)",isDark()?0.2:0.24],[1,"var(--sun2)",isDark()?0.5:0.6]]);
+    el("circle",{cx:0,cy:0,r:f((g0+g1)/2),fill:"none",stroke:"url(#winglow)","stroke-width":f(g1-g0),"pointer-events":"none"}); }
+  el("circle",{cx:0,cy:0,r:f(WB),class:"winborder",fill:"none",stroke:"var(--sun2)","stroke-width":9,"stroke-opacity":.8,"pointer-events":"none"});
   [45,135,225,315].forEach(a=>{
-    const [x,y]=P(R.win[1]+3,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
+    const [x,y]=P(WB,a), g=el("g",{class:"door",tabindex:"0",role:"button","aria-label":"Orienting: the doorway home"});
     el("circle",{cx:f(x),cy:f(y),r:11,class:"dh"},g); el("circle",{cx:f(x),cy:f(y),r:5.6,class:"dc"},g);
     hookTip(g,()=>({x,y,html:`<b>Orienting</b>The doorway home, from anywhere on the wheel.<span>Tap to read more.</span>`}),()=>showHome(true));
   });
@@ -2064,8 +2059,8 @@ function showIntro(){
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction, each the safe root of the defense beyond it.</div></li>
       <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>In the simpler wheel, the words just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
       <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
-      <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. A dashed line marks where it begins: a soft edge, easy to cross back over, between the window's steady center and too much or too little energy.</div></li>
-      <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. The deeper gold band around it is the border of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, draws the window the same way: a dashed line around its steady center, and a solid line before survival.</div></li>
+      <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. In the simpler wheel, the window's glow reaches out over it: too much or too little energy, but still inside the window.</div></li>
+      <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. The deeper gold band around it is the border of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
       <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
