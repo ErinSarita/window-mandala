@@ -1349,9 +1349,9 @@ function nowShine(){
   if(b<30) return 1;
   if(b<Z.wEnd) return lerp(1,0.8,(b-30)/(Z.wEnd-30));
   if(b<Z.aEnd) return lerp(0.8,0.45,(b-Z.wEnd)/(Z.aEnd-Z.wEnd));
-  if(b<225) return lerp(0.45,0.06,(b-Z.aEnd)/(225-Z.aEnd));
-  if(b<270) return lerp(0.06,0.6,(b-225)/45);
-  return lerp(0.6,1,(b-270)/60);
+  if(b<Z.sEnd) return lerp(0.45,0.06,(b-Z.aEnd)/(Z.sEnd-Z.aEnd));
+  if(b<Z.rEnd) return lerp(0.06,0.6,(b-Z.sEnd)/(Z.rEnd-Z.sEnd));
+  return lerp(0.6,1,(b-Z.rEnd)/(330-Z.rEnd));
 }
 function drawRays(){
   const g=document.getElementById("raysG"); if(!g) return; g.innerHTML="";
@@ -1996,16 +1996,17 @@ latelyDialRef=makeDial(document.getElementById("dialLately"),{
   onTurn:a=>setCap(capOf(a))
 });
 
-// Right now: the zones round the dial, with the window's share set by the Lately dial
-function nowZones(){ const wEnd=55+45*CAP, aEnd=wEnd+40;
-  return {wEnd,aEnd,list:[{a0:-30,a1:30,cls:"dz-center",k:"c",nm:"At the center"},{a0:30,a1:wEnd,cls:"dz-win",k:"w",nm:"In the window"},{a0:wEnd,a1:aEnd,cls:"dz-alarm",k:"e",nm:"Alarm"},
-    {a0:aEnd,a1:225,cls:"dz-surv",k:"s",nm:"Survival"},{a0:225,a1:270,cls:"dz-return",k:"e",nm:"The way back"},{a0:270,a1:330,cls:"dz-win",k:"w",nm:"Back in the window"}]}; }
+// Right now: the zones round the dial, mirrored left and right, with the window's share on both sides set by the Lately
+// dial: the way back crosses the edge as the way out does, and a wider window gives more room on both
+function nowZones(){ const wEnd=55+45*CAP, aEnd=wEnd+40, sEnd=360-aEnd, rEnd=360-wEnd;
+  return {wEnd,aEnd,sEnd,rEnd,list:[{a0:-30,a1:30,cls:"dz-center",k:"c",nm:"At the center"},{a0:30,a1:wEnd,cls:"dz-win",k:"w",nm:"In the window"},{a0:wEnd,a1:aEnd,cls:"dz-alarm",k:"e",nm:"Alarm"},
+    {a0:aEnd,a1:sEnd,cls:"dz-surv",k:"s",nm:"Survival"},{a0:sEnd,a1:rEnd,cls:"dz-return",k:"e",nm:"The way back"},{a0:rEnd,a1:330,cls:"dz-win",k:"w",nm:"Back in the window"}]}; }
 const nowZone=a=>{ const b=a>=330?a-360:a; return nowZones().list.find(z=>b>=z.a0&&b<z.a1)||nowZones().list[0]; };
 const nowColor=()=>ARPATH===4?"--ff":DIRS[ARPATH].color;
 nowDial=makeDial(document.getElementById("dialNow"),{
   start:0,
   zones:()=>nowZones().list.map(z=>z.k==="s"?{...z,style:`stroke:var(${nowColor()})`}:z),
-  labels:()=>{ const Z=nowZones(); return [["resonance",0],["alarm",(Z.wEnd+Z.aEnd)/2],["survival",180],["return",247.5]]; },
+  labels:()=>{ const Z=nowZones(); return [["resonance",0],["alarm",(Z.wEnd+Z.aEnd)/2],["survival",180],["return",(Z.sEnd+Z.rEnd)/2]]; },
   arrows:[[42,1],[300,1]],
   // small rings: the one you are in is lit
   mini:(mk,a)=>{ const k=nowZone(a).k;
@@ -2022,13 +2023,13 @@ function renderNow(){
   if(b<30){ AROUSAL=0; drawArousal(); arousalname.textContent="At the center";
     arousalcap.innerHTML="Resonance: coherent, connected, at home in yourself.<small>Turn the dial clockwise to follow the way out, and on round for the way back.</small>";
     const g=document.getElementById("arousalG"); if(g&&CR) el("circle",{cx:0,cy:0,r:f(CR.L1+5),class:"now-here"},g); return; }
-  if(b<225){ let v;
+  if(b<Z.sEnd){ let v;
     if(b<Z.wEnd) v=0.01+(S.on-0.01)*(b-30)/(Z.wEnd-30);
     else if(b<Z.aEnd) v=S.on+(S.b-S.on)*(b-Z.wEnd)/(Z.aEnd-Z.wEnd);
-    else v=S.b+(1-S.b)*(b-Z.aEnd)/(225-Z.aEnd);
+    else v=S.b+(1-S.b)*(b-Z.aEnd)/(Z.sEnd-Z.aEnd);
     AROUSAL=Math.min(1,v); drawArousal(); return; }
   AROUSAL=0; drawArousal();
-  drawBack(b<270?"edge":"window",b<270?(b-225)/45:(b-270)/60,k);
+  drawBack(b<Z.rEnd?"edge":"window",b<Z.rEnd?(b-Z.sEnd)/(Z.rEnd-Z.sEnd):(b-Z.rEnd)/(330-Z.rEnd),k);
 }
 // the way back runs beside the way out, from deep in survival across the edge and home
 function drawBack(phase,u,k){
