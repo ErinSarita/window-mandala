@@ -88,7 +88,6 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .body-wave{fill:none;stroke:var(--goldline);stroke-width:2.2;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 3px var(--sun3))}
 .body-vagus{fill:none;stroke:var(--fr);stroke-width:1.6;stroke-opacity:.8;pointer-events:none}
 .body-aura{fill:#FFE39A;fill-opacity:.55;pointer-events:none;filter:blur(12px)}
-.body-halo{fill:none;stroke:#D7A83A;stroke-width:4;pointer-events:none;filter:drop-shadow(0 0 8px #FFD866)}
 .findbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;max-width:740px;margin:0 auto;width:100%}
 .fgroup{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .fglbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:2px}
@@ -104,18 +103,14 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .t-flow{fill:#B4561E;font-style:italic;font-weight:700}
 .is-dark .t-flow{fill:#7A3A10}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
-.coh-line{fill:none;stroke:#F3D27A;stroke-width:1.3;stroke-opacity:.85;pointer-events:none;filter:drop-shadow(0 0 3px #FFE9A8)}
-.tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 16px #FFC94D) drop-shadow(0 0 32px #FFD978)}
+.tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 8px #FFFFFF) drop-shadow(0 0 20px rgba(255,246,220,.9))}
 .tri-bloom{filter:blur(8px)}
-.tri-line{fill:none;stroke:#E0AE42;stroke-width:1.3;stroke-opacity:.8;pointer-events:none}
-.coh-core{filter:none}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
 svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .t-coh{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.06em}
 .moontip .coh-ev{font-size:12px;color:var(--muted)}
 .cohlist{margin:0;padding-left:20px;display:grid;gap:8px}
 .cohlist .ev{display:block;font-size:13px;color:var(--muted)}
-.body-halo-in{stroke:#E8C25A;stroke-width:1.4;stroke-opacity:.85;filter:none}
 .t-body{fill:var(--sunink);font-style:italic;font-weight:600}
 .body-hit{fill:transparent;cursor:pointer;outline:none}
 .center-dim{fill:var(--bg);fill-opacity:.62;pointer-events:none;transition:opacity .2s}
@@ -274,9 +269,10 @@ svg.rimfocus .rim-focus{opacity:1}
 .res-zone .chips button .sym,.res-anchors .chips button .sym{width:14px;height:11px;vertical-align:-1px;margin-right:3px}
 .res-zone .q{font-family:var(--display);font-style:italic;font-size:18px;margin:0}
 .petal{cursor:pointer;outline:none}
-.petal .pf{fill:var(--mc);fill-opacity:.3;stroke:var(--mc);stroke-width:1.4;transition:fill-opacity .2s}
-.is-dark .petal .pf{fill-opacity:.24}
-.petal:hover .pf,.petal:focus-visible .pf{fill-opacity:.45}
+.petal .pf{fill:#FFFFFF;fill-opacity:.2;stroke:#FFFFFF;stroke-opacity:.75;stroke-width:1.6;pointer-events:none;transition:fill-opacity .2s;filter:drop-shadow(0 0 4px rgba(255,255,255,.55))}
+.is-dark .petal .pf{fill-opacity:.12;stroke-opacity:.5}
+.petal.on .pf{fill-opacity:.36}
+.petal-hit{fill:transparent;cursor:pointer}
 .t-petal{fill:var(--ink);font-family:var(--display);font-style:italic;pointer-events:none}
 .t-petal .po{fill:var(--ink);font-style:normal;font-family:var(--body);font-weight:600}
 .t-petal .pw{fill:#B5658D;font-style:normal;font-family:var(--body);font-weight:600}
@@ -353,7 +349,7 @@ svg.rimfocus .rim-focus{opacity:1}
 .dial-mini{pointer-events:none}
 .shell-ray{stroke:#FFE7A0;stroke-width:2;stroke-linecap:round}
 .now-glow{fill:#FFE9A8;stroke:#E8B84A;stroke-width:1.5;pointer-events:none}
-.now-here{fill:none;stroke:#FFFFFF;stroke-width:3;pointer-events:none;filter:drop-shadow(0 0 6px #FFD866)}
+
 .arousalcap{margin:0;min-height:2.6em}
 .arpaths{display:flex;flex-wrap:wrap;gap:6px}
 .arpaths button{font:inherit;font-size:13px;font-weight:600;padding:4px 11px 4px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -480,7 +476,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <div class="main">
     <div class="stage">
       <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
-      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><svg id="m" viewBox="-618 -618 1236 1236" role="group" aria-label="The Window Mandala"></svg></div>
+      <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><svg id="m" viewBox="-608 -608 1216 1216" role="group" aria-label="The Window Mandala"></svg></div>
       <div class="capbar">
         <div class="dials">
           <div class="dialcard dl-l"><div class="dialhead"><span class="dialeyebrow">Lately</span><b>Your window</b></div>
@@ -983,7 +979,7 @@ const FINDER = [
 const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the neurovisceral integration model (Julian Thayer and Richard Lane), heart rhythm coherence (Paul Lehrer and Richard Gevirtz, and the HeartMath Institute), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
 
 /* ---------- Geometry ---------- */
-const VB = 618, WHEEL = 580;
+const VB = 608, WHEEL = 566;
 const GAP = 1.2;
 // the rings change with capacity, t from 0 (narrow) to 1 (wide): the center stays fixed, the window widens, the threshold at
 // the edge keeps the same width, and only the defenses thin, their outer edge staying where it is
@@ -993,11 +989,11 @@ function radii(t){
     // heart and brainstem, then the alarm at the edge, the brake, and the border of the window of capacity
     const self=142*0.85, core=self*0.44, w0=self+6, w1=w0+(80+80*t)*0.78;
     const heart=[w1,w1+25], stem=[w1+25,w1+50], e0=w1+50, e1=e0+31, brake=[e1,e1+15], rim=[e1+15,e1+32], o0=e1+34;
-    return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,428], braid:[546,572]};
+    return {core, self, win:[w0,w1], heart, stem, edge:[e0,e1], brake, rim, out:[o0,514], braid:[536,562]};
   }
   // the alarm runs straight on from the window's steady center, inside the window's glow, and the window ends beyond it
   const self=142, core=self*0.44, w0=self+6, w1=w0+80+76*t, e0=w1, e1=e0+50, rim=[e1,e1+17], o0=rim[1];
-  return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,428], braid:[546,572]};
+  return {core, self, win:[w0,w1], edge:[e0,e1], brake:rim, rim, out:[o0,514], braid:[536,562]};
 }
 let LOOPON=false, LOOPGEO=false, BODY=true, CAP=0.5, R=radii(CAP);
 // the field of coherence spreads from the center into the window as the window widens, and draws back as it narrows;
@@ -1396,7 +1392,6 @@ function draw(){
   const lumen=el("filter",{id:"lumen",x:"-50%",y:"-50%",width:"200%",height:"200%"},wdefs);
   el("feDropShadow",{dx:0,dy:0,stdDeviation:1.6,"flood-color":"#fff","flood-opacity":0.85},lumen);
   el("circle",{cx:0,cy:0,r:WHEEL,fill:"url(#aura)","pointer-events":"none"});
-  el("g",{id:"petalG"}); drawPetals();
   // the halo between the defenses and the braid is the field of peripheral awareness, which holds every state
   { const r0=R.out[1]+2, r1=R.out[1]+19;
     const ring=`M0 ${-r1} A${r1} ${r1} 0 1 1 0 ${r1} A${r1} ${r1} 0 1 1 0 ${-r1} M0 ${-r0} A${r0} ${r0} 0 1 0 0 ${r0} A${r0} ${r0} 0 1 0 0 ${-r0}Z`;
@@ -1425,6 +1420,8 @@ function draw(){
     if(lit>0){ const rg=el("g",{"pointer-events":"none","stroke-opacity":f(lit*0.6)});
       for(let a=0;a<360;a+=7.5){ const off=((a%90)+90)%90; if(off<16||off>74||Math.abs(off-45)<10) continue;
         const [x0,y0]=P(R.out[0]+3,a), [x1,y1]=P(R.out[1]-3,a); el("line",{x1:f(x0),y1:f(y0),x2:f(x1),y2:f(y1),class:"shell-ray"},rg); } } }
+  // the way back: four petals laid over the ring of survival, a layer of light on top of it
+  el("g",{id:"petalG"}); el("g",{id:"petalHits"}); drawPetals();
   DIRS.forEach((d,k)=>{
     const [a0,a1]=dA(k), b0=a0+GAP, b1=a1-GAP, key=KEYS[k];
     ["out","edge","win"].forEach(L=>{ const v=el("path",{d:sector(R[L][0],R[L][1],a0-0.15,a1+0.15,1,0),class:"veil","pointer-events":"none"}); v.dataset.slice=L+k; });
@@ -1512,6 +1509,8 @@ function draw(){
     const r0=hr-11, r1=hr+9, ring=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
     const hit=el("path",{d:ring(r1)+" "+ring(r0)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"Held emotions: any emotion can be felt inside the window"});
     hookTip(hit,()=>({x:0,y:-hr,html:`<span class="ringtag">Just inside the window's edge</span><b>Every feeling can be held here</b><span class="tl">Inside the window, even hard feelings are felt and held, not driving: anger as a clear no, grief as love that moves, fear as alert attention. You can breathe, stay in your body, and choose.</span><span>Tap to read more.</span>`}),()=>{ showIntro(); bringPanel(document.getElementById("lg-held")); }); }
+  // the petals' tap spots go above the ring's own, so both can be reached
+  svg.appendChild(document.getElementById("petalHits"));
   svg.appendChild(labels);
   // the center: one circle of coherence, in its field; a clear ground beneath takes the taps
   const sunG=el("g",{id:"core"});
@@ -1594,20 +1593,19 @@ function bodyCenter(g,L1){
   // the whole center glows, brightest at the circle in the middle, like the gold nimbus of an icon
   // regulated stays open: it is the window itself, so the glow and the rings begin at coherent
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
-  const mix=(t)=>{ const A=[0xF2,0xCF,0x73], B=[0xFF,0xF9,0xEA]; return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
-  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),fill:mix(Math.pow(i/(COH_LAYERS.length-1),1.3)),"fill-opacity":f(0.6+i*0.07),"pointer-events":"none"},g); });
-  el("circle",{cx:0,cy:0,r:f(r0),fill:"#FFFBF0","pointer-events":"none",class:"coh-core"},g);
-  COH_LAYERS.forEach((L,i)=>{ if(!i) return; const r=r1-i*step; el("circle",{cx:0,cy:0,r:f(r),class:i===1?"body-halo":"coh-line"},g); });
+  // one seamless glow: near white at the center, warming and fading out into the window, with no rings drawn across it
+  { const cg=el("radialGradient",{id:"cohfieldglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
+    [[0,"#FFFFFF",1],[r0/r1,"#FFFCF3",0.97],[0.48,"#FDF2D6",0.85],[0.76,"#F9E4A8",0.55],[1,"#F5D88A",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},cg));
+    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)","pointer-events":"none"},g); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
   { const cr=rc*0.5, BL=cr+48, tg="cohone", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
     [[0,"#FFFFFF",1],[0.62,"#FFFFFF",0.92],[1,"#FFF3CC",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
     const bf=el("radialGradient",{id:"cohbloom",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
-    [[0,"#FFFFFF",1],[cr/BL*0.8,"#FFFFFF",0.9],[cr/BL,"#FFD65C",0.8],[1,"#FFC93C",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
+    [[0,"#FFFFFF",1],[cr/BL,"#FFFFFF",0.9],[(cr/BL+1)/2,"#FFF6DC",0.45],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
     el("circle",{cx:0,cy:0,r:f(BL),fill:"url(#cohbloom)","pointer-events":"none",class:"tri-bloom"},g);
     el("circle",{cx:0,cy:0,r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g);
-    el("circle",{cx:0,cy:0,r:f(cr),class:"tri-line"},g);
   }
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
@@ -2019,7 +2017,7 @@ function renderNow(){
   const Z=nowZones(), b=NOWA>=330?NOWA-360:NOWA, S=arousalMarks(), k=ARPATH===4?2:ARPATH;
   if(b<30){ AROUSAL=0; drawArousal(); arousalname.textContent="At the center";
     arousalcap.innerHTML="Resonance: coherent, connected, at home in yourself.<small>Turn the dial clockwise to follow the way out, and on round for the way back.</small>";
-    const g=document.getElementById("arousalG"); if(g&&CR) el("circle",{cx:0,cy:0,r:f(CR.L1+5),class:"now-here"},g); return; }
+    return; }
   if(b<Z.sEnd){ let v;
     if(b<Z.wEnd) v=0.01+(S.on-0.01)*(b-30)/(Z.wEnd-30);
     else if(b<Z.aEnd) v=S.on+(S.b-S.on)*(b-Z.wEnd)/(Z.aEnd-Z.wEnd);
@@ -3011,7 +3009,7 @@ async function downloadRes(){
 /* The petals: four round the survival ring, one centered on each direction, edge to edge and rising straight from it, drawn the way The Pregnancy and Birth Mandala
    draws its practice petals. Each holds the ways back from its survival state; on My resources map they hold the
    visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:428, r1:544, w:90, lines:[469,484,499,513], size:12.5};
+const PETAL={r0:330, r1:510, w:90, lines:[469,484,499,513], size:12.5};
 // the petal's half-width, in degrees, at a radius: full at the base, where it meets its neighbors on the ring, swelling
 // a little, then curving in to a soft point
 const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.r0)/(PETAL.r1-PETAL.r0))); return PETAL.w/2*(1-Math.pow(u,1.7))*(1+0.16*Math.sin(Math.PI*u)); };
@@ -3023,12 +3021,18 @@ function petalD(a){
 }
 function drawPetals(){
   const g=document.getElementById("petalG"); if(!g) return; g.innerHTML="";
+  const hits=document.getElementById("petalHits"); if(hits) hits.innerHTML="";
+  // the petals span the ring of survival, which widens and narrows with the window; their words sit in the outer part
+  const om=(R.out[0]+R.out[1])/2;
+  PETAL.r0=R.out[0]+3; PETAL.r1=om-16; PETAL.lines=[PETAL.r0+16,PETAL.r0+30,PETAL.r0+44,PETAL.r0+58].filter(r=>r<PETAL.r1-8);
   const mine=resShown(), meas=el("text",{class:"lbl t-petal","font-size":PETAL.size,visibility:"hidden"},g);
   const width=parts=>{ meas.innerHTML=""; parts.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},meas); ts.textContent=(i?"  ·  ":"")+p.t; }); return meas.getComputedTextLength(); };
   DIRS.forEach((d,k)=>{
     const key=KEYS[k], a=d.angle;
-    const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`Ways back from ${d.name.toLowerCase()}. Read them`},g);
+    const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,"aria-hidden":"true"},g);
     el("path",{d:petalD(a),class:"pf"},pg);
+    const [hx,hy]=P((PETAL.r0+PETAL.r1)/2+6,a), hit=el("circle",{cx:f(hx),cy:f(hy),r:26,class:"petal-hit",tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`The way back from ${d.name.toLowerCase()}. Read it`},hits||pg);
+    hit.addEventListener("mouseenter",()=>pg.classList.add("on")); hit.addEventListener("mouseleave",()=>pg.classList.remove("on"));
     // what goes in it: the ways back, or on My resources map, what you have added
     let items;
     if(mine){ const L=RES.items[key]; items=[...L.filter(i=>i.who==="own"),...L.filter(i=>i.who==="others")].map(i=>({t:i.text,c:i.who==="own"?"po":"pw"})); }
@@ -3037,7 +3041,7 @@ function drawPetals(){
     // on screen an empty petal asks; on the printout it stays blank, room to write by hand
     if(empty) items=RES.force?[]:[{t:"What helps you come back from here?",c:""}];
     const [tx,ty]=P(PETAL.r1-30,a);
-    hookTip(pg,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">The way back</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
+    hookTip(hit,()=>({x:tx,y:ty,html:mine?`<span class="ringtag">The way back</span><b>Your ways back from ${d.name.toLowerCase()}</b><span class="tl">${empty?"Add what helps, on your own or with others.":"What you have added, on your own and with others."}</span><span>Tap to add more.</span>`
       :`<span class="ringtag">The way back</span><b>From ${d.name.toLowerCase()}, back to the window</b><span class="tl">What helps the body come back from here, toward the window.</span><span>Tap to read more.</span>`}),
       ()=>mine?showResources(true,key):showWhere(true,null,key));
     // fill the lines from the base of the petal outward, each holding what fits inside the petal at that radius;
