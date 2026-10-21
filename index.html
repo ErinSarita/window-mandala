@@ -113,6 +113,11 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .cohlist .ev{display:block;font-size:13px;color:var(--muted)}
 .t-body{fill:var(--sunink);font-style:italic;font-weight:600}
 .body-hit{fill:transparent;cursor:pointer;outline:none}
+.coh-ring{fill:none;stroke:#FFFFFF;stroke-width:1.4;pointer-events:none}
+.t-cohword{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.08em}
+.static-line{fill:none;stroke:#8E8698;stroke-width:1.1;stroke-linejoin:bevel}
+.is-dark .static-line{stroke:#B9B2C6}
+.rays.lit{filter:drop-shadow(0 0 5px rgba(255,214,110,1)) brightness(1.2)}
 .center-dim{fill:var(--bg);fill-opacity:.62;pointer-events:none;transition:opacity .2s}
 .t-survring{font-style:italic;font-weight:600;opacity:.8}
 .t-blend{font-family:var(--body);font-style:normal;font-weight:600;opacity:.62}
@@ -1349,7 +1354,22 @@ function nowShine(){
   if(b<Z.rEnd) return lerp(0.06,0.6,(b-Z.sEnd)/(Z.rEnd-Z.sEnd));
   return lerp(0.6,1,(b-Z.rEnd)/(330-Z.rEnd));
 }
+// how coherent the whole system is: where you are right now, carried by how wide your window is lately
+const cohLevel=()=>nowShine()*(0.4+0.6*CAP);
+// Static: as coherence falls, short jagged broken lines, like white noise, gather round the wheel where the rays were
+function drawStatic(){
+  const g=document.getElementById("staticG"); if(!g) return; g.innerHTML="";
+  const st=Math.max(0,Math.min(1,(0.6-cohLevel())/0.6)); if(st<=0.02) return;
+  let seed=7; const rnd=()=>{ seed=(seed+0x6D2B79F5)|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
+  const n=Math.round(320*Math.pow(st,1.1)), r0=R.braid[1]+4, span=VB-r0-4;
+  for(let i=0;i<n;i++){
+    const a=rnd()*360, r=r0+rnd()*span, len=5+rnd()*14, steps=3+Math.floor(rnd()*3), pts=[];
+    for(let k=0;k<=steps;k++){ const rr=r+len*k/steps, aa=a+(rnd()-0.5)*1.6; pts.push(P(rr,aa)); }
+    el("polyline",{points:pts.map(([x,y])=>f(x)+","+f(y)).join(" "),class:"static-line","stroke-opacity":f((0.25+0.55*rnd())*st)},g);
+  }
+}
 function drawRays(){
+  drawStatic();
   const g=document.getElementById("raysG"); if(!g) return; g.innerHTML="";
   const sh=nowShine(), r0=R.braid[1]+4, base=(6+14*CAP)*(0.35+0.65*sh), top=r0+base*2+2, defs=document.getElementById("wdefs");
   const old=document.getElementById("raylight"); if(old) old.remove(); const oldg=document.getElementById("rayglow"); if(oldg) oldg.remove();
@@ -1399,7 +1419,11 @@ function draw(){
     const hit=el("path",{d:ring,class:"awarehit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The field of awareness. Read about awareness"});
     if(BODY) hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>If it lasts</b><span class="tl">Living out in the survival states for months or years wears the body down: heart, sleep, digestion, immunity, and mood.</span><span>Tap to read more.</span>`}),()=>showBody(true,"lasts"));
     else hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>The field of awareness</b><span class="tl">Peripheral awareness: the soft, wide knowing that holds every state, the window and the defenses alike.</span><span>Tap to read more.</span>`}),()=>showAware(true)); }
-  drawBraid(); el("g",{id:"raysG",class:"rays","pointer-events":"none","aria-hidden":"true"}); drawRays();
+  drawBraid(); el("g",{id:"raysG",class:"rays","pointer-events":"none","aria-hidden":"true"}); el("g",{id:"staticG",class:"static","pointer-events":"none","aria-hidden":"true"}); drawRays();
+  // one hover for the band outside the braid: resonance, or the static that covers it
+  { const r0=R.braid[1]+3, r1=VB-2, ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
+    const hit=el("path",{d:ringP(r1)+" "+ringP(r0)+"Z","fill-rule":"evenodd",class:"awarehit",tabindex:"0",role:"button","aria-label":"Resonance, or static. Read about coherence and resonance"});
+    hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>Resonance, or static</b><span class="tl">In your window, mind, heart, and body move in step, and the wheel gives off golden rays. Deep in protection and survival the glow dims and static takes its place: the rhythms grow jagged and out of step. The resonance is still there underneath, only covered over.</span><span>Tap to read more.</span>`}),()=>showLens("resonance",true)); }
   const labels=el("g",{id:"ringLabels","pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
@@ -1599,7 +1623,9 @@ function bodyCenter(g,L1){
   // one seamless glow: near white at the center, warming and fading out into the window, with no rings drawn across it
   { const cg=el("radialGradient",{id:"cohfieldglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
     [[0,"#FFFFFF",1],[r0/r1,"#FFFCF3",0.97],[0.48,"#FDF2D6",0.85],[0.76,"#F9E4A8",0.55],[1,"#F5D88A",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},cg));
-    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)","pointer-events":"none"},g); }
+    el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)","pointer-events":"none"},g);
+    // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
+    COH_LAYERS.forEach((L,i)=>{ if(!i) return; el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(0.3+0.08*i)},g); }); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
@@ -1609,14 +1635,17 @@ function bodyCenter(g,L1){
     [[0,"#FFFFFF",1],[cr/BL,"#FFFFFF",0.9],[(cr/BL+1)/2,"#FFF6DC",0.45],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
     el("circle",{cx:0,cy:0,r:f(BL),fill:"url(#cohbloom)","pointer-events":"none",class:"tri-bloom"},g);
     el("circle",{cx:0,cy:0,r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g);
+    arcText(cr+16,-60,60,"coherence","lbl t-cohword",15,1.5,g);
   }
   // one hover for the whole center
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
   const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
   { const dimOn=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove();
       const r0=(R.rim?R.rim[1]:R.edge[1])+1, ringP=r=>`M0 ${f(-r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(r)} A${f(r)} ${f(r)} 0 1 1 0 ${f(-r)}`;
-      el("path",{id:"centerdim",d:`M${-VB} ${-VB} H${VB} V${VB} H${-VB} Z `+ringP(r0)+"Z","fill-rule":"evenodd",class:"center-dim"}); },
-      dimOff=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove(); };
+      el("path",{id:"centerdim",d:`M${-VB} ${-VB} H${VB} V${VB} H${-VB} Z `+ringP(r0)+"Z","fill-rule":"evenodd",class:"center-dim"});
+      // the rays of resonance outside the braid light up with the center
+      const rg=document.getElementById("raysG"); if(rg){ svg.appendChild(rg); rg.classList.add("lit"); } },
+      dimOff=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove(); const rg=document.getElementById("raysG"); if(rg) rg.classList.remove("lit"); };
     ["mouseenter","focus"].forEach(ev=>hc.addEventListener(ev,dimOn)); ["mouseleave","blur","click"].forEach(ev=>hc.addEventListener(ev,dimOff)); }
   hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
 }
