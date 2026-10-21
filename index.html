@@ -3010,19 +3010,26 @@ async function downloadRes(){
   },true);
 }
 
-/* The petals: four broad petals beyond the braid, one at each direction, holding the ways back from it. On My resources
-   map they hold the visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:446, rb:450, r1:542, half:20, lines:[469,484,499,513], size:12.5};
-// the petal's half-width, in degrees, at a radius: the tip of a lotus petal rising from behind the braid, its sides
-// curving in to a point
-const lotusHalf=(r,rb,r1,H)=>{ const u=Math.min(1,Math.max(0,(r-rb)/(r1-rb))); return H*Math.sin(Math.PI*(0.25+0.75*u)); };
-const petalHalf=r=>lotusHalf(r,PETAL.rb,PETAL.r1,PETAL.half);
-function petalPath(a,half,r0,r1){
-  half=half||petalHalf; r0=r0||PETAL.r0; r1=r1||PETAL.r1;
-  const N=32, L=[], Rr=[];
-  for(let i=0;i<=N;i++){ const r=r0+(r1-r0)*i/N, h=half(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
-  return "M"+[...L,...Rr].map(([x,y])=>f(x)+" "+f(y)).join(" L")+"Z";
+/* The petals: a ring of twelve round the survival ring, edge to edge, drawn the way The Pregnancy and Birth Mandala draws
+   its practice petals. The four at the directions stand a little larger and hold the ways back from each state; the two
+   at each diagonal hold the way back from each movement between neighbors, one for each arrow. On My resources map the
+   four large petals hold the visitor's own entries instead, what helps on their own and what helps with others. */
+const PETAL={r0:446, r1:544, w:32, small:{r1:530, w:27}, lines:[469,484,499,513], size:12.5};
+// from the ring, each edge swells gently out past the petal's own width and meets the other in a soft point
+function petalD(r0,r1,a0,a1){
+  const m=(a0+a1)/2, w=a1-a0, q=(r,a)=>{ const [x,y]=P(r,a); return f(x)+" "+f(y); };
+  return `M${q(r0,a0)} Q${q(r0+(r1-r0)*.62,a0-w*.08)} ${q(r1,m)} Q${q(r0+(r1-r0)*.62,a1+w*.08)} ${q(r0,a1)} `+arc(r0,a1,a0,0)+"Z";
 }
+// the petal's half-width, in degrees, at a radius, read off its edge curve, for fitting words inside it
+function petalHalfAt(r0,r1,w){
+  const A=P(r0,-w/2), C=P(r0+(r1-r0)*.62,-w/2-w*.08), B=P(r1,0), pts=[];
+  for(let i=0;i<=48;i++){ const t=i/48, x=(1-t)*(1-t)*A[0]+2*(1-t)*t*C[0]+t*t*B[0], y=(1-t)*(1-t)*A[1]+2*(1-t)*t*C[1]+t*t*B[1];
+    pts.push([Math.hypot(x,y),Math.abs(Math.atan2(x,-y)*180/Math.PI)]); }
+  return r=>{ if(r<=pts[0][0]) return pts[0][1];
+    for(let i=1;i<pts.length;i++) if(pts[i][0]>=r){ const [ra,ha]=pts[i-1],[rb,hb]=pts[i]; return ha+(hb-ha)*(r-ra)/(rb-ra); }
+    return 0; };
+}
+const petalHalf=petalHalfAt(PETAL.r0,PETAL.r1,PETAL.w);
 function drawPetals(){
   const g=document.getElementById("petalG"); if(!g) return; g.innerHTML="";
   const mine=resShown(), meas=el("text",{class:"lbl t-petal","font-size":PETAL.size,visibility:"hidden"},g);
@@ -3030,7 +3037,7 @@ function drawPetals(){
   DIRS.forEach((d,k)=>{
     const key=KEYS[k], a=d.angle;
     const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`Ways back from ${d.name.toLowerCase()}. Read them`},g);
-    el("path",{d:petalPath(a),class:"pf"},pg);
+    el("path",{d:petalD(PETAL.r0,PETAL.r1,a-PETAL.w/2,a+PETAL.w/2),class:"pf"},pg);
     // what goes in it: the ways back, or on My resources map, what you have added
     let items;
     if(mine){ const L=RES.items[key]; items=[...L.filter(i=>i.who==="own"),...L.filter(i=>i.who==="others")].map(i=>({t:i.text,c:i.who==="own"?"po":"pw"})); }
@@ -3059,11 +3066,12 @@ function drawPetals(){
       row.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},tp); ts.textContent=(i?"  ·  ":"")+p.t; });
     });
   });
-  // two small petals at each diagonal, one for each arrow between neighbors: the way back from that movement
-  DIRS.forEach((d,k)=>{ const n=(k+1)%4, j=d.angle+45;
-    [[k,n,j+6],[n,k,j-6]].forEach(([from,to,a])=>{ const i=moveIndex(from,to), m=MOVES[i];
+  // two petals at each diagonal, one for each arrow between neighbors: the way back from that movement, each on the
+  // side its arrow points toward
+  DIRS.forEach((d,k)=>{ const n=(k+1)%4;
+    [[k,n,d.angle+60],[n,k,d.angle+30]].forEach(([from,to,a])=>{ const i=moveIndex(from,to), m=MOVES[i];
       const sg=el("g",{class:"petal petal-s",style:`--mc:var(${DIRS[to].color})`,tabindex:"0",role:"button","aria-label":`The way back: ${m.title.toLowerCase()}`},g);
-      el("path",{d:petalPath(a,r=>{ const u=Math.min(1,Math.max(0,(r-450)/(534-450))); return 2.8*Math.pow(Math.sin(Math.PI*u),0.8); },450,536),class:"pf"},sg);
+      el("path",{d:petalD(PETAL.r0,PETAL.small.r1,a-PETAL.small.w/2,a+PETAL.small.w/2),class:"pf"},sg);
       const [tx,ty]=P(510,a);
       hookTip(sg,()=>({x:tx,y:ty,html:`<span class="ringtag">The way back</span><b>${m.title}</b><span class="tl">${m.helps}</span><span>Tap to read more.</span>`}),()=>showMoves(i,true)); }); });
   meas.remove();
