@@ -273,6 +273,7 @@ svg.rimfocus .rim-focus{opacity:1}
 .is-dark .petal .pf{fill-opacity:.12;stroke-opacity:.5}
 .petal.on .pf{fill-opacity:.36}
 .petal-hit{fill:transparent;cursor:pointer}
+.t-wayback{fill:var(--ink);font-style:italic;font-weight:600;letter-spacing:.06em;opacity:.85}
 .t-petal{fill:var(--ink);font-family:var(--display);font-style:italic;pointer-events:none}
 .t-petal .po{fill:var(--ink);font-style:normal;font-family:var(--body);font-weight:600}
 .t-petal .pw{fill:#B5658D;font-style:normal;font-family:var(--body);font-weight:600}
@@ -1429,7 +1430,9 @@ function draw(){
     addCell(sector(R.edge[0],R.edge[1],a0,a1,1,0),"edge",k,null).classList.add("hit");
     addCell(sector(R.win[0],R.win[1],a0,a1,1,0),"win",k,null).classList.add("hit");
     const om=(R.out[0]+R.out[1])/2, em=(R.edge[0]+R.edge[1])/2, wm=(R.win[0]+R.win[1])/2;
-    twoLine(om,b0+3,b1-3,d.name.toUpperCase(),ot>70?d.out.words:"","lbl t-out t-caps","lbl t-out t-sub",ot>100?21:18,16,ot>100?32:26,labels);
+    // each name sits in the outer part of the ring, above its petal of the way back; its words (shown in the cards) below
+    arcText(om+14,b0+3,b1-3,d.name.toUpperCase(),"lbl t-out t-caps",ot>100?21:18,0.3,labels);
+    if(ot>70) arcText(om-14,b0+3,b1-3,d.out.words,"lbl t-out t-sub",16,0.2,labels);
     // the edge's name, and at a wider edge its early signals
     const eTexts=[];
     if(et>=30&&!LOOPGEO){ const flip=d.angle>95&&d.angle<265, up=flip?-11:11;
@@ -3024,13 +3027,14 @@ function drawPetals(){
   const hits=document.getElementById("petalHits"); if(hits) hits.innerHTML="";
   // the petals span the ring of survival, which widens and narrows with the window; their words sit in the outer part
   const om=(R.out[0]+R.out[1])/2;
-  PETAL.r0=R.out[0]+3; PETAL.r1=om-16; PETAL.lines=[PETAL.r0+16,PETAL.r0+30,PETAL.r0+44,PETAL.r0+58].filter(r=>r<PETAL.r1-8);
+  PETAL.r0=R.out[0]+3; PETAL.r1=om-4; PETAL.lines=[PETAL.r0+16,PETAL.r0+30,PETAL.r0+44,PETAL.r0+58].filter(r=>r<PETAL.r1-34);
   const mine=resShown(), meas=el("text",{class:"lbl t-petal","font-size":PETAL.size,visibility:"hidden"},g);
   const width=parts=>{ meas.innerHTML=""; parts.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},meas); ts.textContent=(i?"  ·  ":"")+p.t; }); return meas.getComputedTextLength(); };
   DIRS.forEach((d,k)=>{
     const key=KEYS[k], a=d.angle;
     const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,"aria-hidden":"true"},g);
     el("path",{d:petalD(a),class:"pf"},pg);
+    { const tr=PETAL.r1-22, h=Math.max(6,petalHalf(tr)-3); arcText(tr,a-h,a+h,"the way back","lbl t-wayback",14.5,0.6,pg); }
     const [hx,hy]=P((PETAL.r0+PETAL.r1)/2+6,a), hit=el("circle",{cx:f(hx),cy:f(hy),r:26,class:"petal-hit",tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`The way back from ${d.name.toLowerCase()}. Read it`},hits||pg);
     hit.addEventListener("mouseenter",()=>pg.classList.add("on")); hit.addEventListener("mouseleave",()=>pg.classList.remove("on"));
     // what goes in it: the ways back, or on My resources map, what you have added
