@@ -46,6 +46,7 @@ header.top{display:grid;gap:6px;margin-bottom:22px;position:relative;padding-rig
 @media (max-width:560px){.hbtns{top:0}}
 .homebtn{height:40px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:600;padding:0 14px;cursor:pointer}
 .themebtn{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--ink);cursor:pointer;padding:0}
+a.homebtn{text-decoration:none}
 .homebtn:hover,.themebtn:hover{background:var(--bg)}
 .homebtn:focus-visible,.themebtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .themebtn svg{width:20px;height:20px;overflow:visible}
@@ -498,6 +499,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
   <header class="top">
     <div class="hbtns">
       <button class="homebtn" type="button" id="homebtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 3"/></svg>Come home</button>
+      <a class="homebtn" href="print.html" id="printlink" title="A plain, printable copy to write on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"/></svg>Print</a>
       <button class="themebtn" type="button" id="themebtn" aria-label="Switch to dark mode">
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
