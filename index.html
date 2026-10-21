@@ -200,6 +200,11 @@ svg.rimfocus .rim-focus{opacity:1}
 .panel a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--goldline);text-underline-offset:2px}
 .panel a:hover{color:var(--goldline)}
 .basics{margin:0}
+.fbranch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.fbranch{grid-template-columns:1fr}}
+.fbranch>div{background:color-mix(in srgb, var(--mc) 14%, transparent);border-radius:10px;padding:10px 12px}
+.fbranch h4{display:flex;align-items:center;gap:6px;margin:0 0 4px}
+.fbranch p{margin:0 0 6px;font-size:14.5px}
 .basics dt{font-weight:700}
 .basics dd{margin:1px 0 12px;color:var(--ink)}
 .basics dd:last-child{margin-bottom:0}
@@ -530,6 +535,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Balban, M. Y., Neri, E., Kogon, M. M., Weed, L., Nouriani, B., Jo, B., Holl, G., Zeitzer, J. M., Spiegel, D., &amp; Huberman, A. D. (2023). Brief structured respiration practices enhance mood and reduce physiological arousal. <i>Cell Reports Medicine, 4</i>(1), 100895.</li>
       <li>Barrett, L. F. (2017). <i>How Emotions Are Made: The Secret Life of the Brain</i>. Houghton Mifflin Harcourt.</li>
       <li>Bernardi, L., Sleight, P., Bandinelli, G., Cencetti, S., Fattorini, L., Wdowczyc-Szulc, J., &amp; Lagi, A. (2001). Effect of rosary prayer and yoga mantras on autonomic cardiovascular rhythms: Comparative study. <i>BMJ, 323</i>(7327), 1446–1449.</li>
+      <li>Berridge, K. C., &amp; Robinson, T. E. (1998). What is the role of dopamine in reward: Hedonic impact, reward learning, or incentive salience? <i>Brain Research Reviews, 28</i>(3), 309–369.</li>
       <li>Brewer, J. A., Worhunsky, P. D., Gray, J. R., Tang, Y.-Y., Weber, J., &amp; Kober, H. (2011). Meditation experience is associated with differences in default mode network activity and connectivity. <i>Proceedings of the National Academy of Sciences, 108</i>(50), 20254–20259.</li>
       <li>Brosschot, J. F., Gerin, W., &amp; Thayer, J. F. (2006). The perseverative cognition hypothesis: A review of worry, prolonged stress-related physiological activation, and health. <i>Journal of Psychosomatic Research, 60</i>(2), 113–124.</li>
       <li>Cannon, W. B. (1915). <i>Bodily Changes in Pain, Hunger, Fear and Rage</i>. Appleton.</li>
@@ -549,10 +555,13 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Fisher, J. (2017). <i>Healing the Fragmented Selves of Trauma Survivors</i>. Routledge.</li>
       <li>Fredrickson, B. L. (2001). The role of positive emotions in positive psychology: The broaden-and-build theory of positive emotions. <i>American Psychologist, 56</i>(3), 218–226.</li>
       <li>Fredrickson, B. L., Cohn, M. A., Coffey, K. A., Pek, J., &amp; Finkel, S. M. (2008). Open hearts build lives: Positive emotions, induced through loving-kindness meditation, build consequential personal resources. <i>Journal of Personality and Social Psychology, 95</i>(5), 1045–1062.</li>
+      <li>Fries, E., Dettenborn, L., &amp; Kirschbaum, C. (2009). The cortisol awakening response (CAR): Facts and future directions. <i>International Journal of Psychophysiology, 72</i>(1), 67–73.</li>
+      <li>Fuss, J., Steinle, J., Bindila, L., Auer, M. K., Kirchherr, H., Lutz, B., &amp; Gass, P. (2015). A runner's high depends on cannabinoid receptors in mice. <i>Proceedings of the National Academy of Sciences, 112</i>(42), 13105–13108.</li>
       <li>Glover, V. (2014). Maternal depression, anxiety and stress during pregnancy and child outcome; what needs to be done. <i>Best Practice &amp; Research Clinical Obstetrics &amp; Gynaecology, 28</i>(1), 25–35.</li>
+      <li>Goessl, V. C., Curtiss, J. E., &amp; Hofmann, S. G. (2017). The effect of heart rate variability biofeedback training on stress and anxiety: A meta-analysis. <i>Psychological Medicine, 47</i>(15), 2578–2586.</li>
       <li>Gross, J. J. (2002). Emotion regulation: Affective, cognitive, and social consequences. <i>Psychophysiology, 39</i>(3), 281–291.</li>
       <li>Grossman, P. (2023). Fundamental challenges and likely refutations of the five basic premises of the polyvagal theory. <i>Biological Psychology, 180</i>, 108589.</li>
-      <li>Goessl, V. C., Curtiss, J. E., &amp; Hofmann, S. G. (2017). The effect of heart rate variability biofeedback training on stress and anxiety: A meta-analysis. <i>Psychological Medicine, 47</i>(15), 2578–2586.</li>
+      <li>Heinrichs, M., Baumgartner, T., Kirschbaum, C., &amp; Ehlert, U. (2003). Social support and oxytocin interact to suppress cortisol and subjective responses to psychosocial stress. <i>Biological Psychiatry, 54</i>(12), 1389–1398.</li>
       <li>Hofmann, S. G., Grossman, P., &amp; Hinton, D. E. (2011). Loving-kindness and compassion meditation: Potential for psychological interventions. <i>Clinical Psychology Review, 31</i>(7), 1126–1132.</li>
       <li>Imai, K., Sato, H., Hori, M., Kusuoka, H., Ozaki, H., Yokoyama, H., Takeda, H., Inoue, M., &amp; Kamada, T. (1994). Vagally mediated heart rate recovery after exercise is accelerated in athletes but blunted in patients with chronic heart failure. <i>Journal of the American College of Cardiology, 24</i>(6), 1529–1535.</li>
       <li>Jung, C. G. (1960). Synchronicity: An acausal connecting principle. In <i>The Structure and Dynamics of the Psyche</i> (Collected Works, Vol. 8). Princeton University Press.</li>
@@ -571,6 +580,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Lindahl, J. R., Fisher, N. E., Cooper, D. J., Rosen, R. K., &amp; Britton, W. B. (2017). The varieties of contemplative experience: A mixed-methods study of meditation-related challenges in Western Buddhists. <i>PLoS ONE, 12</i>(5), e0176239.</li>
       <li>Lutz, A., Greischar, L. L., Rawlings, N. B., Ricard, M., &amp; Davidson, R. J. (2004). Long-term meditators self-induce high-amplitude gamma synchrony during mental practice. <i>Proceedings of the National Academy of Sciences, 101</i>(46), 16369–16373.</li>
       <li>Madon, S., Guyll, M., Spoth, R. L., &amp; Willard, J. (2004). Self-fulfilling prophecies: The synergistic accumulative effect of parents' beliefs on children's drinking behavior. <i>Psychological Science, 15</i>(12), 837–845.</li>
+      <li>Manninen, S., Tuominen, L., Dunbar, R. I., Karjalainen, T., Hirvonen, J., Arponen, E., Hari, R., Jääskeläinen, I. P., Sams, M., &amp; Nummenmaa, L. (2017). Social laughter triggers endogenous opioid release in humans. <i>Journal of Neuroscience, 37</i>(25), 6125–6131.</li>
       <li>McCraty, R., Atkinson, M., Tomasino, D., &amp; Bradley, R. T. (2009). The coherent heart: Heart–brain interactions, psychophysiological coherence, and the emergence of system-wide order. <i>Integral Review, 5</i>(2), 10–115.</li>
       <li>McEwen, B. S. (1998). Protective and damaging effects of stress mediators. <i>New England Journal of Medicine, 338</i>(3), 171–179.</li>
       <li>Meins, E., Fernyhough, C., Fradley, E., &amp; Tuckey, M. (2001). Rethinking maternal sensitivity: Mothers' comments on infants' mental processes predict security of attachment at 12 months. <i>Journal of Child Psychology and Psychiatry, 42</i>(5), 637–648.</li>
@@ -586,6 +596,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Porges, S. W. (2011). <i>The Polyvagal Theory</i>. Norton.</li>
       <li>Rauch, S. L., van der Kolk, B. A., Fisler, R. E., Alpert, N. M., Orr, S. P., Savage, C. R., Fischman, A. J., Jenike, M. A., &amp; Pitman, R. K. (1996). A symptom provocation study of posttraumatic stress disorder using positron emission tomography and script-driven imagery. <i>Archives of General Psychiatry, 53</i>(5), 380–387.</li>
       <li>Roelofs, K. (2017). Freeze for action: Neurobiological mechanisms in animal and human freezing. <i>Philosophical Transactions of the Royal Society B, 372</i>(1718), 20160206.</li>
+      <li>Sapolsky, R. M. (2004). <i>Why Zebras Don't Get Ulcers</i> (3rd ed.). Holt.</li>
       <li>Schauer, M., &amp; Elbert, T. (2010). Dissociation following traumatic stress: Etiology and treatment. <i>Zeitschrift für Psychologie / Journal of Psychology, 218</i>(2), 109–127.</li>
       <li>Schwarz, N., &amp; Clore, G. L. (1983). Mood, misattribution, and judgments of well-being: Informative and directive functions of affective states. <i>Journal of Personality and Social Psychology, 45</i>(3), 513–523.</li>
       <li>Siegel, D. J. (1999). <i>The Developing Mind</i>. Guilford.</li>
@@ -604,6 +615,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Vickhoff, B., Malmgren, H., Åström, R., Nyberg, G., Ekström, S.-R., Engwall, M., Snygg, J., Nilsson, M., &amp; Jörnsten, R. (2013). Music structure determines heart rate variability of singers. <i>Frontiers in Psychology, 4</i>, 334.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
       <li>Yaden, D. B., Haidt, J., Hood, R. W., Vago, D. R., &amp; Newberg, A. B. (2017). The varieties of self-transcendent experience. <i>Review of General Psychology, 21</i>(2), 143–160.</li>
+      <li>Yano, J. M., Yu, K., Donaldson, G. P., Shastri, G. G., Ann, P., Ma, L., Nagler, C. R., Ismagilov, R. F., Mazmanian, S. K., &amp; Hsiao, E. Y. (2015). Indigenous bacteria from the gut microbiota regulate host serotonin biosynthesis. <i>Cell, 161</i>(2), 264–276.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
     </ol>
     <p class="foot">Created by Erin Singleton, a student in APPPAH's Prenatal &amp; Perinatal Educator certification, as a companion to The Return Mandala. A model for reflection and education, not diagnosis, therapy, or medical advice.</p>
@@ -662,13 +674,13 @@ const DIRS = [
 // blends: that reading is this mandala's synthesis, and fawn itself comes from Walker, not from polyvagal theory.
 const NERVE = [
   {state:"Sympathetic", stateLong:"sympathetic: the accelerator", feel:"Heart pounding, heat, the urge to push or run.", way:"Breathe out longer than you breathe in.",
-   blend:"Ventral and sympathetic together: energy that stays connected.", },
+   blend:"Ventral and sympathetic together: energy that stays connected.", winTag:"Ventral with sympathetic", healthy:"In balance, the sympathetic branch lifts the heart, the breath, and blood flow to the muscles for exercise, play, and focus. Cortisol rises each morning to help you wake and get going, then eases off.", },
   {state:"Sympathetic and dorsal at once", stateLong:"sympathetic and dorsal at once: accelerator and brake together", feel:"A racing heart in a body that cannot move.", way:"Start with a tiny movement, then let it grow.",
-   blend:"Ventral holding stillness and alertness together: quiet, open presence.", },
+   blend:"Ventral holding stillness and alertness together: quiet, open presence.", winTag:"Ventral holding both", healthy:"In balance, both branches work together for alert stillness: steady attention for listening, learning, and taking things in, without bracing.", },
   {state:"Dorsal", stateLong:"dorsal: the oldest brake", feel:"Numb, heavy, far away; nothing seems to matter.", way:"Warmth first, then gentle rhythm.",
-   blend:"Ventral and dorsal together: stillness that feels safe.", },
+   blend:"Ventral and dorsal together: stillness that feels safe.", winTag:"Ventral with dorsal", healthy:"In balance, the dorsal branch of the vagus runs rest and digest below the diaphragm: digestion, taking in nutrients, repair, and the slower heart of deep rest and sleep.", },
   {state:"The social system, used for defense", stateLong:"the ventral system's face and voice, recruited for defense, with sympathetic fear (or dorsal submission) underneath", feel:"Smiling and agreeing while your own self disappears.", way:"Pause before you answer, and ask what you want.",
-   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.", }
+   blend:"Ventral at its most social: warmth toward others, with yourself still in the room.", winTag:"Ventral, most social", healthy:"In balance, the ventral vagus tunes the face, the voice, and listening for connection, and oxytocin, released with warm touch and closeness, supports bonding and can ease the stress response.", }
 ];
 
 // Emotions: the feelings that tend to arise in each part of the wheel, shown in the direction panels only. These are
@@ -1284,7 +1296,7 @@ const cells=[];
 const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"The ring of survival"};
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
-  if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">Ventral</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span>${more}`;
+  if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">${n.winTag}</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span><span class="tl">${n.healthy}</span>${more}`;
   if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${more}`;
   return `<span class="ringtag">The ring of survival</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
 }
@@ -2084,6 +2096,7 @@ const panel=document.getElementById("panel"), tabs=document.getElementById("tabs
 let sel={kind:null,k:null,layer:null}, view="intro";
 function addTab(label,key,go){ const b=document.createElement("button"); b.className="tab"; b.type="button"; b.setAttribute("role","tab"); b.textContent=label; b.dataset.tab=key; b.addEventListener("click",go); tabs.appendChild(b); }
 addTab("How to read","intro",()=>showIntro());
+addTab("Foundations","found",()=>showFound(true));
 addTab("Where am I?","where",()=>showWhere(true));
 addTab("The four directions","dir",()=>showDir(sel.kind==="dir"?sel.k:0,null,true));
 addTab("Patterns","patterns",()=>showPatterns(true));
@@ -2114,6 +2127,7 @@ function wire(){
   on("[data-patterns]",()=>showPatterns(true));
   on("[data-lens]",b=>showLens(b.dataset.lens,true));
   on("[data-lensoff]",()=>showIntro());
+  on("[data-lasts]",()=>showBody(true,"lasts"));
   on("[data-discern]",()=>{ showBody(true); const t=document.getElementById("body-discern"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); });
   on("[data-flow]",()=>findGo("flow",true));
   on("[data-monkey]",()=>findGo("monkey",true));
@@ -2181,6 +2195,58 @@ function showIntro(){
   const lb=document.getElementById("loopbtn"); lb.textContent=LOOPON?"Show the simpler wheel":"Show the loop on the wheel";
   lb.addEventListener("click",()=>{ setLoop(!LOOPON); lb.textContent=LOOPON?"Show the simpler wheel":"Show the loop on the wheel"; });
   wire();
+}
+
+/* ---------- Foundations ----------
+   One place for the concepts the wheel draws on: the nervous system and its branches, each in balance and under threat,
+   the stress response and cortisol, the hormones and messengers that color what we feel, and how it all sits on the
+   wheel. */
+const FOUND_BRANCH=[
+  ["Sympathetic","--ff","The accelerator. It lifts the heart, the breath, and blood flow to the muscles for exercise, play, and focus, and sharpens attention for a deadline or a game. With ventral safety it is energy that stays connected: passion, excitement, effort.","Fight or flight: the heart pounds, digestion stops, and attention narrows to the threat."],
+  ["Ventral vagal","--sun2","The newest branch of the vagus, from the brainstem to the heart, face, voice, and ears. It slows the heart with a gentle brake and tunes the face and voice for connection: listening, warmth, play, and feeling safe with others.","Recruited for defense: the friendly face and voice used to appease, as in fawn, with fear underneath."],
+  ["Dorsal vagal","--co","The oldest branch, running below the diaphragm. It looks after rest and digest: digestion, taking in nutrients, repair, and the slow heart of deep rest, sleep, and intimacy. With ventral safety it is stillness that feels safe.","Shutdown: when there seems to be no way out, it slows everything down: collapse, numbness, feeling far away."]];
+const FOUND_HORMONES=[
+  ["Cortisol","The steady stress hormone, from the adrenal glands, under the HPA axis. In balance it follows a daily rhythm: it rises in the first half hour after waking to help you get going, then falls through the day to its lowest at night (Fries and colleagues, 2009). In a challenge it raises blood sugar for energy and calms inflammation, then turns itself off. Kept high for too long, it disturbs sleep, raises blood pressure, weakens immunity, and wears on memory and mood (McEwen, 1998; Sapolsky, 2004)."],
+  ["Adrenaline and noradrenaline","The fast messengers of the sympathetic system: within seconds the heart speeds up, the airways open, and the body is ready to move. In balance they give you the surge for a sprint or a performance, and settle soon after."],
+  ["Oxytocin","Released with warm touch, closeness, birth, and breastfeeding. It supports bonding and trust, and with safe company it can soften the stress response: in one study, social support and oxytocin together lowered people's cortisol under stress (Heinrichs and colleagues, 2003). Its effects depend on the setting, so it is not simply a calming hormone."],
+  ["Endorphins","The body's own painkillers, the endogenous opioids. They rise with exercise, laughter, and shared connection: laughing together releases them in the brain (Manninen and colleagues, 2017). In collapse they also bring the numbness that helps a body endure what it cannot escape."],
+  ["Endocannabinoids","The body's own cannabis-like messengers. They help buffer stress, settle mood, and bring the calm after effort; part of the runner's high comes from them (Fuss and colleagues, 2015)."],
+  ["Dopamine","The wanting and seeking messenger: motivation, drive, and reaching for what matters (Berridge and Robinson, 1998). It lights up in flow and in learning, and can be hijacked by habits that promise quick relief."],
+  ["Serotonin","Steadies mood, sleep, and appetite. Most of the body's serotonin is made in the gut, where it helps run digestion (Yano and colleagues, 2015)."]];
+function showFound(user){
+  setView("found");
+  panel.innerHTML=`<div class="phasehead"><div class="eyebrow">Foundations</div><h2>The nervous system, in one place</h2><div class="meta">The branches, the stress response, and the hormones behind what we feel</div>
+      <p>The wheel draws on a handful of ideas again and again. Here they are together: how the nervous system is built, what each branch does when all is well and when it is protecting you, how stress moves through the body, and the hormones and messengers that color how we feel.</p></div>
+    <div class="ring"><h3>The nervous system, in brief</h3>
+      <p>The brain and spinal cord make up the central nervous system; the nerves that reach every part of the body make up the rest. Much of it runs without you having to think about it: the <b>autonomic nervous system</b>, which keeps the heart beating, the breath moving, and food digesting.</p>
+      <p>It has two great branches. The <b>sympathetic</b> branch is the accelerator, readying the body to act. The <b>parasympathetic</b> branch, carried mostly by the <b>vagus nerve</b>, is the brake, slowing the body for rest, repair, and connection. Most of the vagus nerve's fibers carry news up from the body to the brain, so the body is always telling the brain how it is.</p>
+      <p>Polyvagal theory (Porges, 2011) divides the parasympathetic side in two: a newer <b>ventral</b> branch for safety and connection, and an older <b>dorsal</b> branch for rest and, under threat, for shutdown. Below the level of thought, the body keeps scanning for safety and danger, which Porges calls <b>neuroception</b>, and shifts between these states on its own.</p>
+      <p class="note">Polyvagal theory is a useful map, and parts of its anatomy are disputed by physiologists. The broad picture of an accelerator, a brake, and a body that reads safety before the mind does is well supported.</p></div>
+    <div class="ring"><h3>Each branch, in balance and under threat</h3>
+      <p>None of these branches is only for survival. Each one keeps the body healthy when you are inside your window, and each one has a protective form when you are not.</p>
+      <div class="fbranch">${FOUND_BRANCH.map(([n,c,ok,threat])=>`<div style="--mc:var(${c})"><h4>${sw(c)}${n}</h4><p><b>In balance.</b> ${ok}</p><p><b>Under threat.</b> ${threat}</p></div>`).join("")}</div>
+      <p>Inside the window they blend, held by ventral safety: energized is ventral with sympathetic, settled is ventral with dorsal, still holds both, and connected is ventral at its most social.</p></div>
+    <div class="ring"><h3>The stress response</h3>
+      <p>Stress moves through the body in two waves. The <b>fast wave</b> comes from the sympathetic system and the core of the adrenal glands: within seconds, adrenaline and noradrenaline speed the heart, open the airways, and ready the muscles. The <b>slower wave</b> is the <b>HPA axis</b>: the hypothalamus signals the pituitary, the pituitary signals the adrenal glands, and over the next minutes cortisol rises, bringing energy to the blood and steadying the body for a longer effort.</p>
+      <p>When the challenge passes, cortisol tells the brain to stand the system down, and the body returns to rest. This is the stress response working as it should: a short rise, and a full return. It is how we meet a hard day, an exam, a race, or an emergency, and come back.</p>
+      <p><b>Cortisol keeps time.</b> Even without stress it follows a daily rhythm: highest in the first half hour after waking, lowest late at night. Sleep, light, meals, and movement help keep that rhythm steady.</p></div>
+    <div class="ring"><h3>When stress lasts</h3>
+      <p>The trouble comes when the stress response is switched on again and again, or does not switch off. Bruce McEwen called the wear of this <b>allostatic load</b>: the cost of the body's protections running too long (McEwen, 1998). Cortisol that stays high, or a daily rhythm that flattens after long stress, is linked with poor sleep, higher blood pressure, inflammation, lower immunity, belly fat, trouble with memory, and low mood (Sapolsky, 2004).</p>
+      <p>On the wheel this is life lived out in the ring of survival, and the Lately dial shows it as the shell thickening. The way back is the same as always: coming back, again and again, toward the center, so the stress response gets to finish and the body gets to rest.</p>
+      <button type="button" class="linkbtn" data-lasts>Read more: if it lasts</button></div>
+    <div class="ring"><h3>Hormones and messengers</h3>
+      <p class="about">Emotion lives in the body as well as the mind. These are some of the messengers that move with our states, in balance and under strain.</p>
+      <dl class="basics">${FOUND_HORMONES.map(([n,t])=>`<dt>${n}</dt><dd>${t}</dd>`).join("")}</dl>
+      <p class="note">Hormones work together, and their effects depend on the person and the moment. These are simplified; none of them is good or bad on its own.</p></div>
+    <div class="ring"><h3>How it sits on the wheel</h3>
+      <ul><li><b>The center:</b> coherence. Mind, heart, and body in step, with heart rate variability high and flexible.</li>
+        <li><b>The window of capacity:</b> the ventral state, with the sympathetic and dorsal branches in their healthy blends, and cortisol in its daily rhythm.</li>
+        <li><b>The edge:</b> the alarm sounding. Adrenaline begins to rise, or the body begins to sink, while you are still inside your window.</li>
+        <li><b>The border:</b> the brake, the thinking brain holding the alarm in check.</li>
+        <li><b>The ring of survival:</b> the protective forms: fight or flight, freeze, collapse, and fawn, with the stress hormones running high, and in collapse the body's own painkillers.</li></ul>
+      <p><button type="button" class="linkbtn" data-lens="resonance">Coherence and resonance</button> · <button type="button" class="linkbtn" data-lens="loop">The heart-brain loop</button> · <button type="button" class="linkbtn" data-lens="window">Polyvagal theory and the window</button></p></div>
+    <p class="src">Porges (2011); Dana (2018); McEwen (1998); Sapolsky (2004); Fries et al. (2009); Heinrichs et al. (2003); Manninen et al. (2017); Fuss et al. (2015); Berridge &amp; Robinson (1998); Yano et al. (2015); Thayer &amp; Lane (2009)</p>`;
+  wire(); if(user) bringPanel();
 }
 
 // Where am I? The finder, and how wide is my window
@@ -2418,7 +2484,7 @@ function showDir(k, layer, user){
   const step=(n,t)=>`<span class="layerstep">${n} of 6</span>${t}`;
   panel.innerHTML=`<div class="phasehead"><div class="eyebrow">The four directions</div><h2>${Pt.name}</h2><div class="meta">${Pt.span}</div>
       <p>${Pt.text} Read it from the center out, the way energy rises, or from the outside in, the way back.</p></div>
-    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
+    <div class="ring${hl("win")}" id="L-win"><h3>${sw("--w-"+KEYS[k])}${step(1,`Inside the window: ${d.win.name}`)}</h3><p class="about">Nervous system: ${NERVE[k].blend}</p><p>${d.win.text}</p><p><b>In balance:</b> ${NERVE[k].healthy.replace(/^In balance, /,"").replace(/^./,c=>c.toUpperCase())}</p><p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].win)}.</p><p><b>How the world looks from here:</b> ${PERCEIVE[k].win}</p><p><b>The story here:</b> "${STORY.win.i}" "${STORY.win.w}"</p><p><b>Flow here.</b> ${FLOW_DIR[k]} <button type="button" class="linkbtn" data-flow>Read about flow</button></p></div>
     <div class="ring${hl("heart")}" id="L-heart"><h3>${sw("--sun2")}${step(2,"The heart: heart rate variability")}</h3><p>${L.heart}</p></div>
     <div class="ring${hl("stem")}" id="L-stem"><h3>${sw("--sun3")}${step(3,"The brainstem: the vagal centers")}</h3><p>${L.stem}</p></div>
     <div class="ring${hl("edge")}" id="L-edge"><h3>${sw("--e-"+KEYS[k])}${step(4,`The alarm, at the edge: ${d.edge.name}`)}</h3><p class="about">Still inside your window, at its outer reaches.</p><p>${L.alarm}</p>${ul(d.edge.signs)}<p><b>Emotions that tend to arise here:</b> ${emoList(FEEL[k].edge)}.</p><p><b>Monkey mind here.</b> ${MONKEY_DIR[k]} <button type="button" class="linkbtn" data-monkey>Read about monkey mind</button></p><button type="button" class="linkbtn" data-way="edge">Coming back from the edge</button></div>
