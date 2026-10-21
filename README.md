@@ -112,3 +112,5 @@ Each petal is titled "the way back" on the wheel (`.t-wayback`). The direction n
 **Right now lights the whole ring.** As the Right now dial turns, the ring you are in lights all the way round, not just one quarter: the center and its coherence rings in resonance, the window, the alarm at the edge, the ring of survival, the four petals of the way back on the return, and the window again on the way home (`drawNowRings`, `markNow`).
 
 **Brightest at resonance.** The center shines its brightest in resonance (`#nowGlow` over the field glow) and fades as the Right now dial turns away; deep in survival the center's own glow (`#cohField`) dims too, and both come back on the way home. The window's highlight lights its borders only, so it no longer washes the center brighter.
+
+**Section links.** A tab whose sections carry `data-nav` gets a row of jump links under the tabs (`#secnav`), pinned to the top while reading, with the section in view marked. Foundations uses it: In brief, The branches, The stress response, When stress lasts, Hormones, On the wheel.
