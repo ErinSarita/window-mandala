@@ -60,6 +60,7 @@ h1{font-family:var(--display);font-weight:500;font-size:clamp(34px,5vw,54px);lin
 .stage{position:sticky;top:12px;display:grid;gap:14px;max-height:calc(100vh - 24px - env(safe-area-inset-top,0px));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:4px 6px 12px 2px}
 @media (max-width:900px){.stage{position:static;max-height:none;overflow:visible;padding:0}}
 .svgbox{width:100%;max-width:740px;margin:0 auto;aspect-ratio:1/1;position:relative}
+@media (min-width:901px){ .svgbox{max-width:min(740px,calc(100vh - 330px));min-width:380px} .dial{max-width:150px} }
 svg#m{width:100%;height:100%;display:block;overflow:visible}
 .cell{cursor:pointer;transition:opacity .25s ease;stroke:var(--bg);stroke-width:2.5}
 .cell:focus{outline:none} .cell:focus-visible{stroke:var(--ink);stroke-width:3}
@@ -170,7 +171,8 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .map-mark{cursor:grab}
 .map-mark.draft{opacity:.85}
 svg.mapview .t-sub,svg.mapview .t-aware,svg.heldview .t-sub,svg.loopview .t-heldring,svg.loopview .door,svg.loopview .t-out.t-sub{display:none}
-svg.loopview .t-edge.t-sub{display:inline}
+/* the wheel keeps its names; the smaller lines step back, and the cards carry them */
+svg .t-sub,svg .t-blend,svg .t-heldring,svg .t-lasts,svg .t-brakeline{display:none}
 .t-alarm{fill:var(--etext);stroke:none}
 .t-brake{fill:#3E2A06;font-style:normal;letter-spacing:.06em}
 .q-dim,.q-hi{pointer-events:none;opacity:0;transition:opacity .25s ease}
@@ -480,7 +482,6 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
     <div class="stage">
       <div class="lenses" id="lenses" role="group" aria-label="The models this mandala comes from: tap one to light it on the wheel"><span class="lenslbl">The models it comes from</span></div>
       <div class="svgbox"><div class="moontip" id="moontip" role="status"></div><svg id="m" viewBox="-618 -618 1236 1236" role="group" aria-label="The Window Mandala"></svg></div>
-      <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="capbar">
         <div class="dials">
           <div class="dialcard dl-l"><div class="dialhead"><span class="dialeyebrow">Lately</span><b>Your window</b></div>
@@ -496,6 +497,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
         </div>
         <div class="maprow"><button type="button" class="btn" id="loopswitch" aria-pressed="true">Show the loop</button><button type="button" class="btn" id="mapbtn" aria-pressed="false">Make my map</button><button type="button" class="btn" id="resbtn">My resources</button><span class="maphint" id="maphint" hidden>Map mode is on: tap the wheel where something tends to take you.</span></div>
       </div>
+      <div class="findbar" id="findbar" role="group" aria-label="Find on the map: tap one to light where it usually lives"><span class="lenslbl">Find on the map</span></div>
       <div class="legendkey" id="legendkey"></div>
     </div>
     <div class="panel">
@@ -1339,13 +1341,27 @@ function drawBraid(){
 // outside the braid, bright at the base and fading to light at the tips, over a soft glow. They lengthen as the window
 // widens. They stand tallest where the wheel's lines cross it, step down shorter on either side, rise a little again at
 // each midpoint between, and taper back down before the next cross.
+// how much the rays shine right now: full at the center, easing off through the window and the alarm, nearly out deep
+// in survival, and coming back on the way home
+function nowShine(){
+  if(typeof nowZones!=="function") return 1;
+  const Z=nowZones(), b=NOWA>=330?NOWA-360:NOWA, lerp=(x,y,t)=>x+(y-x)*Math.max(0,Math.min(1,t));
+  if(b<30) return 1;
+  if(b<Z.wEnd) return lerp(1,0.8,(b-30)/(Z.wEnd-30));
+  if(b<Z.aEnd) return lerp(0.8,0.45,(b-Z.wEnd)/(Z.aEnd-Z.wEnd));
+  if(b<225) return lerp(0.45,0.06,(b-Z.aEnd)/(225-Z.aEnd));
+  if(b<270) return lerp(0.06,0.6,(b-225)/45);
+  return lerp(0.6,1,(b-270)/60);
+}
 function drawRays(){
-  const r0=R.braid[1]+4, base=6+14*CAP, top=r0+base*2+2, defs=document.getElementById("wdefs");
+  const g=document.getElementById("raysG"); if(!g) return; g.innerHTML="";
+  const sh=nowShine(), r0=R.braid[1]+4, base=(6+14*CAP)*(0.35+0.65*sh), top=r0+base*2+2, defs=document.getElementById("wdefs");
+  const old=document.getElementById("raylight"); if(old) old.remove(); const oldg=document.getElementById("rayglow"); if(oldg) oldg.remove();
   const gr=el("radialGradient",{id:"raylight",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(top)},defs);
   [[r0/top,"#F4C14A",1],[(r0+base*0.7)/top,"#F0BC45",0.9],[(r0+base*1.4)/top,"#EDB940",0.55],[1,"#E8B23A",0.05]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},gr));
   const gl=el("radialGradient",{id:"rayglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(top)},defs);
   [[(r0-6)/top,"#FFE7A0",0],[r0/top,"#FFE7A0",isDark()?0.28:0.5],[(r0+base*1.1)/top,"#FFE7A0",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},gl));
-  const g=el("g",{class:"rays","pointer-events":"none","aria-hidden":"true"});
+  g.setAttribute("opacity",f(0.2+0.8*sh));
   el("circle",{cx:0,cy:0,r:f((r0-6+top)/2),fill:"none",stroke:"url(#rayglow)","stroke-width":f(top-r0+6)},g);
   for(let a=0;a<360;a+=0.6){
     const off=Math.abs(((a+22.5)%45)-22.5), cross=Math.pow(Math.max(0,1-off/10),1.6), mid=Math.pow(Math.max(0,1-Math.abs(off-22.5)/7),1.6);
@@ -1388,7 +1404,7 @@ function draw(){
     const hit=el("path",{d:ring,class:"awarehit","fill-rule":"evenodd",tabindex:"0",role:"button","aria-label":"The field of awareness. Read about awareness"});
     if(BODY) hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>If it lasts</b><span class="tl">Living out in the survival states for months or years wears the body down: heart, sleep, digestion, immunity, and mood.</span><span>Tap to read more.</span>`}),()=>showBody(true,"lasts"));
     else hookTip(hit,()=>({x:0,y:-(r0+r1)/2,html:`<span class="ringtag">Around the whole wheel</span><b>The field of awareness</b><span class="tl">Peripheral awareness: the soft, wide knowing that holds every state, the window and the defenses alike.</span><span>Tap to read more.</span>`}),()=>showAware(true)); }
-  drawBraid(); drawRays();
+  drawBraid(); el("g",{id:"raysG",class:"rays","pointer-events":"none","aria-hidden":"true"}); drawRays();
   const labels=el("g",{id:"ringLabels","pointer-events":"none"});
   const ot=R.out[1]-R.out[0], et=R.edge[1]-R.edge[0], wt=R.win[1]-R.win[0];
   // the two outer rings are each one continuous band, with touch areas laid over them
@@ -1967,7 +1983,7 @@ function syncLately(){
 }
 latelyDialRef=makeDial(document.getElementById("dialLately"),{
   start:90,
-  zones:()=>[{a0:0,a1:180,cls:"dz-rise"},{a0:180,a1:360,cls:"dz-fall"}],
+  zones:()=>[{a0:-90,a1:90,cls:"dz-rise"},{a0:90,a1:270,cls:"dz-fall"}],
   labels:[["center",0],["protection",180]],
   arrows:[[90,-1],[270,-1]],
   // a small sphere: the light at the center grows as the shell around it thins
@@ -2001,6 +2017,7 @@ nowDial=makeDial(document.getElementById("dialNow"),{
 // the way out is the load building, drawn by drawArousal; at the center and on the way back the wheel shows where you are
 function renderNow(){
   if(nowDial) nowDial.redraw();
+  drawRays();
   const Z=nowZones(), b=NOWA>=330?NOWA-360:NOWA, S=arousalMarks(), k=ARPATH===4?2:ARPATH;
   if(b<30){ AROUSAL=0; drawArousal(); arousalname.textContent="At the center";
     arousalcap.innerHTML="Resonance: coherent, connected, at home in yourself.<small>Turn the dial clockwise to follow the way out, and on round for the way back.</small>";
@@ -2105,13 +2122,13 @@ function showIntro(){
     <ul class="legend">
       <li>${sw("--sun3")}<div><b>The center: coherence</b>Three circles, mind, heart, and body, overlapping in light. The closer to the center, the more fully they move in step, and the clearer awareness becomes. Further out, protection takes the lead, but the center is always there to return to.</div></li>
       <li>${sw("--win")}<div><b>Inside the window</b>Four healthy states, one for each direction, each the safe root of the defense beyond it. Inside your window of capacity the qualities many call Self come forward, calm, curiosity, compassion, and clarity, and the connection with Self is easier to feel.</div></li>
-      <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>In the simpler wheel, the words just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
+      <li id="lg-held">${sw("--win")}<div><b>Every feeling can be held here</b>Just inside the window's edge. The window is not only for pleasant feelings: anger, fear, and grief can be felt here too, in their held form. Held, an emotion is felt in the body while you can still breathe, think, stay connected, and choose; anger becomes a clear no, grief love that moves, fear alert attention. Outside the window, the same emotion has taken over and drives the whole system. Even shame has a held form: a brief flush of remorse that leads to repair, rather than the flood that sends you into hiding or collapse.</div></li>
       <li>${sw("--sun2")}<div><b>Heart and brainstem</b>The first rings of the loop that holds the window, shown when you turn the loop on: the heart's rhythm, heart rate variability, and the brainstem's vagal centers, where brain and heart talk.</div></li>
       <li>${sw("--e-ff")}<div><b>The alarm, at the edge</b>The early signals of leaving: revving, bracing, sinking, over-tuning. Still inside your window, at its outer reaches; catching them here makes the way back short. In the simpler wheel, the window's glow reaches out over it: too much or too little energy, but still inside the window.</div></li>
       <li>${sw("--gold")}<div><b>The brake, and the border of your window</b>The prefrontal brake holds the alarm in check. In the simpler wheel it is one gold line, right beside the window's glowing border; with the loop turned on, it is a band, with a deeper gold border around it. Either way it marks the edge of your window of capacity: you leave the window when the brake gives way, into fight or flight, or clamps down, into shutdown. Linda Thai, adapting Dan Siegel, maps the same band of too much or too little energy between the window's steady center and survival.</div></li>
       <li>${sw("--ff")}<div><b>Outside the window</b>The four defenses, each an ancient way the body protects you when something is too much. Here the loop is broken. The arrows between them show how one defense can turn into another.</div></li>
       <li>${sw("--sun2")}<div><b>The braid, and the golden rays</b>The braid weaves the three nervous systems together round the whole mandala. Outside it, short golden rays show resonance: they lengthen as the Lately dial turns toward the center, and run longest where the wheel's lines cross.</div></li>
-      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
+      <li>${sw("--fa")}<div><b>The petals: ways back</b>Beyond the survival ring, a petal at each direction holds the ways back from it, and two small petals at each diagonal hold the way back from each movement between neighbors, one for each arrow. Tap one to read them. On My resources map, the petals fill with what helps you.</div></li>
     </ul>
     <h2>The three nervous systems on the wheel</h2>
     <p>Polyvagal theory describes three states. On this wheel, <b>ventral</b>, the safe and connected state, is the whole window, with coherence at its center. <b>Sympathetic</b>, the accelerator, is the top: fight or flight. <b>Dorsal</b>, the oldest brake, is the bottom: collapse.</p>
@@ -2995,13 +3012,15 @@ async function downloadRes(){
 
 /* The petals: four broad petals beyond the braid, one at each direction, holding the ways back from it. On My resources
    map they hold the visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:446, rb:450, r1:540, half:34, lines:[469,484,499,513], size:12.5};
+const PETAL={r0:446, rb:450, r1:542, half:20, lines:[469,484,499,513], size:12.5};
 // the petal's half-width, in degrees, at a radius: the tip of a lotus petal rising from behind the braid, its sides
 // curving in to a point
-const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.rb)/(PETAL.r1-PETAL.rb))); return PETAL.half*(1-Math.pow(u,1.1)); };
-function petalPath(a){
-  const N=28, L=[], Rr=[];
-  for(let i=0;i<=N;i++){ const r=PETAL.r0+(PETAL.r1-PETAL.r0)*i/N, h=petalHalf(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
+const lotusHalf=(r,rb,r1,H)=>{ const u=Math.min(1,Math.max(0,(r-rb)/(r1-rb))); return H*Math.sin(Math.PI*(0.25+0.75*u)); };
+const petalHalf=r=>lotusHalf(r,PETAL.rb,PETAL.r1,PETAL.half);
+function petalPath(a,half,r0,r1){
+  half=half||petalHalf; r0=r0||PETAL.r0; r1=r1||PETAL.r1;
+  const N=32, L=[], Rr=[];
+  for(let i=0;i<=N;i++){ const r=r0+(r1-r0)*i/N, h=half(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
   return "M"+[...L,...Rr].map(([x,y])=>f(x)+" "+f(y)).join(" L")+"Z";
 }
 function drawPetals(){
@@ -3015,7 +3034,7 @@ function drawPetals(){
     // what goes in it: the ways back, or on My resources map, what you have added
     let items;
     if(mine){ const L=RES.items[key]; items=[...L.filter(i=>i.who==="own"),...L.filter(i=>i.who==="others")].map(i=>({t:i.text,c:i.who==="own"?"po":"pw"})); }
-    else items=WAYS[key].practices.map(p=>({t:p.name,c:""}));
+    else items=[];
     const empty=mine&&!items.length;
     // on screen an empty petal asks; on the printout it stays blank, room to write by hand
     if(empty) items=RES.force?[]:[{t:"What helps you come back from here?",c:""}];
@@ -3040,6 +3059,13 @@ function drawPetals(){
       row.forEach((p,i)=>{ const ts=el("tspan",{class:p.c},tp); ts.textContent=(i?"  ·  ":"")+p.t; });
     });
   });
+  // two small petals at each diagonal, one for each arrow between neighbors: the way back from that movement
+  DIRS.forEach((d,k)=>{ const n=(k+1)%4, j=d.angle+45;
+    [[k,n,j+6],[n,k,j-6]].forEach(([from,to,a])=>{ const i=moveIndex(from,to), m=MOVES[i];
+      const sg=el("g",{class:"petal petal-s",style:`--mc:var(${DIRS[to].color})`,tabindex:"0",role:"button","aria-label":`The way back: ${m.title.toLowerCase()}`},g);
+      el("path",{d:petalPath(a,r=>{ const u=Math.min(1,Math.max(0,(r-450)/(534-450))); return 2.8*Math.pow(Math.sin(Math.PI*u),0.8); },450,536),class:"pf"},sg);
+      const [tx,ty]=P(510,a);
+      hookTip(sg,()=>({x:tx,y:ty,html:`<span class="ringtag">The way back</span><b>${m.title}</b><span class="tl">${m.helps}</span><span>Tap to read more.</span>`}),()=>showMoves(i,true)); }); });
   meas.remove();
 }
 
