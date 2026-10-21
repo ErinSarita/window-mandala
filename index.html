@@ -118,7 +118,6 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .cohlist .ev{display:block;font-size:13px;color:var(--muted)}
 .body-halo-in{stroke:#E8C25A;stroke-width:1.4;stroke-opacity:.85;filter:none}
 .t-body{fill:var(--sunink);font-style:italic;font-weight:600}
-.body-chev{fill:none;stroke:var(--goldline);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:.75;pointer-events:none}
 .body-hit{fill:transparent;cursor:pointer;outline:none}
 .t-blend{font-family:var(--body);font-style:normal;font-weight:600;opacity:.62}
 .t-caps{letter-spacing:.16em;font-weight:600} .t-ital{font-style:italic}
@@ -1607,10 +1606,6 @@ function bodyCenter(g,L1){
   // the tap for the whole center keeps to its own size, so the window around it stays tappable
   const hc=el("circle",{cx:0,cy:0,r:f(L1+2-(L1+2-r0)/COH_LAYERS.length),class:"body-hit",tabindex:"0",role:"button","aria-label":"Coherence, at the center"},g);
   hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center, in the Body view</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
-  // connection grows inward: soft chevrons on the window's diagonals, pointing in
-  [45,135,225,315].forEach(a=>{ [0,1,2].forEach(i=>{ const r=R.win[1]-12-i*13, w=5.5; el("path",{d:`M${f(P(r,a-w)[0])} ${f(P(r,a-w)[1])} L${f(P(r-8,a)[0])} ${f(P(r-8,a)[1])} L${f(P(r,a+w)[0])} ${f(P(r,a+w)[1])}`,class:"body-chev","stroke-opacity":f(0.35+i*0.25)},g); });
-    const [hx,hy]=P(R.win[1]-24,a), h=el("circle",{cx:f(hx),cy:f(hy),r:22,class:"body-hit",tabindex:"0",role:"button","aria-label":"Connection grows inward"},g);
-    hookTip(h,()=>({x:hx,y:hy,html:`<span class="ringtag">Body view</span><b>Connection grows inward</b><span class="tl">The more safe and whole you feel in your own body, the more connected you can be with others and with life.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"inward")); });
 }
 // Flow: the sweet spot at the window's growing edge, on the Energized side. A glowing arc just inside the heart ring.
 // Flow: a translucent band around the whole window, widest on the Energized side (most common, best studied) and
@@ -3001,25 +2996,19 @@ async function downloadRes(){
   },true);
 }
 
-/* The petals: four round the survival ring, one centered on each direction, drawn the way The Pregnancy and Birth Mandala
+/* The petals: four round the survival ring, one centered on each direction, edge to edge and rising straight from it, drawn the way The Pregnancy and Birth Mandala
    draws its practice petals. Each holds the ways back from its survival state; on My resources map they hold the
    visitor's own entries instead, what helps on their own and what helps with others. */
-const PETAL={r0:446, r1:544, w:40, lines:[469,484,499,513], size:12.5};
-// from the ring, each edge swells gently out past the petal's own width and meets the other in a soft point
-function petalD(r0,r1,a0,a1){
-  const m=(a0+a1)/2, w=a1-a0, q=(r,a)=>{ const [x,y]=P(r,a); return f(x)+" "+f(y); };
-  return `M${q(r0,a0)} Q${q(r0+(r1-r0)*.62,a0-w*.08)} ${q(r1,m)} Q${q(r0+(r1-r0)*.62,a1+w*.08)} ${q(r0,a1)} `+arc(r0,a1,a0,0)+"Z";
+const PETAL={r0:428, r1:544, w:90, lines:[469,484,499,513], size:12.5};
+// the petal's half-width, in degrees, at a radius: full at the base, where it meets its neighbors on the ring, swelling
+// a little, then curving in to a soft point
+const petalHalf=r=>{ const u=Math.min(1,Math.max(0,(r-PETAL.r0)/(PETAL.r1-PETAL.r0))); return PETAL.w/2*(1-Math.pow(u,1.7))*(1+0.16*Math.sin(Math.PI*u)); };
+// drawn along the circle, so the petal follows the ring rather than cutting across it
+function petalD(a){
+  const N=60, L=[], Rr=[];
+  for(let i=0;i<=N;i++){ const r=PETAL.r0+(PETAL.r1-PETAL.r0)*i/N, h=petalHalf(r); L.push(P(r,a-h)); Rr.unshift(P(r,a+h)); }
+  return "M"+L.map(([x,y])=>f(x)+" "+f(y)).join(" L")+" L"+Rr.map(([x,y])=>f(x)+" "+f(y)).join(" L")+" "+arc(PETAL.r0,a+PETAL.w/2,a-PETAL.w/2,0)+"Z";
 }
-// the petal's half-width, in degrees, at a radius, read off its edge curve, for fitting words inside it
-function petalHalfAt(r0,r1,w){
-  const A=P(r0,-w/2), C=P(r0+(r1-r0)*.62,-w/2-w*.08), B=P(r1,0), pts=[];
-  for(let i=0;i<=48;i++){ const t=i/48, x=(1-t)*(1-t)*A[0]+2*(1-t)*t*C[0]+t*t*B[0], y=(1-t)*(1-t)*A[1]+2*(1-t)*t*C[1]+t*t*B[1];
-    pts.push([Math.hypot(x,y),Math.abs(Math.atan2(x,-y)*180/Math.PI)]); }
-  return r=>{ if(r<=pts[0][0]) return pts[0][1];
-    for(let i=1;i<pts.length;i++) if(pts[i][0]>=r){ const [ra,ha]=pts[i-1],[rb,hb]=pts[i]; return ha+(hb-ha)*(r-ra)/(rb-ra); }
-    return 0; };
-}
-const petalHalf=petalHalfAt(PETAL.r0,PETAL.r1,PETAL.w);
 function drawPetals(){
   const g=document.getElementById("petalG"); if(!g) return; g.innerHTML="";
   const mine=resShown(), meas=el("text",{class:"lbl t-petal","font-size":PETAL.size,visibility:"hidden"},g);
@@ -3027,7 +3016,7 @@ function drawPetals(){
   DIRS.forEach((d,k)=>{
     const key=KEYS[k], a=d.angle;
     const pg=el("g",{class:"petal",style:`--mc:var(${d.color})`,tabindex:"0",role:"button","aria-label":mine?`Your ways back from ${d.name.toLowerCase()}`:`Ways back from ${d.name.toLowerCase()}. Read them`},g);
-    el("path",{d:petalD(PETAL.r0,PETAL.r1,a-PETAL.w/2,a+PETAL.w/2),class:"pf"},pg);
+    el("path",{d:petalD(a),class:"pf"},pg);
     // what goes in it: the ways back, or on My resources map, what you have added
     let items;
     if(mine){ const L=RES.items[key]; items=[...L.filter(i=>i.who==="own"),...L.filter(i=>i.who==="others")].map(i=>({t:i.text,c:i.who==="own"?"po":"pw"})); }
