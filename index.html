@@ -97,9 +97,9 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .fchip[aria-pressed="true"]{background:var(--goldline);border-color:var(--goldline);color:#fff}
 .t-pin{fill:#2C2433;font-style:italic;font-weight:700;paint-order:stroke;stroke:#FFF8E4;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
 @media (prefers-reduced-motion: no-preference){ #findG,#findPinG{animation:lensin .35s ease} }
-.flow-faint{fill:#F29A55;fill-opacity:.17;stroke:#E8874A;stroke-opacity:.3;stroke-width:1;pointer-events:none}
+.t-flowword{fill:#5E3E08;font-style:italic;font-weight:600;opacity:.85}
 .flow-hit{fill:transparent;cursor:pointer;outline:none}
-.flow-hit:hover,.flow-hit:focus-visible{fill:rgba(242,154,85,.16)}
+.flow-hit:hover,.flow-hit:focus-visible{fill:rgba(255,255,255,.16)}
 .flow-band{fill:#F29A55;fill-opacity:.3;stroke:#E8874A;stroke-opacity:.6;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,180,120,.75))}
 .monkey-arc{fill:none;stroke:#B85A4A;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:.8;pointer-events:none}
 .t-monkey{fill:#8A3A2E;font-style:italic;font-weight:700}
@@ -1772,8 +1772,8 @@ function bodyCenter(g,L1){
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
     // six rings: the outermost, new, sits where the glow ends, out in the window
     for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(i?0.3+0.08*i:0.55)},g);
-    // flow: a faint band on the second step in, widest on the Energized side and thinnest toward Settled
-    flowBand(g,r1-1.5*step,step*0.8,5,"flow-faint"); }
+    // flow: the word, on the band two steps in from the outer ring, once at each state; the hover lives here too
+    DIRS.forEach(d=>arcText(r1-1.5*step,d.angle-22,d.angle+22,"flow","lbl t-flowword",15,2,g)); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
