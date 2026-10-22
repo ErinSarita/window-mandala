@@ -97,6 +97,9 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .fchip[aria-pressed="true"]{background:var(--goldline);border-color:var(--goldline);color:#fff}
 .t-pin{fill:#2C2433;font-style:italic;font-weight:700;paint-order:stroke;stroke:#FFF8E4;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
 @media (prefers-reduced-motion: no-preference){ #findG,#findPinG{animation:lensin .35s ease} }
+.flow-faint{fill:#F29A55;fill-opacity:.17;stroke:#E8874A;stroke-opacity:.3;stroke-width:1;pointer-events:none}
+.flow-hit{fill:transparent;cursor:pointer;outline:none}
+.flow-hit:hover,.flow-hit:focus-visible{fill:rgba(242,154,85,.16)}
 .flow-band{fill:#F29A55;fill-opacity:.3;stroke:#E8874A;stroke-opacity:.6;stroke-width:1.2;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,180,120,.75))}
 .monkey-arc{fill:none;stroke:#B85A4A;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;stroke-opacity:.8;pointer-events:none}
 .t-monkey{fill:#8A3A2E;font-style:italic;font-weight:700}
@@ -1596,7 +1599,7 @@ function draw(){
     // where there is room, a third, smaller line names the blend: ventral is a thread through all four directions
     if(showWords&&band>=60){ const s1=LOOPGEO?22:24, s2=LOOPGEO?15:16, s3=12, sg=wflip?-1:1, mid=(L1+3+R.win[1])/2;
       const d12=(s1+s2)/2+3, d23=(s2+s3)/2+3, h3=(d12+d23+s1/2-s3/2)/2, h1=d12+d23-h3;
-      arcText(mid+sg*h1,b0+3,b1-3,d.win.name,"lbl t-win",s1,0.3,labels);
+      arcText(mid+h1,b0+3,b1-3,d.win.name,"lbl t-win",s1,0.3,labels);
       arcText(mid+sg*(h1-d12),b0+3,b1-3,BODY?BODY_WIN[k][0]:d.win.words,"lbl t-win t-sub",s2,0.2,labels);
       arcText(mid-sg*h3,b0+3,b1-3,BODY?BODY_WIN[k][1]:BLEND_NAMES[k],"lbl t-win t-sub t-blend",s3,0.5,labels); }
     else twoLine(wr,b0+3,b1-3,d.win.name,showWords?(BODY?BODY_WIN[k][0]:d.win.words):"","lbl t-win","lbl t-win t-sub",LOOPGEO?22:24,LOOPGEO?15:16,LOOPGEO?24:27,labels);
@@ -1768,7 +1771,9 @@ function bodyCenter(g,L1){
     el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#nowglow)",id:"nowGlow",class:"now-centerglow","pointer-events":"none"},g);
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
     // six rings: the outermost, new, sits where the glow ends, out in the window
-    for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(i?0.3+0.08*i:0.55)},g); }
+    for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(i?0.3+0.08*i:0.55)},g);
+    // flow: a faint band on the second step in, widest on the Energized side and thinnest toward Settled
+    flowBand(g,r1-1.5*step,step*0.8,5,"flow-faint"); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
@@ -1790,6 +1795,11 @@ function bodyCenter(g,L1){
       const rg=document.getElementById("raysG"); if(rg){ svg.appendChild(rg); rg.classList.add("lit"); } },
       dimOff=()=>{ const old=document.getElementById("centerdim"); if(old) old.remove(); const rg=document.getElementById("raysG"); if(rg) rg.classList.remove("lit"); };
     ["mouseenter","focus"].forEach(ev=>hc.addEventListener(ev,dimOn)); ["mouseleave","blur","click"].forEach(ev=>hc.addEventListener(ev,dimOff)); }
+  // flow, read by hovering the band two steps in: one hover for each state's kind of flow
+  { const fg=el("g",{id:"flowHits"});
+    DIRS.forEach((d,k)=>{ const a=d.angle, [tx,ty]=P(r1-1.5*step,a), F=FLOW_TIPS[k];
+      const h=el("path",{d:sector(r1-2*step,r1-step,a-45,a+45,1,0),class:"flow-hit",tabindex:"0",role:"button","aria-label":`${F[0]}, in ${d.win.name.toLowerCase()}`},fg);
+      hookTip(h,()=>({x:tx,y:ty,html:`<span class="ringtag">Flow</span><b>${F[0]}</b><span class="tl">${F[1]}</span><span>Tap to read about flow.</span>`,color:d.color}),()=>showFlow(true)); }); }
   hookTip(hc,()=>({x:0,y:-(r1-step*1.5),html:`<span class="ringtag">The center</span><b>Coherence</b><span class="tl">Mind, heart, and body in step, each with its own rhythm. As it deepens, other qualities may arise: openness, attunement, absorption, and a sense of unity.</span><span>Tap to read more.</span>`,color:"--sun3"}),()=>showBody(true,"layers"));
 }
 // Flow: the sweet spot at the window's growing edge, on the Energized side. A glowing arc just inside the heart ring.
@@ -1804,13 +1814,20 @@ const MONKEY_DIR=["Racing thoughts, jumping from one thing to the next, a sense 
   "Scanning for what could go wrong, thoughts circling the danger.",
   "Heavy rumination: going over and over the same thoughts, with little energy to move.",
   "Replaying conversations and reading every mood, the mind busy with other people."];
-const flowR=()=>BODY?CR.L1-8:CR.L1+16;
-function flowBand(g){
-  const rc=flowR(), wMax=30, wMin=7, w=a=>wMin+(wMax-wMin)*(1+Math.cos(a*Math.PI/180))/2;
+// in the Body view flow lives on the band two steps in from the outermost ring of the coherence field
+const cohStep=()=>(cohEdge()-R.core*0.72)/COH_STEPS;
+const flowR=()=>BODY?cohEdge()-1.5*cohStep():CR.L1+16;
+// a short word on each kind of flow, for the hover on its ring
+const FLOW_TIPS=[["Active flow","Absorbed in a challenge that stretches you just enough, with the whole body: dancing, sport, creative work."],
+  ["Quiet flow","Hands busy and attention steady on a task: crafts, painting, deep listening."],
+  ["Meditative flow","The work is inward: quieting the mind and resting attention on one thing."],
+  ["Group flow","Moving as one with others: music, play, a conversation that carries everyone along."]];
+function flowBand(g,rcIn,wMaxIn,wMinIn,cls){
+  const rc=rcIn||flowR(), wMax=wMaxIn||30, wMin=wMinIn||7, w=a=>wMin+(wMax-wMin)*(1+Math.cos(a*Math.PI/180))/2;
   let outer="", inner="";
   for(let a=0;a<=360;a+=2){ const [x,y]=P(rc+w(a)/2,a); outer+=(a?"L":"M")+f(x)+" "+f(y); }
   for(let a=360;a>=0;a-=2){ const [x,y]=P(rc-w(a)/2,a); inner+=(a===360?"M":"L")+f(x)+" "+f(y); }
-  el("path",{d:outer+"Z "+inner+"Z","fill-rule":"evenodd",class:"flow-band"},g);
+  el("path",{d:outer+"Z "+inner+"Z","fill-rule":"evenodd",class:cls||"flow-band"},g);
 }
 function monkeyLine(g){
   const E=R.edge, rm=E[0]+6; let d="";
@@ -1888,7 +1905,7 @@ function showFlow(user){
       <p><b>Connected.</b> Flow is shared here. People move as one in music, play, or a conversation that carries everyone along.</p>
       <p>Flow needs some engagement, and it needs safety.</p>
       <p>Research finds flow follows a curve: a moderate rise in arousal helps, and too much or too little breaks it (Peifer and colleagues, 2014). Too much challenge pushes you toward the edge and on into survival; too little drifts you toward boredom, and in the end apathy.</p>
-      <p>In the Body view the band laps over the outer layers of coherence. Flow shares a great deal with them: it is receptive, often attuned, and absorbed, with attention unified and self-consciousness gone. What it usually lacks is the resting heart coherence of stillness, because flow comes with effort. It is coherence of attention, in motion.</p></div>
+      <p>In the Body view the band sits two rings in from the outer edge of the coherence field, and hovering there names each state's kind of flow. Flow shares a great deal with the layers of coherence: it is receptive, often attuned, and absorbed, with attention unified and self-consciousness gone. What it usually lacks is the resting heart coherence of stillness, because flow comes with effort. It is coherence of attention, in motion.</p></div>
     <div class="ring"><h3>Flow without action</h3>
       <p>Flow does not need movement, only a challenge that stretches your skill. In meditation the challenge is to rest the mind on one thing while the chatter pulls it away, and the skill is coming back. It follows the same balance as other flow. Too hard, and the mind races: that is the restless, anxious side, and it is the monkey mind. Too easy, and it goes dull and drowsy: that is the bored side. Meditation teachers name this same pair, restlessness and dullness, and the old image of a lute string that is neither too tight nor too slack.</p>
       <p>As skill grows, effort fades. In the later stages of <i>The Mind Illuminated</i>, attention becomes effortless, which the Daoist tradition calls wu wei, effortless action.</p>
