@@ -118,6 +118,9 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .t-body{fill:var(--sunink);font-style:italic;font-weight:600}
 .body-hit{fill:transparent;cursor:pointer;outline:none}
 .coh-ring{fill:none;stroke:#FFFFFF;stroke-width:1.4;pointer-events:none}
+.is-dark .coh-ring{stroke:#FFEFC2;stroke-width:1.7}
+.is-dark .body-aura{fill-opacity:.3}
+.is-dark .tri-circle{filter:drop-shadow(0 0 6px #FAEBC4) drop-shadow(0 0 14px rgba(240,212,140,.6))}
 .t-cohword{fill:#7A4D10;font-style:italic;font-weight:600;letter-spacing:.08em}
 .static-line{fill:none;stroke:#8E8698;stroke-width:1.1;stroke-linejoin:bevel}
 .is-dark .static-line{stroke:#B9B2C6}
@@ -377,6 +380,7 @@ svg.rimfocus .rim-focus{opacity:1}
 .now-line{fill:none;stroke:#FFEAA8;stroke-width:2.6;filter:drop-shadow(0 0 3px #FFD866) drop-shadow(0 0 7px rgba(255,214,102,.7))}
 .coh-ring,.tri-bloom,.petal .pf{transition:stroke-opacity .35s,fill-opacity .35s,filter .35s}
 svg.now-center .coh-ring{stroke-opacity:.62;filter:drop-shadow(0 0 2px #FFFFFF) drop-shadow(0 0 4px rgba(255,236,170,.8))}
+.is-dark svg.now-center .coh-ring{stroke-opacity:.8;filter:drop-shadow(0 0 2px rgba(255,226,150,.55))}
 svg.now-return .petal .pf{fill-opacity:.44;stroke:#FFEAA8;stroke-opacity:1;stroke-width:2.4;filter:drop-shadow(0 0 4px #FFD866) drop-shadow(0 0 10px rgba(255,214,102,.75))}
 
 .arousalcap{margin:0;min-height:2.6em}
@@ -1754,8 +1758,11 @@ const COH_LAYERS=[
   {name:"Absorbed", tag:"Early evidence", feel:"Meditative stillness: attention steady without effort, then joy, tranquility, and equanimity. Samatha, and the jhānas.", ev:"Early evidence: long-term meditators show strong, synchronized brain rhythms (Lutz and colleagues, 2004), and advanced states are now being studied directly."},
   {name:"Unity", tag:"Mostly from contemplative traditions", feel:"The sense of a separate self softens into oneness. Samadhi, nondual awareness.", ev:"Mostly from contemplative traditions, with early research on changes in the brain's self-related networks (Newberg and colleagues, 2001; Brewer and colleagues, 2011) and on self-transcendent experience (Yaden and colleagues, 2017)."}];
 const COH_HEART={name:"Beyond words", tag:"Not measured", feel:"Where the traditions point and the science stops. Left open, a portal rather than a map.", ev:"Not measured."};
+// in the dark, the center is a softer, warmer gold, so it still glows but does not dazzle
+const warmMix=(a,b,t)=>{ const h=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16)); const A=h(a),B=h(b); return "#"+A.map((v,i)=>Math.round(v*(1-t)+B[i]*t).toString(16).padStart(2,"0")).join(""); };
 function bodyCenter(g,L1){
   const rc=R.core, r1=cohEdge(), r0=rc*0.72, step=(r1-r0)/COH_STEPS;
+  const DK=isDark(), warm=(c,t)=>DK?warmMix(c,"#DDB866",t==null?0.3:t):c, soft=(a,k)=>DK?a*(k==null?0.88:k):a;
   // the field and its rings spread over the window, under the ring names; the heart and the words go above the field
   g=el("g",{id:"cohfield","pointer-events":"none"}); svg.insertBefore(g,document.getElementById("ringLabels"));
   // the whole center glows, brightest at the circle in the middle, like the gold nimbus of an icon
@@ -1763,24 +1770,24 @@ function bodyCenter(g,L1){
   el("circle",{cx:0,cy:0,r:f(r1-step+12),class:"body-aura","pointer-events":"none"},g);
   // one seamless glow: near white at the center, warming and fading out into the window, with no rings drawn across it
   { const cg=el("radialGradient",{id:"cohfieldglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
-    [[0,"#FFFFFF",1],[r0/r1,"#FFFCF3",0.97],[0.48,"#FDF2D6",0.85],[0.76,"#F9E4A8",0.55],[1,"#F5D88A",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},cg));
+    [[0,"#FFFFFF",1],[r0/r1,"#FFFCF3",0.97],[0.48,"#FDF2D6",0.85],[0.76,"#F9E4A8",0.55],[1,"#F5D88A",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":warm(c),"stop-opacity":f(soft(a))},cg));
     el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#cohfieldglow)",id:"cohField",class:"now-centerglow","pointer-events":"none"},g);
     // Right now: in resonance the whole center shines its brightest, and the shine fades as the dial turns away from it
     const ng=el("radialGradient",{id:"nowglow",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(r1)},g);
-    [[0,"#FFFFFF",1],[0.3,"#FFFFFF",0.9],[0.65,"#FFF8E2",0.5],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},ng));
+    [[0,"#FFFFFF",1],[0.3,"#FFFFFF",0.9],[0.65,"#FFF8E2",0.5],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":warm(c),"stop-opacity":f(soft(a))},ng));
     el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#nowglow)",id:"nowGlow",class:"now-centerglow","pointer-events":"none"},g);
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
     // six rings: the outermost, new, sits where the glow ends, out in the window
-    for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(i?0.3+0.08*i:0.55)},g);
+    for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(DK?(i?0.42+0.07*i:0.6):(i?0.3+0.08*i:0.55))},g);
     // flow: the word, on the band two steps in from the outer ring, once at each state; the hover lives here too
     DIRS.forEach(d=>arcText(r1-1.5*step,d.angle-22,d.angle+22,"flow","lbl t-flowword",15,2,g)); }
   // a small circle of light at the very center, glowing out through the rings around it: coherence, mind, heart, and
   // body in step. Its name comes up on hover.
   g=el("g",{id:"cohtop"});
   { const cr=rc*0.5, BL=cr+48, tg="cohone", tf=el("radialGradient",{id:tg,cx:"50%",cy:"50%",r:"50%"},g);
-    [[0,"#FFFFFF",1],[0.62,"#FFFFFF",0.92],[1,"#FFF3CC",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":c,"stop-opacity":a},tf));
+    [[0,"#FFFFFF",1],[0.62,"#FFFFFF",0.92],[1,"#FFF3CC",0.95]].forEach(([o,c,a])=>el("stop",{offset:o,"stop-color":warm(c,0.14),"stop-opacity":f(soft(a,0.95))},tf));
     const bf=el("radialGradient",{id:"cohbloom",gradientUnits:"userSpaceOnUse",cx:0,cy:0,r:f(BL)},g);
-    [[0,"#FFFFFF",1],[cr/BL,"#FFFFFF",0.9],[(cr/BL+1)/2,"#FFF6DC",0.45],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":c,"stop-opacity":a},bf));
+    [[0,"#FFFFFF",1],[cr/BL,"#FFFFFF",0.9],[(cr/BL+1)/2,"#FFF6DC",0.45],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":warm(c,0.14),"stop-opacity":f(soft(a,0.9))},bf));
     el("circle",{cx:0,cy:0,r:f(BL),fill:"url(#cohbloom)","pointer-events":"none",class:"tri-bloom"},g);
     el("circle",{cx:0,cy:0,r:f(cr),fill:`url(#${tg})`,class:"tri-circle"},g);
     arcText(cr+16,-60,60,"coherence","lbl t-cohword",15,1.5,g);
