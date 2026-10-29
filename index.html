@@ -107,6 +107,7 @@ svg.bodyview .t-aware{fill:var(--muted)}
 .t-flow{fill:#B4561E;font-style:italic;font-weight:700}
 .is-dark .t-flow{fill:#7A3A10}
 svg.mapview #flowG,svg.mapview #findG,svg.mapview #findPinG{display:none}
+svg.findview #enG,svg.lensview #enG,svg.mapview #enG{display:none}
 .tri-circle{stroke:none;pointer-events:none;filter:drop-shadow(0 0 8px #FFFFFF) drop-shadow(0 0 20px rgba(255,246,220,.9))}
 .tri-bloom{filter:blur(8px)}
 .coh-edge{fill:none;stroke:var(--goldline);stroke-width:1.6;stroke-opacity:.75;stroke-dasharray:1.5 5;stroke-linecap:round}
@@ -151,6 +152,8 @@ svg text.t-cohedge{fill:#7A4D10;font-style:italic;font-weight:700;opacity:1}
 .moontip span{color:var(--muted);font-size:12.5px;display:block}
 .moontip .nstag{font-family:var(--display);font-style:italic;font-size:14px;color:var(--muted);margin:1px 0 2px}
 .moontip .tl{color:var(--ink);font-size:13.5px;margin-top:4px;line-height:1.4} .moontip em{font-style:normal;font-weight:700} .moontip i{display:block;font-family:var(--display);font-size:16px}
+.moontip .entag{font-family:var(--display);font-style:italic;font-size:14px;color:var(--ink);margin-top:5px;padding-top:4px;border-top:1px dashed var(--line)}
+.moontip .entag em{font-style:normal;font-weight:700;color:var(--goldline)}
 .moontip .ringtag{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 @media (prefers-reduced-motion: no-preference){ .lhl{animation:lpulse 3.6s ease-in-out infinite} }
 @keyframes lpulse{0%,100%{fill-opacity:.1}50%{fill-opacity:.42}}
@@ -199,6 +202,7 @@ svg.rimfocus .rim-focus{opacity:1}
 .lens:hover{border-color:var(--goldline)}
 .lens[aria-pressed="true"]{background:var(--goldline);border-color:var(--goldline);color:#fff}
 .lens[aria-pressed="true"] svg{color:#fff}
+.lens .tog{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-left:2px}
 .lens-dim{fill:#1E1726;pointer-events:none}
 .lens-line{fill:none;stroke:#FFE38A;stroke-width:3;stroke-opacity:.95;pointer-events:none;filter:drop-shadow(0 0 6px #FFD866)}
 @media (prefers-reduced-motion: no-preference){ #lensG{animation:lensin .35s ease} }
@@ -1121,7 +1125,7 @@ const FINDER = [
   {q:"What does your body want to do?", a:[["Move: push, run, act","move"],["Stay still, it can't move","still"],["Rest, lie down","rest"],["Please someone, make it okay","please"]]}
 ];
 
-const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the neurovisceral integration model (Julian Thayer and Richard Lane), heart rhythm coherence (Paul Lehrer and Richard Gevirtz, and the HeartMath Institute), and the science of resilience (Harvard's Center on the Developing Child). The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
+const MODEL_NOTE = "This mandala is a model: a map drawn from earlier maps. It brings together the window of tolerance (Dan Siegel), the ladder of nervous-system states (Stephen Porges and Deb Dana), the defense cascade (Maggie Schauer and Thomas Elbert), fawn (Pete Walker), tend and befriend (Shelley Taylor and colleagues), the thaw (Peter Levine), the neurovisceral integration model (Julian Thayer and Richard Lane), heart rhythm coherence (Paul Lehrer and Richard Gevirtz, and the HeartMath Institute), and the science of resilience (Harvard's Center on the Developing Child). A switch in the bar above adds one more lens, offered as a lens and not as a source: the qi, yin, and yang of traditional Chinese medicine (Kaptchuk, 2000; Maciocia, 2015), whose matching to the wheel is this mandala's own idea. The circle, the four directions, the healthy root of each defense, and the transitions are this mandala's own synthesis, theory-based and offered from an evolutionary perspective: each state is an inheritance that once kept our ancestors alive. Some of these sources are well measured; others are clinical models; parts of polyvagal theory are disputed by physiologists. It is for reflection and education, not diagnosis or therapy.";
 
 /* ---------- Geometry ---------- */
 const VB = 608, WHEEL = 566;
@@ -1196,6 +1200,7 @@ function petal(r0,r1,a0,a1,bulgeIn){
   return `M${f(b0[0])} ${f(b0[1])} Q${f(c0[0])} ${f(c0[1])} ${f(tip[0])} ${f(tip[1])} Q${f(c1[0])} ${f(c1[1])} ${f(b1[0])} ${f(b1[1])} `+(bulgeIn ? `Q${f(P(r0+bulgeIn,m)[0])} ${f(P(r0+bulgeIn,m)[1])} ${f(b0[0])} ${f(b0[1])}` : arc(r0,a1,a0,0))+"Z";
 }
 // text path along an arc that reads upright
+let ENERGY_ON=false;
 let tpId=0, CR={sr:30,L1:200,dot:4.5}, layerKey=null, LENS=null, FIND=null;
 /* ---------- Patterns on the wheel ----------
    A route is a list of [angle, depth] points: the angle is the direction (0 fight or flight at the top, 90 freeze,
@@ -1421,11 +1426,16 @@ function ringShade(layer,r0,r1){
 /* ---------- Draw ---------- */
 const cells=[];
 const LAYER_TAG={win:"Inside the window", edge:"At the edge", out:"The ring of survival"};
+const ENERGY_TIP={
+  win:["Qi rises, then settles","Qi gathers in and is cultivated","Qi sinks: yin leads, then lifts","Qi goes out and returns"],
+  edge:["Yang climbing: qi rising faster than it settles","Qi beginning to bind","Qi beginning to sink, with less lift","Qi beginning to pour out, with less coming back"],
+  out:["Yang rising: full heat in fight, empty heat in flight","Qi stuck: held, bound, with heat building behind it","Yang and yin both spent: qi sunk, cold, and damp","Qi leaking: poured out, with little coming back"]};
+const energyTip=(layer,k)=>ENERGY_ON?`<span class="entag"><em>Energetics:</em> ${ENERGY_TIP[layer][k]}</span>`:"";
 function cellTip(layer,k){
   const d=DIRS[k], n=NERVE[k], more="<span>Tap to read more.</span>";
-  if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">${n.winTag}</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span><span class="tl">${n.healthy}</span>${more}`;
-  if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${more}`;
-  return `<span class="ringtag">The ring of survival</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${more}`;
+  if(layer==="win") return `<span class="ringtag">Inside the window</span><span class="nstag">${n.winTag}</span><b>${d.win.name}</b><i>${d.win.words}</i><span class="tl">${n.blend}</span><span class="tl">${n.healthy}</span>${energyTip(layer,k)}${more}`;
+  if(layer==="edge") return `<span class="ringtag">At the edge</span><span class="nstag">The early signals of ${d.name.toLowerCase()}</span><b>${d.edge.name}</b><i>${d.edge.words}</i><span class="tl">${d.edge.signs[0]}; ${d.edge.signs[1].charAt(0).toLowerCase()+d.edge.signs[1].slice(1)}.</span>${energyTip(layer,k)}${more}`;
+  return `<span class="ringtag">The ring of survival</span><span class="nstag">${n.state}</span><b>${d.name}</b><i>${d.out.words}</i><span class="tl">${n.feel}</span><span class="tl"><em>The way back:</em> ${n.way}</span>${energyTip(layer,k)}${more}`;
 }
 function hookTip(node, info, go){
   node.addEventListener("click",e=>{ e.stopPropagation(); moonTip(null); go(); });
@@ -1702,11 +1712,12 @@ function draw(){
   el("g",{id:"findG"});
   el("g",{id:"flowG"});
   el("g",{id:"findPinG"});
+  el("g",{id:"enG"});
   el("g",{id:"lensG"});
   el("g",{id:"nowRingG"}); drawNowRings();
   el("g",{id:"arousalG"});
   el("g",{id:"selOutline"});
-  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); renderNow();
+  applySel(); setLayerHL(layerKey); drawLoop(); drawTrace(false); drawMap(); drawRes(); drawFind(); drawFlow(); drawLens(); drawEnergy(); renderNow();
 }
 function hover(node){
   const all=[...cells,...svg.querySelectorAll(".veil")];
@@ -1898,6 +1909,12 @@ function drawFind(){
   spans.forEach(([a,b])=>{ el("circle",{cx:0,cy:0,r:f(b),class:"lens-line"},g); if(a>0.5) el("circle",{cx:0,cy:0,r:f(a),class:"lens-line"},g); });
   if(F.extra) F.extra(gp);
   if(F.pins) F.pins(gp);
+}
+// the energetics view: qi labels on the wheel and a qi line on each hover card, switched from the models bar
+function drawEnergy(){
+  const g=document.getElementById("enG"); if(!g) return; g.innerHTML=""; if(!ENERGY_ON) return;
+  [["qi rises",0],["qi held in",90],["qi sinks",180],["qi pours out",270]].forEach(([t,a])=>pin(g,midR(R.edge),a+26,t,12));
+  pin(g,winMid(),45,"qi flows freely",12); pin(g,winMid(),225,"qi flows freely",12);
 }
 const findbar=document.getElementById("findbar");
 ["States","The body","The mind","Energetics"].forEach(grp=>{ const box=document.createElement("span"); box.className="fgroup"; box.innerHTML=`<span class="fglbl">${grp}</span>`;
@@ -2800,6 +2817,14 @@ const lensbar=document.getElementById("lenses");
 LENSES.forEach(L=>{ const b=document.createElement("button"); b.type="button"; b.className="lens"; b.dataset.lens=L.key; b.setAttribute("aria-pressed","false");
   b.innerHTML=`<svg viewBox="0 0 16 16" aria-hidden="true">${L.icon}</svg>${L.tab}`;
   b.addEventListener("click",()=>{ if(LENS===L.key) showIntro(); else showLens(L.key,true); }); lensbar.appendChild(b); });
+const enbtn=document.createElement("button"); enbtn.type="button"; enbtn.className="lens lens-toggle"; enbtn.id="energytoggle"; enbtn.setAttribute("aria-pressed","false");
+enbtn.setAttribute("aria-label","Chinese medicine: qi, yin, and yang. Switch on to show its labels on the wheel and in the hover cards");
+enbtn.innerHTML=`<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.6a3.2 3.2 0 0 1 0 6.4a3.2 3.2 0 0 0 0 6.4" fill="currentColor"/></svg>Chinese medicine: qi, yin, and yang <span class="tog" id="entog">off</span>`;
+const enread=document.createElement("button"); enread.type="button"; enread.className="linkbtn"; enread.id="energyread"; enread.hidden=true; enread.textContent="Read the page";
+function setEnergy(on){ ENERGY_ON=on; enbtn.setAttribute("aria-pressed",on?"true":"false"); document.getElementById("entog").textContent=on?"on":"off"; enread.hidden=!on; drawEnergy(); moonTip(null); }
+enbtn.addEventListener("click",()=>setEnergy(!ENERGY_ON));
+enread.addEventListener("click",()=>findGo("energetics",true));
+lensbar.appendChild(enbtn); lensbar.appendChild(enread);
 function markLens(){ lensbar.querySelectorAll(".lens").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lens===LENS?"true":"false")); }
 // dims the whole wheel except the lit rings, which glow at their edges
 function drawLens(){
