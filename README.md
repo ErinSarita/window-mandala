@@ -160,3 +160,5 @@ Each petal is titled "the way back" on the wheel (`.t-wayback`). The direction n
 The models bar also carries a switch for Chinese medicine: qi, yin, and yang. Switched on, it adds qi labels around the wheel and an "Energetics" line to the hover cards for the window, edge, and survival parts of each direction, and shows a link to the Energetics page. It sits apart from the three source models, since it is a lens and not a source, and the labels step aside while a model or a Find chip is lit.
 
 The Energetics page now has "The return: how it rebalances qi", which says what the way back does for each pattern in qi terms, and the one-to-one phrasing is softened to "can look like" because states are moments and Chinese medicine patterns are tendencies.
+
+Equanimity: the Energetics page has "The still point: equanimity", and the center field now has seven rings, with Equanimous between Coherent and Receptive. It has its own Find chip and an entry under "As coherence deepens", tagged early evidence. Coherence is a body rhythm that can be measured, and equanimity is a relationship to what you feel, so they sit side by side as two things.

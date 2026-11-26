@@ -591,6 +591,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Damasio, A. R. (1994). <i>Descartes' Error: Emotion, Reason, and the Human Brain</i>. Putnam.</li>
       <li>Dana, D. (2018). <i>The Polyvagal Theory in Therapy</i>. Norton.</li>
       <li>de Manzano, Ö., Theorell, T., Harmat, L., &amp; Ullén, F. (2010). The psychophysiology of flow during piano playing. <i>Emotion, 10</i>(3), 301–311.</li>
+      <li>Desbordes, G., Gard, T., Hoge, E. A., Hölzel, B. K., Kerr, C., Lazar, S. W., Olendzki, A., &amp; Vago, D. R. (2015). Moving beyond mindfulness: Defining equanimity as an outcome measure in meditation and contemplative research. <i>Mindfulness, 6</i>(2), 356–372.</li>
       <li>Dickerson, S. S., &amp; Kemeny, M. E. (2004). Acute stressors and cortisol responses: A theoretical integration and synthesis of laboratory research. <i>Psychological Bulletin, 130</i>(3), 355–391.</li>
       <li>Dietrich, A. (2004). Neurocognitive mechanisms underlying the experience of flow. <i>Consciousness and Cognition, 13</i>(4), 746–761.</li>
       <li>Dixon, M. J., Stange, M., Larche, C. J., Graydon, C., Fugelsang, J. A., &amp; Harrigan, K. A. (2018). Dark flow, depression and multiline slot machine play. <i>Journal of Gambling Studies, 34</i>(1), 73–84.</li>
@@ -670,6 +671,7 @@ try{ var t=localStorage.getItem("wm-theme"); if(t==="light"||t==="dark") documen
       <li>Vaschillo, E. G., Vaschillo, B., &amp; Lehrer, P. M. (2006). Characteristics of resonance in heart rate variability stimulated by biofeedback. <i>Applied Psychophysiology and Biofeedback, 31</i>(2), 129–142.</li>
       <li>Vickhoff, B., Malmgren, H., Åström, R., Nyberg, G., Ekström, S.-R., Engwall, M., Snygg, J., Nilsson, M., &amp; Jörnsten, R. (2013). Music structure determines heart rate variability of singers. <i>Frontiers in Psychology, 4</i>, 334.</li>
       <li>Walker, P. (2013). <i>Complex PTSD: From Surviving to Thriving</i>. Azure Coyote.</li>
+      <li>Watson, B. (Trans.). (1968). <i>The Complete Works of Chuang Tzu</i>. Columbia University Press.</li>
       <li>Yaden, D. B., Haidt, J., Hood, R. W., Vago, D. R., &amp; Newberg, A. B. (2017). The varieties of self-transcendent experience. <i>Review of General Psychology, 21</i>(2), 143–160.</li>
       <li>Yano, J. M., Yu, K., Donaldson, G. P., Shastri, G. G., Ann, P., Ma, L., Nagler, C. R., Ismagilov, R. F., Mazmanian, S. K., &amp; Hsiao, E. Y. (2015). Indigenous bacteria from the gut microbiota regulate host serotonin biosynthesis. <i>Cell, 161</i>(2), 264–276.</li>
       <li>Yates, J. (Culadasa), Immergut, M., &amp; Graves, J. (2017). <i>The Mind Illuminated: A Complete Meditation Guide Integrating Buddhist Wisdom and Brain Science for Greater Mindfulness</i>. Touchstone.</li>
@@ -1767,14 +1769,15 @@ function setCap(t, redraw){ CAP=Math.max(0,Math.min(1,t)); syncLately(); capname
 // felt in the body, and the halo carries the long-term cost of living out in the survival states.
 const BODY_WIN=[["warm, strong, quick","heart up, still flexible"],["steady, alert, watching","heart slows to take things in"],["heavy, warm, digesting","heart slow and soft"],["soft face, warm voice","heart warmed by closeness"]];
 const BODY_LASTS=["if it lasts: high blood pressure, poor sleep, inflammation","if it lasts: tension, pain, exhaustion","if it lasts: fatigue, low mood, aches","if it lasts: burnout, losing yourself"];
-// the field is cut into six steps from the center out to its edge; the rings sit on these steps, so a ring added
-// at the outer edge leaves every other ring where it was
-const COH_STEPS=6;
+// the field is cut into seven steps from the center out to its edge; the rings sit on these steps. Equanimous was added
+// between coherent and receptive, so the rings inward of it each sit one step further in than they once did
+const COH_STEPS=7;
 // layers of coherence, from the window inward to the circle at the center: each with how it feels and how well it is measured
 const COH_LAYERS=[
   {name:"Regulated", tag:"Well measured", feel:"Inside the window: safe, flexible, and able to choose.", ev:"Well measured: a flexible heart rate variability, and the brake holding."},
   {name:"Engaged", tag:"Good evidence", feel:"The face softens, the voice warms, and the ears tune to the human voice. You can look, listen, and respond to the people around you.", ev:"Good evidence: a higher vagal tone goes with warmer, more open engagement with others (Kok and Fredrickson, 2010; Porges, 2011). The nerve pathways behind it are still debated."},
   {name:"Coherent", tag:"Well measured", feel:"Heart, breath, and brain in step through the vagus nerve: a smooth, wave-like rhythm near six breaths a minute.", ev:"Well measured: heart rhythm coherence can be scored from low to high (Lehrer and Gevirtz, 2014)."},
+  {name:"Equanimous", tag:"Early evidence", feel:"Aware before reacting. Feelings are felt fully and do not take the wheel: there is a pause between impulse and response, and room to choose.", ev:"Early evidence: equanimity is now being defined and measured as a quality of its own (Desbordes and colleagues, 2015), and mindfulness practice helps with stress and low mood (Goyal and colleagues, 2014)."},
   {name:"Receptive", tag:"Good evidence", feel:"Open, playful, and intuitive. Attention wide and soft, insight close at hand.", ev:"Good evidence: settled states broaden attention and make insight more likely (Fredrickson, 2001; Subramaniam and colleagues, 2009)."},
   {name:"Attuned", tag:"Measured", feel:"In step with others. Empathy comes easily, and rhythms can fall into sync between people who feel close.", ev:"Measured: mother and infant heart rhythms align during attuned play (Feldman and colleagues, 2011), heart rates synchronize between loved ones at a shared ritual (Konvalinka and colleagues, 2011), and the more closely a listener's body tracks another person's, the more accurately they read that person's feelings (Levenson and Ruef, 1992)."},
   {name:"Absorbed", tag:"Early evidence", feel:"Meditative stillness: attention steady without effort, then joy, tranquility, and equanimity. Samatha, and the jhānas.", ev:"Early evidence: long-term meditators show strong, synchronized brain rhythms (Lutz and colleagues, 2004), and advanced states are now being studied directly."},
@@ -1799,7 +1802,7 @@ function bodyCenter(g,L1){
     [[0,"#FFFFFF",1],[0.3,"#FFFFFF",0.9],[0.65,"#FFF8E2",0.5],[1,"#FFF3CC",0]].forEach(([o,c,a])=>el("stop",{offset:f(o),"stop-color":warm(c),"stop-opacity":f(soft(a))},ng));
     el("circle",{cx:0,cy:0,r:f(r1),fill:"url(#nowglow)",id:"nowGlow",class:"now-centerglow","pointer-events":"none"},g);
     // faint white rings over the glow, for the degrees of coherence, a little clearer toward the center
-    // six rings: the outermost, new, sits where the glow ends, out in the window
+    // seven rings: the outermost, new, sits where the glow ends, out in the window
     for(let i=0;i<COH_STEPS;i++) el("circle",{cx:0,cy:0,r:f(r1-i*step),class:"coh-ring","stroke-opacity":f(DK?(i?0.42+0.07*i:0.6):(i?0.3+0.08*i:0.55))},g);
     // flow: the word, on the band two steps in from the outer ring, once at each state; the hover lives here too
     DIRS.forEach(d=>arcText(r1-1.5*step,d.angle-22,d.angle+22,"flow","lbl t-flowword",15,2,g)); }
@@ -1869,7 +1872,7 @@ function drawFlow(){
   if(FIND==="monkey") monkeyLine(g);
 }
 // Find on the map: the foundation stays clean, and each idea lights up where it usually lives, with a short pin
-const cohR=i=>{ const r1=cohEdge(), r0=R.core*0.72, st=(r1-r0)/6; return [r1-(i+1)*st, r1-i*st]; };
+const cohR=i=>{ const r1=cohEdge(), r0=R.core*0.72, st=(r1-r0)/COH_STEPS; return [r1-(i+1)*st, r1-i*st]; };
 const midR=sp=>(sp[0]+sp[1])/2, omR=()=>(R.out[0]+R.out[1])/2, winMid=()=>(CR.L1+3+R.win[1])/2;
 function pin(g,r,a,t,sz){ sz=sz||12.5; const sp=Math.min(80,(t.length*sz*0.56/2)/r*57.3+3); arcText(r,a-sp,a+sp,t,"lbl t-pin",sz,0.3,g); }
 const toLoop=u=>{ showIntro(); if(u){ const t=document.getElementById("loop"); if(t) bringPanel(t); } };
@@ -1880,10 +1883,12 @@ const FINDS=[
    pins:g=>["racing","scanning","ruminating","replaying"].forEach((t,k)=>pin(g,midR(R.edge),DIRS[k].angle+28,t,12)), open:u=>showMonkey(u)},
   {key:"coherence", label:"Coherence", group:"States", body:true, spans:()=>[[0,cohR(1)[1]]],
    open:u=>showBody(u,"layers")},
-  {key:"receptivity", label:"Receptivity", group:"States", body:true, spans:()=>[cohR(2)],
-   pins:g=>pin(g,midR(cohR(2)),180,"receptivity lives here",11.5), open:u=>showBody(u,"receptive")},
-  {key:"absorption", label:"Absorption", group:"States", body:true, spans:()=>[cohR(4)], open:u=>showBody(u,"layers")},
-  {key:"unity", label:"Unity", group:"States", body:true, spans:()=>[cohR(5)], open:u=>showBody(u,"layers")},
+  {key:"equanimity", label:"Equanimity", group:"States", body:true, spans:()=>[cohR(2)],
+   pins:g=>pin(g,midR(cohR(2)),180,"equanimity lives here",11.5), open:u=>showBody(u,"layers")},
+  {key:"receptivity", label:"Receptivity", group:"States", body:true, spans:()=>[cohR(3)],
+   pins:g=>pin(g,midR(cohR(3)),180,"receptivity lives here",11.5), open:u=>showBody(u,"receptive")},
+  {key:"absorption", label:"Absorption", group:"States", body:true, spans:()=>[cohR(5)], open:u=>showBody(u,"layers")},
+  {key:"unity", label:"Unity", group:"States", body:true, spans:()=>[cohR(6)], open:u=>showBody(u,"layers")},
   {key:"hrv", label:"Heart rate variability", group:"The body", loop:true, spans:()=>[R.heart,R.edge,R.out],
    pins:g=>{ const a=67.5; pin(g,midR(R.heart),a,"HRV high",Math.min(12.5,(R.heart[1]-R.heart[0])*0.55)); pin(g,midR(R.edge),a,"HRV falling",12.5); pin(g,R.out[0]+26,a,"HRV low",13); }, open:toLoop},
   {key:"early", label:"The early alarm", group:"The body", spans:()=>[R.edge],
@@ -1895,8 +1900,8 @@ const FINDS=[
   {key:"perception", label:"Perception", group:"The mind", spans:()=>[[CR.L1+4,R.out[1]]],
    pins:g=>{ pin(g,winMid(),45,"a wide, open lens",12); pin(g,omR(),67.5,"a narrowed lens",12.5); },
    open:u=>showBody(u,"perception")},
-  {key:"intuition", label:"Intuition, or an old alarm?", group:"The mind", body:true, spans:()=>[cohR(2),R.out],
-   pins:g=>{ pin(g,midR(cohR(2)),180,"intuition: quiet, settled",11.5); pin(g,omR(),157.5,"old alarms: loud, urgent",12.5); }, open:u=>showBody(u,"discern")},
+  {key:"intuition", label:"Intuition, or an old alarm?", group:"The mind", body:true, spans:()=>[cohR(3),R.out],
+   pins:g=>{ pin(g,midR(cohR(3)),180,"intuition: quiet, settled",11.5); pin(g,omR(),157.5,"old alarms: loud, urgent",12.5); }, open:u=>showBody(u,"discern")},
   {key:"energetics", label:"Qi, yin, and yang", group:"Energetics", spans:()=>[[CR.L1+4,R.out[1]]],
    pins:g=>{ [["qi rises",0],["qi held in",90],["qi sinks",180],["qi pours out",270]].forEach(([t,a])=>pin(g,midR(R.edge),a+26,t,12)); pin(g,winMid(),45,"qi flows freely",12); }, open:u=>showEnergetics(u)}];
 function drawFind(){
@@ -2140,10 +2145,21 @@ function showEnergetics(user){
         <li><b>It stays rooted.</b> Coming back to the center is also coming back to the source: close the leaks, take in what nourishes, and settle where qi gathers.</li></ul>
       <p><button type="button" class="linkbtn" data-pr="being">Practices of being</button> · <button type="button" class="linkbtn" data-pr="breath">Coherent breathing</button> · <button type="button" class="linkbtn" data-pr="center">Into the center</button></p>
       <p class="note">This is a traditional picture, held as a lens. No research tests whether coherence practice builds qi. What research does support is that slow breathing and rest aid recovery (Lehrer and Gevirtz, 2014).</p></div>
+    <div class="ring"><h3>The still point: equanimity</h3>
+      <p>Everything so far is about how qi moves and returns. At the center there is a quality that makes the return possible: feeling what moves through you without being carried off by it. This is equanimity. It is not numbness, and it is not detachment. The feelings stay. Anger, fear, grief, and joy each arise and are fully felt, but they do not take the wheel.</p>
+      <p>What changes is a pause, however small, between the feeling and the response. In that pause there is room to notice, and room to choose.</p>
+      <p>Chinese medicine shows why the pause matters. In the old text each emotion moves qi: anger raises it, fear sends it down, fright scatters it, and over-thinking knots it (Unschuld and Tessenow, 2011). An emotion that takes over also moves the qi, and an automatic reaction repeats that movement again and again with little return. Equanimity is the heart-mind staying steady while the weather of feeling passes, which is what the tradition means by the spirit settled in the heart. The qi is not flung about, so less is spent.</p>
+      <p>In the nervous system&rsquo;s terms, the pause is the brake: the thinking brain holding the alarm in check while the body feels what it feels (Thayer and Lane, 2000). Awareness comes first, and the response follows. On the wheel, the place to practice this is the edge, where the early signals first appear.</p>
+      <p><b>A pause in three small steps.</b></p>
+      <ul><li><b>Notice.</b> Name what is here, and where it sits in the body: tight shoulders, a rushing feeling, a held breath.</li>
+        <li><b>Take in the moment.</b> One long out-breath, and let the awareness widen to the room before acting.</li>
+        <li><b>Choose.</b> Respond from the center, or wait. Either one is a choice, where a reflex is not.</li></ul>
+      <p>On the wheel, equanimity has its own ring in the center, just inside coherence and just outside receptivity. The pause is a skill that grows with use. At first it comes only after the reaction, and over time it comes sooner. <button type="button" class="linkbtn" data-pr="edge">Practice: Touch the edge, and come back</button> · <button type="button" class="linkbtn" data-pr="being">Practices of being</button> · <button type="button" class="linkbtn" data-pr="center">Into the center</button></p>
+      <p class="note">Many traditions point here. Buddhist teaching calls it equanimity, one of its four boundless qualities. The Daoist text Zhuangzi describes a &ldquo;fasting of the heart-mind&rdquo;: not eating less, but emptying the heart-mind of its busy tallying so that qi can gather and listening can go deeper than thought (Watson, 1968, ch. 4). They are held here as lenses, not as claims about measured effects. What research does support is that mindfulness practice and slow breathing help with stress and regulation (Goyal and colleagues, 2014; Lehrer and Gevirtz, 2014).</p></div>
     <div class="ring"><h3>Held with care</h3>
       <p class="note">These are parallels in how things feel and how they are described, not measurements and not diagnoses. In Chinese medicine, patterns are read by a trained practitioner from the whole person. Practitioners have linked polyvagal theory with Chinese medicine, mostly in courses and clinic writing, and a few small studies have measured heart rate variability across Chinese medicine patterns, with mixed results (Liu and colleagues, 2017). No research was found that tests these particular matches, including fight as full heat and flight as empty. The matching of qi's movements to the wheel's axes is this mandala's own synthesis. States are moments, and Chinese medicine patterns are tendencies read over time, so &ldquo;can look like&rdquo; is meant literally throughout. Hold it as a lens: a way to notice, not a verdict.</p>
       <p class="about">For the Five Phases, the organ clock, and the seasons of the day, see <a href="https://erinsarita.github.io/tcm-mandala/">The Body Clock Mandala</a>.</p></div>
-    <p class="src">Berntson et al. (1991); Kaptchuk (2000); Laozi, Dao De Jing, ch. 16; Lehrer &amp; Gevirtz (2014); Liu et al. (2017); Maciocia (2015); McEwen (1998); Unschuld &amp; Tessenow (2011)</p>`;
+    <p class="src">Berntson et al. (1991); Desbordes et al. (2015); Goyal et al. (2014); Kaptchuk (2000); Laozi, Dao De Jing, ch. 16; Lehrer &amp; Gevirtz (2014); Liu et al. (2017); Maciocia (2015); McEwen (1998); Thayer &amp; Lane (2000); Unschuld &amp; Tessenow (2011); Watson (1968)</p>`;
   wire(); if(user) bringPanel();
 }
 function showEarly(user){
@@ -2190,7 +2206,7 @@ function showBody(user, focus){
       <p class="note">What is measured, and what is a model. Brain, heart, and breath rhythms falling into step is well measured. Of the body's electrical rhythms the heart's is the strongest, and its magnetic field can be picked up by sensitive instruments a short way from the body. The idea that this field carries feeling between people comes mostly from the HeartMath Institute and is still early and debated.</p>
       <p><button type="button" class="linkbtn" data-pr="breath">Practice: Coherent breathing</button> · <button type="button" class="linkbtn" data-pr="cohbuild">Practices: building coherence</button> · <button type="button" class="linkbtn" data-pr="being">Practices of being</button></p></div>
     <div class="ring" id="body-layers"><h3>As coherence deepens</h3>
-      <p>At the center, mind, heart, and body move in step: coherence. The rings around the circle grow brighter toward the center, because coherence can deepen. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
+      <p>At the center, mind, heart, and body move in step: coherence. The rings around the circle grow brighter toward the center, because coherence can deepen. Equanimity has its own ring, just inside coherence: the body steady first, then awareness steady. As it does, other qualities may arise. They are possibilities, not stages to reach, and they come and go.</p>
       <ul class="cohlist">${COH_LAYERS.filter(L=>!["Regulated","Coherent"].includes(L.name)).map(L=>`<li><b>${L.name}.</b> ${L.feel}<span class="ev">${L.ev}</span></li>`).join("")}<li><b>${COH_HEART.name}.</b> ${COH_HEART.feel}</li></ul>
       <p><b>The vagus, and myelin.</b> Polyvagal theory links the safe, connected state to a myelinated branch of the vagus nerve. Myelin is wiring that grows early in life and does not change from moment to moment, and parts of that anatomy are debated. What changes as you move toward the center is how strongly the vagus is working: vagal tone, which shows up as a higher, more flexible heart rate variability (Porges, 2011; Thayer and Lane, 2009).</p>
       <p><b>Practices of being.</b> The deeper layers are reached less by doing than by allowing: standing, natural breathing, training attention, and time in darkness. <button type="button" class="linkbtn" data-pr="being">Read the practices of being</button></p>
